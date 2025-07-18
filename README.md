@@ -25,9 +25,8 @@
 [![GitHub Forks](https://img.shields.io/github/forks/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized/network)
 [![GitHub License](https://img.shields.io/github/license/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized/blob/main/LICENSE)
 
-[![Discord](https://img.shields.io/badge/Discord-Join%20Community-7289DA.svg)](https://discord.gg/bizflow)
-[![Twitter](https://img.shields.io/badge/Twitter-Follow%20%40BizFlow-1DA1F2.svg)](https://twitter.com/BizFlow)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Follow%20BizFlow-0077B5.svg)](https://linkedin.com/company/bizflow)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Community-7289DA.svg)](https://discord.gg/qaMmuCqxAQ)
+[![Email](https://img.shields.io/badge/Email-dev%40scootr.ca-blue.svg)](mailto:dev@scootr.ca)
 
 ---
 
@@ -286,10 +285,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- Documentation: [docs.bizflow.com](https://docs.bizflow.com)
-- Community: [community.bizflow.com](https://community.bizflow.com)
-- Email: support@bizflow.com
-- Status: [status.bizflow.com](https://status.bizflow.com)
+- Documentation: [GitHub Wiki](https://github.com/jshields-ca/get-organized/wiki)
+- Community: [Discord Server](https://discord.gg/qaMmuCqxAQ)
+- Email: dev@scootr.ca
+- Issues: [GitHub Issues](https://github.com/jshields-ca/get-organized/issues)
 
 ## 📊 Project Statistics
 
