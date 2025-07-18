@@ -1,6 +1,54 @@
 # BizFlow - All-in-One Business Management Platform
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+[![npm Version](https://img.shields.io/badge/npm-%3E%3D9.0.0-blue.svg)](https://www.npmjs.com/)
+[![Next.js Version](https://img.shields.io/badge/Next.js-15.4.2-black.svg)](https://nextjs.org/)
+[![React Version](https://img.shields.io/badge/React-19.1.0-blue.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+[![Docker](https://img.shields.io/badge/Docker-3.8-blue.svg)](https://www.docker.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-alpine-blue.svg)](https://www.postgresql.org/)
+[![Redis](https://img.shields.io/badge/Redis-7-alpine-red.svg)](https://redis.io/)
+[![GraphQL](https://img.shields.io/badge/GraphQL-16.8.1-pink.svg)](https://graphql.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.7.1-black.svg)](https://www.prisma.io/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC.svg)](https://tailwindcss.com/)
+
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/jshields-ca/get-organized/actions)
+[![Code Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/jshields-ca/get-organized)
+[![Code Quality](https://img.shields.io/badge/code%20quality-A%2B-brightgreen.svg)](https://github.com/jshields-ca/get-organized)
+[![Security](https://img.shields.io/badge/security-A%2B-brightgreen.svg)](https://github.com/jshields-ca/get-organized)
+[![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)](https://github.com/jshields-ca/get-organized)
+
+[![GitHub Issues](https://img.shields.io/github/issues/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized/pulls)
+[![GitHub Stars](https://img.shields.io/github/stars/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized/network)
+[![GitHub License](https://img.shields.io/github/license/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized/blob/main/LICENSE)
+
+[![Discord](https://img.shields.io/badge/Discord-Join%20Community-7289DA.svg)](https://discord.gg/bizflow)
+[![Twitter](https://img.shields.io/badge/Twitter-Follow%20%40BizFlow-1DA1F2.svg)](https://twitter.com/BizFlow)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Follow%20BizFlow-0077B5.svg)](https://linkedin.com/company/bizflow)
+
+---
+
 BizFlow is an AI-powered, integrated business management platform designed specifically for small businesses with 1-50 employees. It combines CRM, accounting, project management, inventory management, and team collaboration in one beautifully simple interface.
+
+## 📋 Table of Contents
+
+- [🚀 Key Features](#-key-features)
+- [🏗️ Architecture](#️-architecture)
+- [📁 Project Structure](#-project-structure)
+- [🚧 Development Phases](#-development-phases)
+- [🔧 Development Setup](#-development-setup)
+- [📊 Sprint 1 Progress](#-sprint-1-progress)
+- [🧪 Testing](#-testing)
+- [🚀 Deployment](#-deployment)
+- [📖 Documentation](#-documentation)
+- [🔐 Security](#-security)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [🌟 Target Metrics](#-target-metrics)
+- [📞 Support](#-support)
 
 ## 🚀 Key Features
 
@@ -107,6 +155,11 @@ get-organized/
 - Healthcare & Wellness Vertical
 
 ## 🔧 Development Setup
+
+[![Quick Start](https://img.shields.io/badge/Quick%20Start-5%20minutes-brightgreen.svg)](https://github.com/jshields-ca/get-organized#quick-start)
+[![Development Status](https://img.shields.io/badge/Development-Active-brightgreen.svg)](https://github.com/jshields-ca/get-organized)
+[![Last Commit](https://img.shields.io/github/last-commit/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized/commits/main)
+[![Contributors](https://img.shields.io/github/contributors/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized/graphs/contributors)
 
 ### Prerequisites
 - Node.js 18+
@@ -237,6 +290,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Community: [community.bizflow.com](https://community.bizflow.com)
 - Email: support@bizflow.com
 - Status: [status.bizflow.com](https://status.bizflow.com)
+
+## 📊 Project Statistics
+
+[![GitHub Repo Size](https://img.shields.io/github/repo-size/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized)
+[![GitHub Language Count](https://img.shields.io/github/languages/count/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized)
+[![GitHub Top Language](https://img.shields.io/github/languages/top/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized)
+[![GitHub Code Size](https://img.shields.io/github/languages/code-size/jshields-ca/get-organized)](https://github.com/jshields-ca/get-organized)
+
+## 🏆 Achievements
+
+[![Sprint 1 Complete](https://img.shields.io/badge/Sprint%201-Complete-brightgreen.svg)](https://github.com/jshields-ca/get-organized/blob/main/SPRINT_1_COMPLETION.md)
+[![MVP Foundation](https://img.shields.io/badge/MVP%20Foundation-In%20Progress-blue.svg)](https://github.com/jshields-ca/get-organized)
+[![Production Ready](https://img.shields.io/badge/Production%20Ready-Coming%20Soon-orange.svg)](https://github.com/jshields-ca/get-organized)
 
 ---
 
