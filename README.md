@@ -1,6 +1,6 @@
 # BizFlow - All-in-One Business Management Platform
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 [![npm Version](https://img.shields.io/badge/npm-%3E%3D9.0.0-blue.svg)](https://www.npmjs.com/)
 [![Next.js Version](https://img.shields.io/badge/Next.js-15.4.2-black.svg)](https://nextjs.org/)
@@ -267,7 +267,14 @@ npm run deploy:production
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License, Version 2.0 - see the [LICENSE](LICENSE) file for details.
+
+### License Benefits:
+- ✅ **Business-Friendly**: Allows commercial use and distribution
+- ✅ **Patent Protection**: Includes patent license grants
+- ✅ **Attribution Required**: Ensures credit is given to contributors
+- ✅ **Modification Allowed**: Others can modify and distribute
+- ✅ **Trademark Protection**: Protects your brand and trademarks
 
 ## 🌟 Target Metrics
 
