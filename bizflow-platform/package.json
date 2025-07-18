@@ -1,0 +1,69 @@
+{
+  "name": "bizflow-platform",
+  "version": "1.0.0",
+  "description": "AI-powered business management platform for small businesses",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "cd api && npm run dev",
+    "dev:web": "cd web-app && npm run dev",
+    "build": "npm run build:api && npm run build:web",
+    "build:api": "cd api && npm run build",
+    "build:web": "cd web-app && npm run build",
+    "test": "npm run test:api && npm run test:web",
+    "test:api": "cd api && npm test",
+    "test:web": "cd web-app && npm test",
+    "test:coverage": "npm run test:api -- --coverage && npm run test:web -- --coverage",
+    "lint": "npm run lint:api && npm run lint:web",
+    "lint:api": "cd api && npm run lint",
+    "lint:web": "cd web-app && npm run lint",
+    "db:migrate": "cd api && npm run db:migrate",
+    "db:seed": "cd api && npm run db:seed",
+    "db:reset": "cd api && npm run db:reset",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "deploy:staging": "npm run build && npm run deploy:staging:api && npm run deploy:staging:web",
+    "deploy:production": "npm run build && npm run deploy:production:api && npm run deploy:production:web",
+    "install:all": "npm install && cd api && npm install && cd ../web-app && npm install"
+  },
+  "keywords": [
+    "saas",
+    "business-management",
+    "crm",
+    "accounting",
+    "project-management",
+    "small-business",
+    "ai",
+    "automation"
+  ],
+  "author": "BizFlow Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "workspaces": [
+    "api",
+    "web-app"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

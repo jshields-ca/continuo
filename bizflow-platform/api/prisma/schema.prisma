@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MANAGER
+  EMPLOYEE
+  VIEWER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  SUSPENDED
+}
+
+enum CompanyStatus {
+  TRIAL
+  ACTIVE
+  SUSPENDED
+  CANCELLED
+}
+
+enum SubscriptionPlan {
+  FREE
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  firstName   String
+  lastName    String
+  password    String
+  role        UserRole  @default(EMPLOYEE)
+  status      UserStatus @default(PENDING)
+  avatar      String?
+  phone       String?
+  timezone    String    @default("UTC")
+  lastLoginAt DateTime?
+  emailVerified Boolean @default(false)
+  emailVerificationToken String?
+  resetPasswordToken String?
+  resetPasswordExpires DateTime?
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret String?
+  
+  // Company relationship
+  companyId   String
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  // Audit fields
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdBy   String?
+  updatedBy   String?
+
+  @@map("users")
+}
+
+model Company {
+  id          String        @id @default(cuid())
+  name        String
+  email       String?
+  phone       String?
+  website     String?
+  logo        String?
+  description String?
+  industry    String?
+  size        String?       // "1-10", "11-50", "51-200", "201-500", "500+"
+  country     String?
+  state       String?
+  city        String?
+  address     String?
+  zipCode     String?
+  
+  // Business details
+  taxId       String?
+  currency    String        @default("USD")
+  timezone    String        @default("UTC")
+  fiscalYearStart Int       @default(1) // Month (1-12)
+  
+  // Subscription details
+  status      CompanyStatus @default(TRIAL)
+  plan        SubscriptionPlan @default(FREE)
+  planStartedAt DateTime?
+  planExpiresAt DateTime?
+  maxUsers    Int           @default(2)
+  
+  // Settings
+  settings    Json?         // JSON object for various settings
+  
+  // Relationships
+  users       User[]
+  
+  // Audit fields
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  createdBy   String?
+  updatedBy   String?
+
+  @@map("companies")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  companyId String
+  action    String   // "CREATE", "UPDATE", "DELETE", "LOGIN", etc.
+  entity    String   // "User", "Company", "Contact", etc.
+  entityId  String?
+  oldValues Json?
+  newValues Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  ipAddress String?
+  userAgent String?
+
+  @@map("sessions")
+}
