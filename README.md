@@ -34,25 +34,56 @@ BizFlow is an AI-powered, integrated business management platform designed speci
 ## 📁 Project Structure
 
 ```
-bizflow-platform/
-├── api/                    # Backend API services
-│   ├── auth/              # Authentication services
-│   ├── crm/               # CRM modules
-│   ├── finance/           # Financial management
-│   ├── projects/          # Project management
-│   ├── ai/                # AI services
-│   └── shared/            # Shared utilities
-├── web-app/               # Next.js web application
-│   ├── components/        # React components
-│   ├── pages/             # Next.js pages
-│   ├── styles/            # CSS/Tailwind styles
-│   └── utils/             # Utility functions
-├── mobile-app/            # React Native mobile app
+get-organized/
+├── .gitignore             # Git ignore rules
+├── .env.example           # Environment variables template
+├── README.md              # Project documentation
+├── CHANGELOG.md           # Version history and changes
+├── package.json           # Root package configuration
+├── package-lock.json      # Dependency lock file
+├── docker-compose.yml     # Docker services configuration
+├── SPRINT_1_COMPLETION.md # Sprint completion notes
+├── api/                   # Backend API services
+│   ├── Dockerfile.dev     # API development Dockerfile
+│   ├── package.json       # API dependencies
+│   ├── config/            # Configuration files
+│   │   ├── database.js    # PostgreSQL configuration
+│   │   └── redis.js       # Redis configuration
+│   ├── database/          # Database files
+│   │   ├── init/          # Database initialization
+│   │   ├── models/        # Database models
+│   │   └── migrations/    # Database migrations
+│   ├── prisma/            # Prisma ORM
+│   │   └── schema.prisma  # Database schema
 │   ├── src/               # Source code
-│   ├── ios/               # iOS specific files
-│   └── android/           # Android specific files
+│   │   ├── graphql/       # GraphQL implementation
+│   │   │   ├── context.js # GraphQL context
+│   │   │   ├── resolvers/ # GraphQL resolvers
+│   │   │   └── typeDefs/  # GraphQL type definitions
+│   │   └── shared/        # Shared utilities
+│   ├── auth/              # Authentication services
+│   ├── users/             # User management
+│   └── tests/             # API tests
+├── web-app/               # Next.js web application
+│   ├── Dockerfile.dev     # Web app development Dockerfile
+│   ├── package.json       # Web app dependencies
+│   ├── next.config.ts     # Next.js configuration
+│   ├── tsconfig.json      # TypeScript configuration
+│   ├── eslint.config.mjs  # ESLint configuration
+│   ├── postcss.config.mjs # PostCSS configuration
+│   ├── src/               # Source code
+│   │   ├── app/           # Next.js App Router
+│   │   │   ├── auth/      # Authentication pages
+│   │   │   ├── dashboard/ # Dashboard pages
+│   │   │   ├── globals.css # Global styles
+│   │   │   └── layout.tsx # Root layout
+│   │   └── lib/           # Utility libraries
+│   │       ├── graphql/   # GraphQL client
+│   │       └── auth-context.tsx # Authentication context
+│   └── public/            # Static assets
+├── mobile-app/            # React Native mobile app (planned)
 ├── docs/                  # Documentation
-└── deploy/                # Deployment configurations
+└── node_modules/          # Dependencies (gitignored)
 ```
 
 ## 🚧 Development Phases
@@ -87,8 +118,8 @@ bizflow-platform/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-org/bizflow-platform.git
-   cd bizflow-platform
+   git clone https://github.com/jshields-ca/get-organized.git
+   cd get-organized
    ```
 
 2. **Set up environment variables**
