@@ -216,6 +216,19 @@ export default function DashboardPage() {
                 </div>
               </Link>
               
+              <Link
+                href="/dashboard/debug"
+                className="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center">
+                  <BarChart3 className="h-8 w-8 text-red-600" />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-medium text-gray-900">Debug</h3>
+                    <p className="text-sm text-gray-500">Debug authentication and API issues</p>
+                  </div>
+                </div>
+              </Link>
+              
               <div className="bg-white shadow rounded-lg p-6 opacity-50">
                 <div className="flex items-center">
                   <Calendar className="h-8 w-8 text-gray-400" />
