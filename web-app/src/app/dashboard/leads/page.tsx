@@ -22,61 +22,83 @@ import {
   User,
   Building,
   DollarSign,
-  ArrowRight
+  ArrowRight,
+  ArrowLeft
 } from 'lucide-react';
+import Link from 'next/link';
 
 // GraphQL Queries
 const GET_LEADS = gql`
-  query GetLeads($filter: LeadFilterInput, $limit: Int, $offset: Int) {
-    leads(filter: $filter, limit: $limit, offset: $offset) {
-      id
-      name
-      email
-      phone
-      company
-      source
-      status
-      score
-      assignedTo {
-        id
-        firstName
-        lastName
-        email
+  query GetLeads($filter: LeadFilterInput, $first: Int, $after: String) {
+    leads(filter: $filter, first: $first, after: $after) {
+      edges {
+        node {
+          id
+          name
+          email
+          phone
+          company
+          source
+          status
+          score
+          assignedTo
+          assignedUser {
+            id
+            firstName
+            lastName
+            email
+          }
+          opportunities {
+            edges {
+              node {
+                id
+                title
+                amount
+                stage
+                probability
+                expectedCloseDate
+              }
+            }
+          }
+          activities {
+            edges {
+              node {
+                id
+                activityType
+                description
+                createdAt
+              }
+            }
+          }
+          createdAt
+          updatedAt
+        }
       }
-      opportunities {
-        id
-        title
-        amount
-        stage
-        probability
-        expectedCloseDate
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
       }
-      activities {
-        id
-        type
-        description
-        date
-      }
-      createdAt
-      updatedAt
+      totalCount
     }
   }
 `;
 
 const GET_LEAD_SUMMARY = gql`
   query GetLeadSummary {
-    leadSummary {
+    leadPipeline {
       totalLeads
-      activeLeads
-      leadsByStatus {
-        status
-        count
-      }
-      leadsBySource {
-        source
-        count
-      }
-      totalOpportunityValue
+      newLeads
+      contactedLeads
+      qualifiedLeads
+      proposalLeads
+      negotiationLeads
+      convertedLeads
+      lostLeads
+      totalOpportunities
+      totalPipelineValue
+      conversionRate
     }
   }
 `;
@@ -98,10 +120,13 @@ const CREATE_LEAD = gql`
       id
       name
       email
+      phone
       company
       source
       status
       score
+      assignedTo
+      notes
     }
   }
 `;
@@ -134,7 +159,7 @@ export default function LeadsPage() {
     phone: '',
     company: '',
     source: '',
-    assignedToId: '',
+    assignedTo: '',
     notes: '',
   });
 
@@ -145,10 +170,10 @@ export default function LeadsPage() {
         search: searchTerm || undefined,
         status: selectedStatus || undefined,
         source: selectedSource || undefined,
-        assignedToId: selectedAssignee || undefined,
+        assignedTo: selectedAssignee || undefined,
       },
-      limit: 50,
-      offset: 0,
+      first: 50,
+      after: null,
     },
   });
 
@@ -166,7 +191,7 @@ export default function LeadsPage() {
         phone: '',
         company: '',
         source: '',
-        assignedToId: '',
+        assignedTo: '',
         notes: '',
       });
     },
@@ -184,8 +209,8 @@ export default function LeadsPage() {
     },
   });
 
-  const leads = leadsData?.leads || [];
-  const summary = summaryData?.leadSummary;
+  const leads = leadsData?.leads?.edges.map((edge: any) => edge.node) || [];
+  const summary = summaryData?.leadPipeline;
   const users = usersData?.users || [];
 
   const handleCreateLead = async (e: React.FormEvent) => {
@@ -195,8 +220,7 @@ export default function LeadsPage() {
         variables: {
           input: {
             ...newLead,
-            status: 'NEW',
-            score: 0,
+            // Remove status and score as they have defaults in the backend
           },
         },
       });
@@ -279,9 +303,18 @@ export default function LeadsPage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <Target className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-2xl font-bold text-gray-900">Leads</span>
+            <div className="flex items-center space-x-4">
+              <Link
+                href="/dashboard"
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back to Dashboard
+              </Link>
+              <div className="flex items-center">
+                <Target className="h-8 w-8 text-blue-600" />
+                <span className="ml-2 text-2xl font-bold text-gray-900">Leads</span>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <button
@@ -333,7 +366,7 @@ export default function LeadsPage() {
                         Active Leads
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        {summary.activeLeads}
+                        {summary.totalLeads}
                       </dd>
                     </dl>
                   </div>
@@ -353,7 +386,7 @@ export default function LeadsPage() {
                         Pipeline Value
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        {formatCurrency(summary.totalOpportunityValue)}
+                        {formatCurrency(summary.totalPipelineValue)}
                       </dd>
                     </dl>
                   </div>
@@ -569,8 +602,8 @@ export default function LeadsPage() {
                         Assign To
                       </label>
                       <select
-                        value={newLead.assignedToId}
-                        onChange={(e) => setNewLead({...newLead, assignedToId: e.target.value})}
+                        value={newLead.assignedTo}
+                        onChange={(e) => setNewLead({...newLead, assignedTo: e.target.value})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                       >
                         <option value="">Select User</option>
@@ -746,16 +779,16 @@ export default function LeadsPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {lead.assignedTo ? `${lead.assignedTo.firstName} ${lead.assignedTo.lastName}` : '-'}
+                            {lead.assignedUser ? `${lead.assignedUser.firstName} ${lead.assignedUser.lastName}` : '-'}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {lead.opportunities.length} opportunity{lead.opportunities.length !== 1 ? 'ies' : 'y'}
+                            {lead.opportunities.edges.length} opportunity{lead.opportunities.edges.length !== 1 ? 'ies' : 'y'}
                           </div>
-                          {lead.opportunities.length > 0 && (
+                          {lead.opportunities.edges.length > 0 && (
                             <div className="text-sm text-gray-500">
-                              {formatCurrency(lead.opportunities.reduce((total: number, opp: any) => total + (opp.amount || 0), 0))}
+                              {formatCurrency(lead.opportunities.edges.reduce((total: number, oppEdge: any) => total + (oppEdge.node.amount || 0), 0))}
                             </div>
                           )}
                         </td>
