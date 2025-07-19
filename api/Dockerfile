@@ -6,9 +6,9 @@ RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY package.json ./
 
-# Install dependencies
+# Install dependencies (will create package-lock.json if missing)
 RUN npm install
 
 # Copy source code
