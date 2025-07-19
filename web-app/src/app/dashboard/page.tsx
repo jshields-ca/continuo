@@ -1,7 +1,8 @@
 'use client';
 
 import { useRequireAuth } from '@/lib/auth-context';
-import { BarChart3, Users, DollarSign, Calendar, Building, User, LogOut } from 'lucide-react';
+import { BarChart3, Users, DollarSign, Calendar, Building, User, LogOut, BookOpen, Receipt, Target } from 'lucide-react';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const { user, logout } = useRequireAuth();
@@ -146,6 +147,87 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* Quick Actions */}
+          <div className="mt-8">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Link
+                href="/dashboard/accounts"
+                className="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center">
+                  <BookOpen className="h-8 w-8 text-blue-600" />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-medium text-gray-900">Chart of Accounts</h3>
+                    <p className="text-sm text-gray-500">Manage your financial accounts and transactions</p>
+                  </div>
+                </div>
+              </Link>
+              
+              <Link
+                href="/dashboard/transactions"
+                className="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center">
+                  <Receipt className="h-8 w-8 text-green-600" />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-medium text-gray-900">Transactions</h3>
+                    <p className="text-sm text-gray-500">Create and manage financial transactions</p>
+                  </div>
+                </div>
+              </Link>
+              
+              <Link
+                href="/dashboard/customers"
+                className="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center">
+                  <Building className="h-8 w-8 text-blue-600" />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-medium text-gray-900">Customers</h3>
+                    <p className="text-sm text-gray-500">Manage customer database and relationships</p>
+                  </div>
+                </div>
+              </Link>
+              
+              <Link
+                href="/dashboard/contacts"
+                className="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center">
+                  <Users className="h-8 w-8 text-purple-600" />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-medium text-gray-900">Contacts</h3>
+                    <p className="text-sm text-gray-500">Manage customer contacts and relationships</p>
+                  </div>
+                </div>
+              </Link>
+              
+              <Link
+                href="/dashboard/leads"
+                className="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center">
+                  <Target className="h-8 w-8 text-orange-600" />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-medium text-gray-900">Leads</h3>
+                    <p className="text-sm text-gray-500">Track leads and sales opportunities</p>
+                  </div>
+                </div>
+              </Link>
+              
+              <div className="bg-white shadow rounded-lg p-6 opacity-50">
+                <div className="flex items-center">
+                  <Calendar className="h-8 w-8 text-gray-400" />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-medium text-gray-500">Project Management</h3>
+                    <p className="text-sm text-gray-400">Coming soon - Track projects and tasks</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Company Info and User Details */}
           <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-2">
             {/* Company Information */}
@@ -164,11 +246,11 @@ export default function DashboardPage() {
                       <dt className="text-sm font-medium text-gray-500">Plan</dt>
                       <dd className="mt-1 text-sm text-gray-900">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          user.company.plan === 'FREE' 
+                          user.company.subscriptionPlan === 'FREE' 
                             ? 'bg-gray-100 text-gray-800'
                             : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {user.company.plan}
+                          {user.company.subscriptionPlan}
                         </span>
                       </dd>
                     </div>
@@ -214,24 +296,20 @@ export default function DashboardPage() {
                     <div>
                       <dt className="text-sm font-medium text-gray-500">Role</dt>
                       <dd className="mt-1 text-sm text-gray-900">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          user.role === 'OWNER' 
+                            ? 'bg-purple-100 text-purple-800'
+                            : user.role === 'ADMIN'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
                           {user.role}
                         </span>
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Status</dt>
-                      <dd className="mt-1 text-sm text-gray-900">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          user.status === 'ACTIVE' 
-                            ? 'bg-green-100 text-green-800'
-                            : user.status === 'PENDING'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}>
-                          {user.status}
-                        </span>
-                      </dd>
+                      <dt className="text-sm font-medium text-gray-500">User ID</dt>
+                      <dd className="mt-1 text-sm text-gray-900 font-mono">{user.id}</dd>
                     </div>
                   </dl>
                 </div>

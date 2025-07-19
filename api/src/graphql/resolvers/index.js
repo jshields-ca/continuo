@@ -4,6 +4,7 @@ const { userResolvers } = require('./user');
 const { companyResolvers } = require('./company');
 const customerResolvers = require('./customer');
 const leadResolvers = require('./lead');
+const accountResolvers = require('./account');
 
 const resolvers = {
   DateTime: DateTimeResolver,
@@ -15,6 +16,7 @@ const resolvers = {
     ...companyResolvers.Query,
     ...customerResolvers.Query,
     ...leadResolvers.Query,
+    ...accountResolvers.Query,
   },
   
   Mutation: {
@@ -23,6 +25,7 @@ const resolvers = {
     ...companyResolvers.Mutation,
     ...customerResolvers.Mutation,
     ...leadResolvers.Mutation,
+    ...accountResolvers.Mutation,
   },
   
   Subscription: {
@@ -34,6 +37,8 @@ const resolvers = {
   // Type resolvers
   User: userResolvers.User,
   Company: companyResolvers.Company,
+  Account: accountResolvers.Account,
+  Transaction: accountResolvers.Transaction,
 };
 
 module.exports = { resolvers };

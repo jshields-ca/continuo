@@ -31,6 +31,7 @@ const { companyTypeDefs } = require('./company');
 const { authTypeDefs } = require('./auth');
 const customerTypeDefs = require('./customer');
 const leadTypeDefs = require('./lead');
+const accountTypeDefs = require('./account');
 
 // Combine all type definitions
 const typeDefs = [
@@ -40,6 +41,7 @@ const typeDefs = [
   companyTypeDefs,
   customerTypeDefs,
   leadTypeDefs,
+  accountTypeDefs,
 ];
 
 module.exports = { typeDefs };

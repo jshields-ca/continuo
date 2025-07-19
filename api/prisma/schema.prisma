@@ -127,6 +127,8 @@ model Company {
   users       User[]
   customers   Customer[]
   leads       Lead[]
+  accounts    Account[]
+  transactions Transaction[]
   
   // Audit fields
   createdAt   DateTime      @default(now())
@@ -451,15 +453,136 @@ enum LeadActivityType {
   CREATED
   CONTACTED
   QUALIFIED
-  PROPOSAL_SENT
-  MEETING_SCHEDULED
-  MEETING_COMPLETED
-  FOLLOW_UP
-  CONVERTED
   LOST
   REASSIGNED
-  NOTE_ADDED
   EMAIL_SENT
   PHONE_CALL
   OTHER
+  CALL
+  EMAIL
+  MEETING_SCHEDULED
+  MEETING_COMPLETED
+  PROPOSAL_SENT
+  PROPOSAL_ACCEPTED
+  PROPOSAL_REJECTED
+  FOLLOW_UP
+  NOTE_ADDED
+  STATUS_CHANGED
+  SCORE_UPDATED
+  ASSIGNED
+  CONVERTED
+}
+
+// Chart of Accounts Enums
+enum AccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  REVENUE
+  EXPENSE
+}
+
+enum AccountCategory {
+  // Assets
+  CURRENT_ASSETS
+  FIXED_ASSETS
+  INTANGIBLE_ASSETS
+  OTHER_ASSETS
+  
+  // Liabilities
+  CURRENT_LIABILITIES
+  LONG_TERM_LIABILITIES
+  OTHER_LIABILITIES
+  
+  // Equity
+  OWNERS_EQUITY
+  RETAINED_EARNINGS
+  COMMON_STOCK
+  PREFERRED_STOCK
+  
+  // Revenue
+  OPERATING_REVENUE
+  NON_OPERATING_REVENUE
+  OTHER_REVENUE
+  
+  // Expenses
+  COST_OF_GOODS_SOLD
+  OPERATING_EXPENSES
+  ADMINISTRATIVE_EXPENSES
+  MARKETING_EXPENSES
+  RESEARCH_AND_DEVELOPMENT
+  OTHER_EXPENSES
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+// Chart of Accounts Model
+model Account {
+  id          String        @id @default(cuid())
+  companyId   String
+  name        String
+  code        String        // Account code (e.g., "1000", "1100", "2000")
+  type        AccountType
+  category    AccountCategory
+  status      AccountStatus @default(ACTIVE)
+  description String?
+  
+  // Balance information
+  balance     Decimal       @default(0) @db.Decimal(15, 2)
+  openingBalance Decimal    @default(0) @db.Decimal(15, 2)
+  
+  // Hierarchy
+  parentId    String?
+  parent      Account?      @relation("AccountHierarchy", fields: [parentId], references: [id])
+  children    Account[]     @relation("AccountHierarchy")
+  
+  // Account settings
+  isSystem    Boolean       @default(false) // System accounts cannot be deleted
+  isReconcilable Boolean    @default(true)  // Can be reconciled
+  isTaxable   Boolean       @default(false) // Subject to tax calculations
+  
+  // Relationships
+  company     Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  
+  // Audit fields
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  createdBy   String?
+  updatedBy   String?
+
+  @@unique([companyId, code])
+  @@map("accounts")
+}
+
+// Transaction Model for basic transaction tracking
+model Transaction {
+  id          String    @id @default(cuid())
+  companyId   String
+  accountId   String
+  type        String    // "DEBIT" or "CREDIT"
+  amount      Decimal   @db.Decimal(15, 2)
+  description String?
+  reference   String?   // External reference number
+  date        DateTime  @default(now())
+  
+  // Transaction details
+  category    String?   // Transaction category
+  tags        String[]  // Array of tags for categorization
+  
+  // Relationships
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  account     Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  
+  // Audit fields
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdBy   String?
+  updatedBy   String?
+
+  @@map("transactions")
 }
