@@ -1,393 +1,266 @@
-# Railway Deployment Guide for Continuo Platform
+# Railway Production Deployment Guide
 
-## Overview
+## 🚀 Overview
 
-This guide provides step-by-step instructions for deploying the Continuo platform to Railway's Hobby plan for production testing and initial launch.
+This guide walks you through deploying Continuo to Railway's production environment.
 
-## 🚀 Railway Platform Setup
+## 📋 Prerequisites
 
-### Account Status
-- **Plan**: Hobby Plan ($5/month)
-- **Status**: ✅ Account established
-- **Ready for**: Production deployment configuration
+- [Railway Account](https://railway.app/) (Hobby plan or higher)
+- GitHub repository connected to Railway
+- Domain name (optional, for custom domain)
 
-### Railway Hobby Plan Limits
-- **RAM**: 512MB per service
-- **Storage**: 1GB per service
-- **Bandwidth**: Unlimited
-- **Deployments**: Unlimited
-- **Custom Domains**: ✅ Supported
-- **SSL Certificates**: ✅ Automatic
+## 🏗️ Architecture
 
-## 📋 Pre-Deployment Checklist
-
-### ✅ Completed
-- [x] Railway account created (Hobby plan)
-- [x] GitHub repository connected
-- [x] Project rebranded to "Continuo"
-- [x] Docker configuration updated
-- [x] Environment variables documented
-
-### 🔄 Pending Tasks
-- [ ] Create Railway project configuration
-- [ ] Set up environment variables
-- [ ] Configure database service
-- [ ] Set up Redis service
-- [ ] Configure web application service
-- [ ] Set up API service
-- [ ] Test deployment pipeline
-- [ ] Configure custom domain
-- [ ] Set up monitoring
-
-**Note**: All tasks are tracked in Linear issue [BUS-16](https://linear.app/scootr-ca/issue/BUS-16/configure-railway-deployment-for-continuo-platform-production-testing)
-
-## 🏗️ Railway Project Structure
-
-### Services Required
-1. **PostgreSQL Database** (Railway managed)
-2. **Redis Cache** (Railway managed)
-3. **API Service** (Custom Docker container)
-4. **Web Application** (Custom Docker container)
-
-### Service Configuration
 ```
-Continuo Platform (Railway Project)
-├── continuo-database (PostgreSQL)
-├── continuo-redis (Redis)
-├── continuo-api (Node.js API)
-└── continuo-web (Next.js Web App)
+Railway Services:
+├── continuo-api (Backend API)
+├── continuo-web (Frontend Web App)
+├── continuo-db (PostgreSQL Database)
+└── continuo-redis (Redis Cache)
 ```
 
-## 📁 Required Configuration Files
+## 🚀 Step-by-Step Deployment
 
-### 1. Railway Configuration (`railway.json`)
-```json
-{
-  "$schema": "https://railway.app/railway.schema.json",
-  "build": {
-    "builder": "DOCKERFILE",
-    "dockerfilePath": "Dockerfile"
-  },
-  "deploy": {
-    "startCommand": "npm start",
-    "healthcheckPath": "/health",
-    "healthcheckTimeout": 300,
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
-  }
-}
-```
+### 1. Railway Project Setup
 
-### 2. Production Dockerfile (`Dockerfile.prod`)
-```dockerfile
-# Multi-stage build for production
-FROM node:18-alpine AS base
+1. **Login to Railway**
+   - Go to [railway.app](https://railway.app)
+   - Sign in with GitHub
 
-# Install dependencies only when needed
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
-
-# Install dependencies based on the preferred package manager
-COPY package.json package-lock.json* ./
-RUN npm ci --only=production
-
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-# Build the application
-RUN npm run build
-
-# Production image, copy all the files and run the app
-FROM base AS runner
-WORKDIR /app
-
-ENV NODE_ENV=production
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
-
-EXPOSE 3000
-
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-CMD ["node", "server.js"]
-```
-
-### 3. API Production Dockerfile (`api/Dockerfile.prod`)
-```dockerfile
-FROM node:18-alpine
-
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy application code
-COPY . .
-
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodejs -u 1001
-
-# Change ownership of the app directory
-RUN chown -R nodejs:nodejs /app
-USER nodejs
-
-# Expose port
-EXPOSE 4000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:4000/health || exit 1
-
-# Start the application
-CMD ["npm", "start"]
-```
-
-## 🔧 Environment Variables
-
-### Railway Environment Variables Setup
-
-#### Database Service Variables
-```bash
-# PostgreSQL (Railway managed)
-DATABASE_URL=postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}
-```
-
-#### API Service Variables
-```bash
-# Application
-NODE_ENV=production
-PORT=4000
-
-# Database
-DATABASE_URL=${DATABASE_URL}
-
-# Redis
-REDIS_URL=${REDIS_URL}
-
-# Authentication
-JWT_SECRET=${JWT_SECRET}
-JWT_EXPIRES_IN=7d
-
-# Security
-CORS_ORIGIN=${CORS_ORIGIN}
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
-
-# Logging
-LOG_LEVEL=info
-```
-
-#### Web Application Variables
-```bash
-# Application
-NODE_ENV=production
-PORT=3000
-
-# API Configuration
-NEXT_PUBLIC_API_URL=${API_URL}/graphql
-NEXT_PUBLIC_APP_URL=${APP_URL}
-
-# Security
-NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-NEXTAUTH_URL=${APP_URL}
-
-# Analytics (optional)
-NEXT_PUBLIC_ANALYTICS_ID=${ANALYTICS_ID}
-```
-
-## 🚀 Deployment Steps
-
-### Step 1: Create Railway Project
-1. **Login to Railway Dashboard**
 2. **Create New Project**
-   - Name: `continuo-platform`
-   - Description: `Continuo - AI-powered business management platform`
-   - Template: `Empty Project`
+   - Click "New Project"
+   - Select "Deploy from GitHub repo"
+   - Choose your `Continuo` repository
 
-### Step 2: Add Database Service
-1. **Add Service** → **Database** → **PostgreSQL**
-2. **Configure Database**:
-   - Name: `continuo-database`
-   - Version: `15`
-   - Plan: `Hobby`
+3. **Add Services**
+   - Click "New Service" → "Database" → "PostgreSQL"
+   - Click "New Service" → "Database" → "Redis"
+   - Click "New Service" → "GitHub Repo" → Select your repo
 
-### Step 3: Add Redis Service
-1. **Add Service** → **Database** → **Redis**
-2. **Configure Redis**:
-   - Name: `continuo-redis`
-   - Version: `7`
-   - Plan: `Hobby`
+### 2. Configure Database Service
 
-### Step 4: Add API Service
-1. **Add Service** → **GitHub Repo**
-2. **Select Repository**: `jeremyshields/continuo-platform`
-3. **Configure Service**:
-   - Name: `continuo-api`
+1. **PostgreSQL Setup**
+   - Service Name: `continuo-db`
+   - Railway will auto-generate connection details
+   - Note the `DATABASE_URL` from Variables tab
+
+2. **Redis Setup**
+   - Service Name: `continuo-redis`
+   - Note the `REDIS_URL` from Variables tab
+
+### 3. Configure API Service
+
+1. **Create API Service**
+   - Service Name: `continuo-api`
+   - Source: Your GitHub repo
    - Root Directory: `api`
-   - Build Command: `npm install && npm run build`
-   - Start Command: `npm start`
 
-### Step 5: Add Web Application Service
-1. **Add Service** → **GitHub Repo**
-2. **Select Repository**: `jeremyshields/continuo-platform`
-3. **Configure Service**:
-   - Name: `continuo-web`
+2. **Set Environment Variables**
+   ```
+   NODE_ENV=production
+   DATABASE_URL=${{continuo-db.DATABASE_URL}}
+   REDIS_URL=${{continuo-redis.REDIS_URL}}
+   JWT_SECRET=your-super-secure-jwt-secret-here
+   PORT=4000
+   CORS_ORIGIN=https://your-web-domain.railway.app
+   GRAPHQL_PLAYGROUND=false
+   RATE_LIMIT_WINDOW_MS=900000
+   RATE_LIMIT_MAX_REQUESTS=100
+   LOG_FORMAT=combined
+   ```
+
+3. **Deploy API**
+   - Railway will auto-deploy when you push to main
+   - Check logs for any build errors
+
+### 4. Configure Web Service
+
+1. **Create Web Service**
+   - Service Name: `continuo-web`
+   - Source: Your GitHub repo
    - Root Directory: `web-app`
-   - Build Command: `npm install && npm run build`
-   - Start Command: `npm start`
 
-### Step 6: Configure Environment Variables
-1. **API Service Variables**:
-   ```bash
+2. **Set Environment Variables**
+   ```
    NODE_ENV=production
-   DATABASE_URL=${continuo-database.DATABASE_URL}
-   REDIS_URL=${continuo-redis.REDIS_URL}
-   JWT_SECRET=your-super-secure-jwt-secret-key
-   CORS_ORIGIN=https://your-domain.railway.app
+   NEXT_PUBLIC_API_URL=https://your-api-domain.railway.app/graphql
+   PORT=3000
    ```
 
-2. **Web Service Variables**:
+3. **Deploy Web App**
+   - Railway will auto-deploy when you push to main
+   - Check logs for any build errors
+
+### 5. Database Migration
+
+1. **Run Prisma Migrations**
    ```bash
-   NODE_ENV=production
-   NEXT_PUBLIC_API_URL=https://continuo-api.railway.app/graphql
-   NEXT_PUBLIC_APP_URL=https://continuo-web.railway.app
+   # Connect to Railway CLI
+   railway login
+   railway link
+   
+   # Run migrations on production database
+   railway run --service continuo-api npx prisma migrate deploy
    ```
 
-### Step 7: Configure Domains
-1. **Custom Domain Setup**:
-   - Domain: `continuo.yourdomain.com`
-   - SSL: Automatic (Railway handles)
-   - DNS: Configure CNAME record
+2. **Seed Database (Optional)**
+   ```bash
+   railway run --service continuo-api npm run seed
+   ```
 
-2. **Railway Domains**:
-   - API: `continuo-api.railway.app`
-   - Web: `continuo-web.railway.app`
+### 6. Domain Configuration
 
-## 🔄 Deployment Pipeline
+1. **Custom Domain (Optional)**
+   - Go to your web service settings
+   - Click "Domains" tab
+   - Add your custom domain
+   - Update DNS records as instructed
 
-### GitHub Integration
-1. **Connect GitHub Repository**
-2. **Configure Auto-Deploy**:
-   - Branch: `main`
-   - Auto-deploy: ✅ Enabled
-   - Preview deployments: ✅ Enabled
+2. **Update CORS Settings**
+   - Update `CORS_ORIGIN` in API service to include your domain
 
-### Deployment Triggers
-- **Push to main**: Automatic deployment
-- **Pull Request**: Preview deployment
-- **Manual**: Manual deployment from dashboard
+## 🔧 Environment Variables Reference
 
-## 📊 Monitoring and Health Checks
+### API Service Variables
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `NODE_ENV` | Environment mode | `production` |
+| `DATABASE_URL` | PostgreSQL connection | `postgresql://...` |
+| `REDIS_URL` | Redis connection | `redis://...` |
+| `JWT_SECRET` | JWT signing secret | `your-secret-here` |
+| `PORT` | API port | `4000` |
+| `CORS_ORIGIN` | Allowed origins | `https://your-domain.com` |
+| `GRAPHQL_PLAYGROUND` | Enable playground | `false` |
 
-### Health Check Endpoints
-- **API Health**: `GET /health`
-- **Web Health**: `GET /api/health`
-- **Database Health**: Connection test
-- **Redis Health**: Connection test
-
-### Railway Monitoring
-- **Logs**: Real-time application logs
-- **Metrics**: CPU, memory, network usage
-- **Alerts**: Automatic alerting for issues
-- **Uptime**: Service availability monitoring
-
-## 🔒 Security Configuration
-
-### SSL/TLS
-- **Automatic SSL**: Railway provides certificates
-- **HTTPS Only**: Force HTTPS redirects
-- **HSTS**: HTTP Strict Transport Security
-
-### Environment Security
-- **Secrets Management**: Railway handles sensitive data
-- **Access Control**: Team member permissions
-- **Audit Logs**: Deployment and access logs
-
-## 📈 Scaling Considerations
-
-### Hobby Plan Limits
-- **RAM**: 512MB per service (sufficient for testing)
-- **Storage**: 1GB per service
-- **Concurrent Users**: ~50-100 users
-
-### Upgrade Path
-- **Pro Plan**: $20/month for more resources
-- **Enterprise**: Custom pricing for large deployments
-- **Migration**: Easy migration to other platforms
+### Web Service Variables
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `NODE_ENV` | Environment mode | `production` |
+| `NEXT_PUBLIC_API_URL` | API endpoint | `https://api.railway.app/graphql` |
+| `PORT` | Web port | `3000` |
 
 ## 🧪 Testing Deployment
 
-### Pre-Deployment Testing
-1. **Local Testing**: Verify Docker builds work
-2. **Environment Variables**: Test all variables
-3. **Database Migration**: Test migration scripts
-4. **API Endpoints**: Verify all endpoints work
+### 1. Health Checks
+- API: `https://your-api-domain.railway.app/health`
+- Web: `https://your-web-domain.railway.app/`
 
-### Post-Deployment Testing
-1. **Health Checks**: Verify all services healthy
-2. **Functionality**: Test all application features
-3. **Performance**: Monitor response times
-4. **Security**: Verify HTTPS and authentication
+### 2. GraphQL Playground
+- URL: `https://your-api-domain.railway.app/graphql`
+- Note: Disabled in production by default
+
+### 3. Application Features
+- User registration/login
+- Dashboard functionality
+- Customer management
+- Lead management
+- Contact management
+
+## 🔍 Monitoring & Logs
+
+### Railway Dashboard
+- **Metrics**: CPU, Memory, Network usage
+- **Logs**: Real-time application logs
+- **Deployments**: Build and deployment history
+
+### Health Monitoring
+- Railway automatically monitors service health
+- Failed health checks trigger restarts
+- Set up alerts for critical issues
+
+## 🔒 Security Considerations
+
+### Environment Variables
+- Never commit secrets to Git
+- Use Railway's secure variable storage
+- Rotate JWT secrets regularly
+
+### Database Security
+- Railway provides secure database connections
+- Enable SSL for database connections
+- Regular backups (automatic with Railway)
+
+### API Security
+- Rate limiting enabled
+- CORS properly configured
+- Helmet.js security headers
+- Input validation and sanitization
 
 ## 🚨 Troubleshooting
 
 ### Common Issues
-1. **Build Failures**: Check Dockerfile and dependencies
-2. **Environment Variables**: Verify all variables set
-3. **Database Connection**: Check DATABASE_URL format
-4. **Port Conflicts**: Ensure correct port configuration
+
+1. **Build Failures**
+   - Check Dockerfile syntax
+   - Verify all dependencies in package.json
+   - Check build logs in Railway dashboard
+
+2. **Database Connection Issues**
+   - Verify DATABASE_URL format
+   - Check database service is running
+   - Run migrations manually if needed
+
+3. **CORS Errors**
+   - Update CORS_ORIGIN to match your domain
+   - Check API and web service URLs
+
+4. **Environment Variables**
+   - Verify all required variables are set
+   - Check variable names match code
+   - Restart services after variable changes
 
 ### Debug Commands
 ```bash
 # Check service logs
-railway logs
+railway logs --service continuo-api
+railway logs --service continuo-web
+
+# Run commands in service
+railway run --service continuo-api npm run test
+railway run --service continuo-api npx prisma studio
 
 # Check service status
 railway status
-
-# Restart service
-railway restart
-
-# View environment variables
-railway variables
 ```
 
-## 📞 Support Resources
+## 📈 Scaling
 
-### Railway Documentation
-- [Railway Docs](https://docs.railway.app/)
-- [Deployment Guide](https://docs.railway.app/deploy/deployments)
-- [Environment Variables](https://docs.railway.app/deploy/environment-variables)
+### Railway Hobby Plan Limits
+- 500 hours/month
+- 512MB RAM per service
+- Shared CPU resources
 
-### Community Support
-- [Railway Discord](https://discord.gg/railway)
-- [GitHub Issues](https://github.com/railwayapp/railway/issues)
-- [Community Forum](https://community.railway.app/)
+### Upgrading for Production
+- **Pro Plan**: $20/month
+  - Unlimited hours
+  - 1GB RAM per service
+  - Dedicated CPU
+  - Custom domains
+  - Team collaboration
+
+## 🔄 Continuous Deployment
+
+### Automatic Deployments
+- Railway auto-deploys on push to main branch
+- Preview deployments for pull requests
+- Rollback to previous deployments
+
+### Deployment Pipeline
+1. Push code to GitHub
+2. Railway detects changes
+3. Builds Docker images
+4. Runs health checks
+5. Deploys to production
+6. Updates domain routing
+
+## 📞 Support
+
+- **Railway Documentation**: [docs.railway.app](https://docs.railway.app)
+- **Railway Discord**: [discord.gg/railway](https://discord.gg/railway)
+- **GitHub Issues**: Report bugs in your repository
 
 ---
 
-**Last Updated**: July 19, 2025  
-**Status**: Ready for Implementation  
-**Next Step**: Linear issue BUS-16 created for deployment tasks 
+**Last Updated**: July 2025
+**Version**: 0.2.3 
