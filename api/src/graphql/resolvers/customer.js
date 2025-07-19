@@ -119,6 +119,65 @@ const customerResolvers = {
       }
     },
 
+    // Get customer summary statistics
+    customerSummary: async (_, args, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        const where = {
+          companyId: user.companyId
+        };
+
+        const [totalCustomers, activeCustomers, customersByStatus, customersByIndustry] = await Promise.all([
+          prisma.customer.count({ where }),
+          prisma.customer.count({ 
+            where: { 
+              ...where, 
+              status: 'ACTIVE' 
+            } 
+          }),
+          prisma.customer.groupBy({
+            by: ['status'],
+            where,
+            _count: {
+              status: true
+            }
+          }),
+          prisma.customer.groupBy({
+            by: ['industry'],
+            where: {
+              ...where,
+              industry: { not: null }
+            },
+            _count: {
+              industry: true
+            }
+          })
+        ]);
+
+        return {
+          totalCustomers,
+          activeCustomers,
+          customersByStatus: customersByStatus.map(item => ({
+            status: item.status,
+            count: item._count.status
+          })),
+          customersByIndustry: customersByIndustry.map(item => ({
+            industry: item.industry,
+            count: item._count.industry
+          }))
+        };
+      } catch (error) {
+        logger.error('Error fetching customer summary:', error);
+        throw error;
+      }
+    },
+
     // Get contacts with enhanced filtering
     contacts: async (_, { customerId, first = 10, after, filter }, context) => {
       try {

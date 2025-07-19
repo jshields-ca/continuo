@@ -1,6 +1,6 @@
 # BUS-3: Contact Management System - Complete
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
 
 ## ✅ **BUS-3 Implementation Complete**
 

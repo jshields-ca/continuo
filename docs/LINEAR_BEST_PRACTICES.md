@@ -1,10 +1,10 @@
-# Linear Best Practices for BizFlow Platform
+# Linear Best Practices for Continuo Platform
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
 
 ## 🎯 Overview
 
-This document outlines best practices for using Linear with the BizFlow Platform project, including workflows, conventions, and recommendations for effective project management.
+This document outlines best practices for using Linear with the Continuo Platform project, including workflows, conventions, and recommendations for effective project management.
 
 ## 📋 Linear Setup & Configuration
 

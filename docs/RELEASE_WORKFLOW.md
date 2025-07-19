@@ -1,10 +1,10 @@
 # Release Workflow Documentation
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
 
 ## Overview
 
-This document outlines the release workflow for the BizFlow platform using release-it and conventional commits. The workflow ensures consistent, automated releases with proper versioning, changelog generation, and deployment preparation.
+This document outlines the release workflow for the Continuo platform using release-it and conventional commits. The workflow ensures consistent, automated releases with proper versioning, changelog generation, and deployment preparation.
 
 ## 🏷️ Versioning Strategy
 

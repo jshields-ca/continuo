@@ -1,10 +1,10 @@
-# BizFlow Security Documentation
+# Continuo Security Documentation
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
 
 ## Overview
 
-This document outlines the security measures, best practices, and protocols implemented in the BizFlow platform to ensure data protection, user privacy, and system integrity.
+This document outlines the security measures, best practices, and protocols implemented in the Continuo platform to ensure data protection, user privacy, and system integrity.
 
 ## 🔒 Security Architecture
 
@@ -336,7 +336,7 @@ const currentUser = requireRole(['OWNER', 'ADMIN']);
    - Post-incident analysis
 
 ### Contact Information
-- **Security Team**: security@bizflow.com
+- **Security Team**: security@continuo.com
 - **Emergency**: +1-XXX-XXX-XXXX
 - **Bug Reports**: GitHub Issues
 
@@ -387,7 +387,7 @@ const currentUser = requireRole(['OWNER', 'ADMIN']);
 
 ## 🔐 Security Commitment
 
-BizFlow is committed to maintaining the highest security standards to protect our users' data and ensure system integrity. We regularly review and update our security measures to address emerging threats and maintain compliance with industry best practices.
+Continuo is committed to maintaining the highest security standards to protect our users' data and ensure system integrity. We regularly review and update our security measures to address emerging threats and maintain compliance with industry best practices.
 
 For security concerns or vulnerability reports, please contact our security team at security@[final-domain].com.
 

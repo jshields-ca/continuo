@@ -104,7 +104,7 @@ describe('Chart of Accounts API Tests', () => {
     // Login to get authentication token
     const loginQuery = `
       mutation {
-        login(input: { email: "admin@bizflow-demo.com", password: "TestPassword123!" }) {
+        login(input: { email: "admin@continuo-demo.com", password: "TestPassword123!" }) {
           token
           user {
             id

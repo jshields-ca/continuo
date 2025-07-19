@@ -8,7 +8,7 @@ import { ClientOnly } from '@/lib/client-only'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'BizFlow - All-in-One Business Management',
+  title: 'Continuo - All-in-One Business Management',
   description: 'AI-powered business management platform for small businesses',
 }
 

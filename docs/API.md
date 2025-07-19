@@ -1,10 +1,10 @@
-# BizFlow API Documentation
+# Continuo API Documentation
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+
 
 ## Overview
 
-The BizFlow API is built with GraphQL using Apollo Server, providing a flexible and efficient way to interact with the platform's data. This documentation covers all available queries, mutations, and types.
+The Continuo API is built with GraphQL using Apollo Server, providing a flexible and efficient way to interact with the platform's data. This documentation covers all available queries, mutations, and types.
 
 ## Base URL
 

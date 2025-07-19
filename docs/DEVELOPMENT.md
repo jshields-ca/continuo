@@ -1,10 +1,10 @@
-# BizFlow Development Guide
+# Continuo Development Guide
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
 
 ## Overview
 
-This guide provides comprehensive information for developers working on the BizFlow platform, including setup, architecture, coding standards, and best practices.
+This guide provides comprehensive information for developers working on the Continuo platform, including setup, architecture, coding standards, and best practices.
 
 ## 🚀 Quick Start
 

@@ -1,4 +1,4 @@
-# Sprint 2 Progress Summary - BizFlow Platform
+# Sprint 2 Progress Summary - Continuo Platform
 
 ## 🚀 Sprint 2 Development Status
 
@@ -6,7 +6,7 @@
 **Version**: 0.2.0 (In Progress)  
 **Status**: 🟡 **IN PROGRESS** - Core Business Features
 
-Sprint 2 focuses on implementing core business features for the BizFlow platform. This document tracks progress on the prioritized business tasks (BUS-1 through BUS-6).
+Sprint 2 focuses on implementing core business features for the Continuo platform. This document tracks progress on the prioritized business tasks (BUS-1 through BUS-6).
 
 ## 📋 Sprint 2 Business Tasks Overview
 

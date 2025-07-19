@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the development approach, methodology, and planning for the BizFlow Platform project.
+This document outlines the development approach, methodology, and planning for the Continuo Platform project.
 
 ## 🤖 Development Approach
 
@@ -63,6 +63,15 @@ This project is developed using a **human-AI collaboration model** that combines
 **Duration**: 2-3 weeks  
 **Priority**: High - Must complete before BUS-6 development
 
+#### Production Deployment Preparation
+- **Railway Platform**: Hobby plan account established
+- **Deployment Configuration**: Docker-based deployment setup
+- **Environment Variables**: Production environment configuration
+- **Database Migration**: Production database setup and migration
+- **SSL/HTTPS**: Automatic SSL certificate configuration
+- **Monitoring**: Basic application monitoring setup
+- **Linear Issue**: [BUS-16](https://linear.app/scootr-ca/issue/BUS-16/configure-railway-deployment-for-continuo-platform-production-testing) - Railway deployment configuration
+
 #### Testing Requirements
 1. **Comprehensive Feature Testing**
    - Dashboard functionality and navigation
@@ -93,6 +102,8 @@ This project is developed using a **human-AI collaboration model** that combines
 - **Bug Fixes**: Resolution of all critical issues
 - **Performance Optimization**: Improvements based on testing
 - **Documentation Updates**: Updated user and technical documentation
+- **Production Deployment**: Railway deployment configuration and testing
+- **Linear Tracking**: All deployment tasks tracked in BUS-16
 
 ### Sprint 3 (Version 0.3.0) - AFTER Testing Phase
 
@@ -156,7 +167,8 @@ This project is developed using a **human-AI collaboration model** that combines
 #### DevOps
 - **Docker**: Containerization
 - **Docker Compose**: Orchestration
-- **Linear**: Project management
+- **Railway**: Production hosting platform
+- **Linear**: Project management (Business Dev team)
 - **GitHub**: Version control
 
 ### Design Principles
@@ -200,16 +212,16 @@ This project is developed using a **human-AI collaboration model** that combines
 ## 🔄 Development Process
 
 ### Daily Workflow
-1. **Morning Planning**: Review tasks and priorities
+1. **Morning Planning**: Review Linear tasks and priorities
 2. **Development Session**: AI-assisted coding
 3. **Code Review**: Human validation of changes
 4. **Testing**: Automated and manual testing
 5. **Documentation**: Update documentation
-6. **End-of-Day Review**: Progress assessment
+6. **End-of-Day Review**: Progress assessment and Linear updates
 
 ### Sprint Workflow
-1. **Sprint Planning**: Define objectives and tasks
-2. **Development**: AI-assisted implementation
+1. **Sprint Planning**: Define objectives and create Linear issues
+2. **Development**: AI-assisted implementation with Linear tracking
 3. **Testing**: Comprehensive testing phase
 4. **Review**: Code and feature review
 5. **Documentation**: Update project documentation
@@ -259,6 +271,7 @@ This project is developed using a **human-AI collaboration model** that combines
 ## 📞 Communication
 
 ### Internal Communication
+- **Linear Tracking**: All tasks and progress tracked in Linear
 - **Daily Standups**: Progress updates and blockers
 - **Sprint Reviews**: Feature demonstrations
 - **Retrospectives**: Process improvements
@@ -274,4 +287,4 @@ This project is developed using a **human-AI collaboration model** that combines
 
 **Last Updated**: July 19, 2025  
 **Version**: 0.2.2  
-**Status**: Sprint 2 Complete - Ready for Production Testing 
+**Status**: Sprint 2 Complete - Railway Deployment Configuration in Progress 

@@ -1,6 +1,6 @@
 # Sprint 2 Development Kickoff - Initial Progress
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
 
 ## 🚀 **Sprint 2 Development Started**
 

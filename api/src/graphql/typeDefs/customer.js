@@ -128,6 +128,23 @@ const customerTypeDefs = gql`
     createdBy: String
   }
 
+  type CustomerSummary {
+    totalCustomers: Int!
+    activeCustomers: Int!
+    customersByStatus: [CustomerStatusCount!]!
+    customersByIndustry: [CustomerIndustryCount!]!
+  }
+
+  type CustomerStatusCount {
+    status: CustomerStatus!
+    count: Int!
+  }
+
+  type CustomerIndustryCount {
+    industry: String!
+    count: Int!
+  }
+
   input CreateCustomerInput {
     name: String!
     type: CustomerType = COMPANY
@@ -293,6 +310,8 @@ const customerTypeDefs = gql`
     ): CustomerConnection!
     
     customer(id: ID!): Customer
+    
+    customerSummary: CustomerSummary!
     
     # Contact queries
     contacts(

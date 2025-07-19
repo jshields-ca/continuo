@@ -482,14 +482,34 @@ const leadResolvers = {
           });
         }
 
+        // Filter out assignedTo if it's empty to avoid foreign key constraint
+        const leadData = {
+          ...input,
+          companyId: user.companyId,
+          createdBy: user.id,
+          updatedBy: user.id,
+          tags: input.tags || []
+        };
+        
+        // Only include assignedTo if it has a valid value
+        if (!input.assignedTo || input.assignedTo.trim() === '') {
+          delete leadData.assignedTo;
+        } else {
+          // Verify the user exists before assigning
+          const assignedUser = await prisma.user.findFirst({
+            where: {
+              id: input.assignedTo,
+              companyId: user.companyId
+            }
+          });
+          
+          if (!assignedUser) {
+            delete leadData.assignedTo;
+          }
+        }
+
         const lead = await prisma.lead.create({
-          data: {
-            ...input,
-            companyId: user.companyId,
-            createdBy: user.id,
-            updatedBy: user.id,
-            tags: input.tags || []
-          },
+          data: leadData,
           include: {
             company_ref: true,
             assignedUser: true

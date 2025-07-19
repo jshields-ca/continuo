@@ -1,6 +1,6 @@
 # File Structure Reorganization - Complete
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
 
 ## ✅ **Reorganization Completed**
 

@@ -236,6 +236,7 @@ api/tests/results/
 # Debug files
 .debug
 debug.log
+utputFormat
 
 # Local development files
 .local

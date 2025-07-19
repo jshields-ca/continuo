@@ -1,10 +1,10 @@
 # Release Workflow Setup Complete ✅
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
 
 ## 🎉 Release Workflow Successfully Configured
 
-The release workflow for BizFlow Platform has been successfully set up and is ready for Version 0.1.0 release.
+The release workflow for Continuo Platform has been successfully set up and is ready for Version 0.1.0 release.
 
 ## ✅ What Was Configured
 

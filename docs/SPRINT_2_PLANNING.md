@@ -1,6 +1,6 @@
 # Sprint 2 Planning - Core Business Features (Version 0.2.0)
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
 
 ## 🎯 Sprint Overview
 

@@ -5,11 +5,12 @@
 **Version**: 0.2.2  
 **Sprint**: 2 Complete  
 **Status**: Ready for Production Testing  
+**Deployment Platform**: Railway (Hobby Plan) ✅ Account Established  
 **Last Updated**: July 19, 2025
 
 ## 🎯 Project Overview
 
-BizFlow Platform is an AI-powered business management platform designed for small businesses. The project has successfully completed two major development sprints and is now ready for production testing.
+Continuo Platform is an AI-powered business management platform designed for small businesses. The project has successfully completed two major development sprints and is now ready for production testing.
 
 ### Development Approach
 - **Primary Developer**: Jeremy Shields
@@ -198,6 +199,28 @@ BizFlow Platform is an AI-powered business management platform designed for smal
 - **Test Coverage**: 100% backend coverage
 - **Performance**: < 150ms average response time
 - **Security**: Zero vulnerabilities detected
+
+## 🚀 Deployment Status
+
+### Railway Platform Setup
+- **Account Status**: ✅ Hobby Plan Established
+- **Deployment Issue**: [BUS-16](https://linear.app/scootr-ca/issue/BUS-16/configure-railway-deployment-for-continuo-platform-production-testing)
+- **Configuration Status**: Ready for implementation
+- **Estimated Timeline**: 1-2 weeks
+
+### Deployment Architecture
+- **PostgreSQL Database**: Railway managed service
+- **Redis Cache**: Railway managed service  
+- **API Service**: Node.js with Docker containerization
+- **Web Application**: Next.js with Docker containerization
+- **SSL/HTTPS**: Automatic certificate management
+- **Custom Domains**: Supported and configurable
+
+### Next Steps
+1. **Configure Railway Project**: Set up services and environment variables
+2. **Deploy to Staging**: Test deployment pipeline and functionality
+3. **Production Testing**: Validate all features in production environment
+4. **Go Live**: Launch for initial users and feedback collection
 - **Code Quality**: High standards maintained
 
 ## 🚀 Next Steps
@@ -343,4 +366,4 @@ BizFlow Platform is an AI-powered business management platform designed for smal
 
 ---
 
-**Conclusion**: The BizFlow Platform has successfully completed Sprint 2 with all core business features implemented. The project is now ready for production testing and deployment, with a solid foundation for future development and growth. 
+**Conclusion**: The Continuo Platform has successfully completed Sprint 2 with all core business features implemented. The project is now ready for production testing and deployment, with a solid foundation for future development and growth. 

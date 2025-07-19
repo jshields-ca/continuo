@@ -2,7 +2,7 @@
 
 ## 🎯 Vision Statement
 
-BizFlow Platform aims to be the premier AI-powered business management solution for small businesses, providing comprehensive tools for customer relationship management, accounting, project management, and business intelligence in a single, integrated platform.
+Continuo Platform aims to be the premier AI-powered business management solution for small businesses, providing comprehensive tools for customer relationship management, accounting, project management, and business intelligence in a single, integrated platform.
 
 ## 🚀 Development Philosophy
 

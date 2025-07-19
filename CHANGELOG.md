@@ -1,11 +1,77 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to the Continuo Platform will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.2.3] - 2025-07-19
+
+### Added
+- **Complete Real Data Integration**
+  - Dashboard now displays real-time statistics from GraphQL API
+  - Customer counts, account balances, and user counts are live data
+  - All dashboard pages use real data instead of hardcoded values
+  - Proper loading states and error handling for all data fetching
+
+- **Enhanced GraphQL Schema**
+  - Added `CustomerSummary` type and resolver for dashboard statistics
+  - Implemented proper GraphQL connection structure across all queries
+  - Updated pagination to use `first`/`after` instead of `limit`/`offset`
+  - Fixed data access patterns for connection types with `edges`/`node`
+
+- **Comprehensive Bug Fixes**
+  - Fixed customer creation form validation errors
+  - Resolved lead creation foreign key constraint violations
+  - Updated all GraphQL queries to use proper connection structure
+  - Fixed transaction and contact page pagination issues
+
+### Fixed
+- **GraphQL Query Structure**
+  - Updated customers page to use connection-based pagination
+  - Fixed accounts page GraphQL query structure
+  - Updated transactions page to use proper connection format
+  - Fixed contacts page query and form field structure
+
+- **Form Validation Issues**
+  - Removed invalid fields (`city`, `state`, `zipCode`, `country`) from customer creation
+  - Updated contact form to use `firstName`/`lastName` instead of `name`
+  - Fixed customer creation GraphQL validation errors
+  - Enhanced form error handling and user feedback
+
+- **Data Display Issues**
+  - Fixed dashboard customer count display (was showing 0 instead of actual count)
+  - Updated team member count to show real user count instead of hardcoded value
+  - Fixed contact display to show full names properly
+  - Enhanced loading states and skeleton screens
+
+### Changed
+- **Frontend Architecture**
+  - All pages now use real data from GraphQL API
+  - Consistent connection-based pagination across all modules
+  - Improved error handling and loading states
+  - Enhanced user experience with proper feedback
+
+- **Code Quality**
+  - Removed unnecessary debug files and improved file structure
+  - Updated .gitignore to exclude debug output files
+  - Enhanced TypeScript type safety across components
+  - Improved code organization and maintainability
+
+### Technical Improvements
+- **Performance**
+  - Optimized GraphQL queries with proper connection structure
+  - Improved data fetching efficiency
+  - Enhanced frontend rendering performance
+  - Better error boundary implementation
+
+- **User Experience**
+  - Added loading states for all data fetching operations
+  - Improved form validation and error messages
+  - Enhanced accessibility with proper focus states
+  - Better mobile responsiveness
 
 ## [0.2.2] - 2025-07-19
 

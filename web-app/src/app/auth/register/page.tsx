@@ -87,7 +87,7 @@ export default function RegisterPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center justify-center mb-4">
             <BarChart3 className="h-8 w-8 text-blue-600" />
-            <span className="ml-2 text-2xl font-bold text-gray-900">BizFlow</span>
+            <span className="ml-2 text-2xl font-bold text-gray-900">Continuo</span>
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
           <p className="text-gray-800 mt-2">Start your free trial today</p>

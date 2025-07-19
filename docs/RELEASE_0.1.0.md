@@ -1,6 +1,6 @@
 # Release Guide - Version 0.1.0
 
-> **Note**: "BizFlow" is a placeholder name and may not reflect the final chosen name for the software.
+> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
 
 ## 🎯 Sprint 1 Release - Version 0.1.0
 

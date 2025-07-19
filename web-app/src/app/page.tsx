@@ -34,7 +34,7 @@ export default function Home() {
       <header className="px-4 lg:px-6 h-16 flex items-center border-b bg-white/80 backdrop-blur-sm">
         <Link className="flex items-center justify-center" href="/">
           <BarChart3 className="h-8 w-8 text-blue-600" />
-          <span className="ml-2 text-2xl font-bold text-gray-900">BizFlow</span>
+          <span className="ml-2 text-2xl font-bold text-gray-900">Continuo</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
                   <Link className="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors" href="#features">
@@ -110,7 +110,7 @@ export default function Home() {
           <div className="container px-4 md:px-6 mx-auto">
             <div className="flex flex-col items-center space-y-4 text-center mb-16">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-gray-900">
-                Why Choose BizFlow?
+                Why Choose Continuo?
               </h2>
               <p className="max-w-[700px] text-lg text-gray-700 md:text-xl">
                 Powerful features designed to save you time and grow your business
@@ -222,7 +222,7 @@ export default function Home() {
                 What Our Customers Say
               </h2>
               <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-                Join thousands of satisfied customers who've transformed their business with BizFlow
+                Join thousands of satisfied customers who've transformed their business with Continuo
               </p>
             </div>
             
@@ -234,7 +234,7 @@ export default function Home() {
                   ))}
                 </div>
                 <p className="text-gray-700 mb-6 leading-relaxed">
-                  "BizFlow has completely transformed how we manage our business. We've saved over 25 hours per week on administrative tasks."
+                  "Continuo has completely transformed how we manage our business. We've saved over 25 hours per week on administrative tasks."
                 </p>
                 <div className="flex items-center">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -299,7 +299,7 @@ export default function Home() {
                   Ready to Transform Your Business?
                 </h2>
                 <p className="mx-auto max-w-[600px] text-blue-100 text-lg">
-                  Join 10,000+ businesses saving time and growing revenue with BizFlow
+                  Join 10,000+ businesses saving time and growing revenue with Continuo
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -339,7 +339,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t bg-white">
         <p className="text-xs text-gray-900">
-          © 2024 BizFlow. All rights reserved.
+          © 2024 Continuo. All rights reserved.
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs text-gray-900 hover:underline underline-offset-4" href="#">
