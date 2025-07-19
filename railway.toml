@@ -11,4 +11,5 @@ restartPolicyMaxRetries = 10
 
 # Build arguments for different services
 [build.args]
-SERVICE_DIR = "web-app" 
+SERVICE_DIR = "api"
+SERVICE_PORT = "4000" 

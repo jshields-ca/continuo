@@ -16,10 +16,13 @@ ENV SERVICE_DIR=${SERVICE_DIR:-web-app}
 WORKDIR /app/${SERVICE_DIR}
 
 # Install dependencies for the specific service
-RUN npm ci
+RUN npm install
 
-# Build the application
-RUN npm run build
+# For API service, generate Prisma client
+RUN if [ "$SERVICE_DIR" = "api" ]; then npx prisma generate; fi
+
+# For web service, build the application
+RUN if [ "$SERVICE_DIR" = "web-app" ]; then npm run build; fi
 
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
@@ -31,11 +34,14 @@ RUN chown -R nextjs:nodejs /app/${SERVICE_DIR}
 USER nextjs
 
 # Set environment variables
-ENV PORT=3000
 ENV NODE_ENV=production
 
+# Set port based on service
+ARG SERVICE_PORT=3000
+ENV PORT=$SERVICE_PORT
+
 # Expose port
-EXPOSE 3000
+EXPOSE $PORT
 
 # Start the application
 CMD ["npm", "start"] 
