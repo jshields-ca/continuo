@@ -140,12 +140,17 @@ export default function TransactionsPage() {
   const handleCreateTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Convert the date string to a proper ISO DateTime string
+      const dateString = newTransaction.date;
+      const dateTime = dateString ? new Date(dateString + 'T00:00:00.000Z').toISOString() : new Date().toISOString();
+      
       await createTransaction({
         variables: {
           input: {
             ...newTransaction,
             amount: parseFloat(newTransaction.amount),
-            tags: newTransaction.tags.filter(tag => tag.trim() !== ''),
+            date: dateTime,
+            tags: newTransaction.tags.filter((tag: string) => tag.trim() !== ''),
           },
         },
       });

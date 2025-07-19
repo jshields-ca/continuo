@@ -49,26 +49,18 @@ const GET_LEADS = gql`
             email
           }
           opportunities {
-            edges {
-              node {
-                id
-                title
-                amount
-                stage
-                probability
-                expectedCloseDate
-              }
-            }
+            id
+            title
+            amount
+            stage
+            probability
+            expectedCloseDate
           }
           activities {
-            edges {
-              node {
-                id
-                activityType
-                description
-                createdAt
-              }
-            }
+            id
+            activityType
+            description
+            createdAt
           }
           createdAt
           updatedAt
@@ -104,8 +96,8 @@ const GET_LEAD_SUMMARY = gql`
 `;
 
 const GET_USERS = gql`
-  query GetUsers {
-    users {
+  query GetUsers($companyId: String!) {
+    users(companyId: $companyId) {
       id
       firstName
       lastName
@@ -178,7 +170,10 @@ export default function LeadsPage() {
   });
 
   const { data: summaryData, loading: summaryLoading } = useQuery(GET_LEAD_SUMMARY);
-  const { data: usersData, loading: usersLoading } = useQuery(GET_USERS);
+  const { data: usersData, loading: usersLoading } = useQuery(GET_USERS, {
+    variables: { companyId: user?.companyId },
+    skip: !user?.companyId,
+  });
 
   // Mutations
   const [createLead, { loading: creating }] = useMutation(CREATE_LEAD, {
@@ -216,12 +211,15 @@ export default function LeadsPage() {
   const handleCreateLead = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const input = {
+        ...newLead,
+        // Only include assignedTo if a user is selected
+        ...(newLead.assignedTo && { assignedTo: newLead.assignedTo }),
+      };
+      
       await createLead({
         variables: {
-          input: {
-            ...newLead,
-            // Remove status and score as they have defaults in the backend
-          },
+          input,
         },
       });
     } catch (error) {
@@ -784,11 +782,11 @@ export default function LeadsPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {lead.opportunities.edges.length} opportunity{lead.opportunities.edges.length !== 1 ? 'ies' : 'y'}
+                            {lead.opportunities.length} {lead.opportunities.length === 1 ? 'opportunity' : 'opportunities'}
                           </div>
-                          {lead.opportunities.edges.length > 0 && (
+                          {lead.opportunities.length > 0 && (
                             <div className="text-sm text-gray-500">
-                              {formatCurrency(lead.opportunities.edges.reduce((total: number, oppEdge: any) => total + (oppEdge.node.amount || 0), 0))}
+                              {formatCurrency(lead.opportunities.reduce((total: number, opp: any) => total + (opp.amount || 0), 0))}
                             </div>
                           )}
                         </td>
