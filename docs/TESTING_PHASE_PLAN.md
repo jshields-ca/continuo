@@ -75,6 +75,7 @@
 - [ ] Conversion tracking
 
 ### 3. Accounting Module Testing (BUS-5)
+**Note**: BUS-6 (Transaction Management) and BUS-7 (Invoice Generation) are not yet implemented and are not part of this testing phase.
 
 #### Chart of Accounts
 - [ ] Account hierarchy management
@@ -84,20 +85,13 @@
 - [ ] Account balance calculations
 - [ ] Default chart creation
 
-#### Transaction Management
-- [ ] Transaction creation, editing, deletion
-- [ ] Date handling and validation
-- [ ] Amount calculations and formatting
-- [ ] Account assignment and validation
-- [ ] Transaction categorization
-- [ ] Balance reconciliation
-
-#### Financial Features
-- [ ] Account balance tracking
-- [ ] Financial reporting
-- [ ] Export functionality
-- [ ] Data integrity validation
-- [ ] Audit trail verification
+#### Chart of Accounts Features
+- [ ] Account hierarchy display
+- [ ] Account filtering and search
+- [ ] Account summary dashboard
+- [ ] Default chart creation
+- [ ] CSV export functionality
+- [ ] Account type management
 
 ### 4. Integration Testing
 

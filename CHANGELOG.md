@@ -14,16 +14,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Customer Database management with advanced filtering and search
   - Contact Management with customer relationships and role assignment
   - Lead Management with pipeline tracking and opportunity management
-  - Real-time data synchronization across all CRM modules
-  - Professional mobile-responsive UI with Tailwind CSS
+  - Real-time data synchronization across all modules
+  - Advanced filtering and search capabilities
+  - User assignment and tracking
+  - Activity tracking and audit trail
+  - Pipeline analytics and conversion tracking
+  - Mobile responsive interface
 
-- **Complete Accounting Module Frontend Implementation**
+- **Partial Accounting Module Implementation**
   - Chart of Accounts with hierarchical account management
-  - Transaction processing with CRUD operations
-  - Account balance tracking and reconciliation
-  - Financial reporting and account summaries
-  - CSV export functionality for account data
-  - Default chart of accounts creation
+  - Account creation, editing, and deletion
+  - Account type validation and hierarchy
+  - Default chart creation functionality
+  - Export functionality for account data
+  - Professional accounting interface
 
 - **Enhanced Navigation and User Experience**
   - Back to dashboard navigation buttons on all pages
@@ -71,6 +75,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Strengthened authentication flow
   - Improved input validation and sanitization
   - Enhanced multi-tenant security isolation
+
+### Pending Features
+- **Transaction Management (BUS-6)**: Income and expense recording, categorization, audit trail
+- **Invoice Generation (BUS-7)**: Invoice creation, line item management, PDF generation
+- **Payment Tracking**: Payment status and integration with customer system
+- **Financial Reporting**: Advanced financial analytics and reporting
 
 ## [0.2.1] - 2025-07-18
 

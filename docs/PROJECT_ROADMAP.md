@@ -91,12 +91,11 @@ This project leverages the power of human-AI collaboration to achieve rapid, hig
 
 #### Primary Objectives
 
-##### Invoice & Billing System (BUS-6)
-- **Invoice Creation**: Professional invoice generation
-- **Line Item Management**: Detailed product/service tracking
-- **Payment Processing**: Payment status and tracking
-- **Integration**: Seamless integration with CRM and accounting
-- **Automation**: Recurring invoices and payment reminders
+##### Complete Accounting Module (BUS-6, BUS-7)
+- **Transaction Management (BUS-6)**: Income and expense recording, categorization, audit trail
+- **Invoice Generation (BUS-7)**: Invoice creation, line item management, PDF generation
+- **Payment Tracking**: Payment status and integration with customer system
+- **Financial Reporting**: Advanced financial analytics and reporting
 
 ##### Project Management Module
 - **Task Management**: Complete task tracking and assignment
