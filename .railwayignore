@@ -62,13 +62,6 @@ Thumbs.db
 .git/
 .gitignore
 
-# Documentation
-docs/
-*.md
-
-# Scripts
-scripts/
-
 # Mobile app (not deployed to Railway)
 mobile-app/
 
