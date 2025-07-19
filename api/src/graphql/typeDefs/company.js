@@ -32,6 +32,7 @@ const companyTypeDefs = gql`
     logo: String
     status: CompanyStatus!
     plan: SubscriptionPlan!
+    subscriptionPlan: SubscriptionPlan!
     planStartedAt: DateTime
     planExpiresAt: DateTime
     users: [User!]!

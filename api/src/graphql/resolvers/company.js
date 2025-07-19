@@ -73,21 +73,21 @@ const companyResolvers = {
         where: { id: currentUser.companyId }
       });
 
-      let subscriptionEndDate = company.subscriptionEndDate;
+      let planExpiresAt = company.planExpiresAt;
       let status = company.status;
 
       // Calculate new subscription end date based on plan
       if (plan !== 'FREE') {
         const now = new Date();
-        const currentEndDate = company.subscriptionEndDate || now;
+        const currentEndDate = company.planExpiresAt || now;
         
         // Extend subscription by 30 days from current end date or now, whichever is later
         const extensionStartDate = currentEndDate > now ? currentEndDate : now;
-        subscriptionEndDate = new Date(extensionStartDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+        planExpiresAt = new Date(extensionStartDate.getTime() + 30 * 24 * 60 * 60 * 1000);
         status = 'ACTIVE';
       } else {
         // Free plan doesn't have an end date
-        subscriptionEndDate = null;
+        planExpiresAt = null;
         status = 'ACTIVE';
       }
 
@@ -95,7 +95,7 @@ const companyResolvers = {
         where: { id: currentUser.companyId },
         data: {
           plan: plan,
-          planExpiresAt: subscriptionEndDate,
+          planExpiresAt: planExpiresAt,
           status,
         },
         include: { users: true }
@@ -116,6 +116,11 @@ const companyResolvers = {
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
+    },
+
+    subscriptionPlan: (parent) => {
+      // Map the database 'plan' field to GraphQL 'subscriptionPlan'
+      return parent.plan;
     },
 
     users: async (parent, args, { prisma }) => {

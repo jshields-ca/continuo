@@ -18,7 +18,7 @@ export const REGISTER_MUTATION = gql`
           id
           name
           slug
-          plan
+          subscriptionPlan
           status
         }
       }
@@ -26,7 +26,7 @@ export const REGISTER_MUTATION = gql`
         id
         name
         slug
-        plan
+        subscriptionPlan
         status
       }
     }
@@ -50,7 +50,7 @@ export const LOGIN_MUTATION = gql`
           id
           name
           slug
-          plan
+          subscriptionPlan
           status
         }
       }
@@ -58,7 +58,7 @@ export const LOGIN_MUTATION = gql`
         id
         name
         slug
-        plan
+        subscriptionPlan
         status
       }
     }
