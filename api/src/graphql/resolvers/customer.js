@@ -1,6 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
 const { GraphQLError } = require('graphql');
-const { logger } = require('../../shared/utils/logger');
+const { PrismaClient } = require('@prisma/client');
+const logger = require('../../shared/utils/logger');
 
 const prisma = new PrismaClient();
 
@@ -16,74 +16,66 @@ const customerResolvers = {
           });
         }
 
-        // Build where clause
         const where = {
-          companyId: user.companyId,
-          ...(filter && {
-            ...(filter.search && {
-              OR: [
-                { name: { contains: filter.search, mode: 'insensitive' } },
-                { email: { contains: filter.search, mode: 'insensitive' } },
-                { phone: { contains: filter.search, mode: 'insensitive' } }
-              ]
-            }),
-            ...(filter.status && { status: filter.status }),
-            ...(filter.type && { type: filter.type }),
-            ...(filter.industry && { industry: filter.industry }),
-            ...(filter.tags && { tags: { hasSome: filter.tags } })
-          })
+          companyId: user.companyId
         };
 
-        // Get total count
-        const totalCount = await prisma.customer.count({ where });
+        if (filter) {
+          if (filter.search) {
+            where.OR = [
+              { name: { contains: filter.search, mode: 'insensitive' } },
+              { email: { contains: filter.search, mode: 'insensitive' } },
+              { phone: { contains: filter.search, mode: 'insensitive' } },
+              { industry: { contains: filter.search, mode: 'insensitive' } },
+              { notes: { contains: filter.search, mode: 'insensitive' } }
+            ];
+          }
+          if (filter.status) where.status = filter.status;
+          if (filter.type) where.type = filter.type;
+          if (filter.industry) where.industry = filter.industry;
+          if (filter.tags && filter.tags.length > 0) {
+            where.tags = { hasSome: filter.tags };
+          }
+        }
 
-        // Build pagination
-        const skip = after ? 1 : 0;
         const cursor = after ? { id: after } : undefined;
 
-        // Get customers
-        const customers = await prisma.customer.findMany({
-          where,
-          take: first,
-          skip,
-          cursor,
-          orderBy: { createdAt: 'desc' },
-          include: {
-            contacts: true
-          }
-        });
+        const [customers, totalCount] = await Promise.all([
+          prisma.customer.findMany({
+            where,
+            take: first + 1,
+            cursor,
+            orderBy: { createdAt: 'desc' },
+            include: {
+              contacts: true
+            }
+          }),
+          prisma.customer.count({ where })
+        ]);
 
-        // Build edges
-        const edges = customers.map(customer => ({
+        const hasNextPage = customers.length > first;
+        const edges = customers.slice(0, first).map(customer => ({
           node: customer,
           cursor: customer.id
         }));
 
-        // Build page info
-        const hasNextPage = customers.length === first;
-        const hasPreviousPage = !!after;
-
-        const pageInfo = {
-          hasNextPage,
-          hasPreviousPage,
-          startCursor: edges.length > 0 ? edges[0].cursor : null,
-          endCursor: edges.length > 0 ? edges[edges.length - 1].cursor : null
-        };
-
         return {
           edges,
-          pageInfo,
+          pageInfo: {
+            hasNextPage,
+            hasPreviousPage: !!after,
+            startCursor: edges[0]?.cursor,
+            endCursor: edges[edges.length - 1]?.cursor
+          },
           totalCount
         };
       } catch (error) {
         logger.error('Error fetching customers:', error);
-        throw new GraphQLError('Failed to fetch customers', {
-          extensions: { code: 'INTERNAL_SERVER_ERROR' }
-        });
+        throw error;
       }
     },
 
-    // Get single customer by ID
+    // Get single customer
     customer: async (_, { id }, context) => {
       try {
         const { user } = context;
@@ -99,7 +91,18 @@ const customerResolvers = {
             companyId: user.companyId
           },
           include: {
-            contacts: true
+            contacts: {
+              include: {
+                communications: {
+                  orderBy: { createdAt: 'desc' },
+                  take: 10
+                },
+                activities: {
+                  orderBy: { createdAt: 'desc' },
+                  take: 10
+                }
+              }
+            }
           }
         });
 
@@ -116,8 +119,8 @@ const customerResolvers = {
       }
     },
 
-    // Get contacts with pagination
-    contacts: async (_, { customerId, first = 10, after }, context) => {
+    // Get contacts with enhanced filtering
+    contacts: async (_, { customerId, first = 10, after, filter }, context) => {
       try {
         const { user } = context;
         if (!user) {
@@ -126,64 +129,96 @@ const customerResolvers = {
           });
         }
 
-        // Build where clause
         const where = {
           customer: {
             companyId: user.companyId
-          },
-          ...(customerId && { customerId })
+          }
         };
 
-        // Get total count
-        const totalCount = await prisma.contact.count({ where });
+        if (customerId) {
+          where.customerId = customerId;
+        }
 
-        // Build pagination
-        const skip = after ? 1 : 0;
+        if (filter) {
+          if (filter.search) {
+            where.OR = [
+              { firstName: { contains: filter.search, mode: 'insensitive' } },
+              { lastName: { contains: filter.search, mode: 'insensitive' } },
+              { email: { contains: filter.search, mode: 'insensitive' } },
+              { phone: { contains: filter.search, mode: 'insensitive' } },
+              { role: { contains: filter.search, mode: 'insensitive' } }
+            ];
+          }
+          if (filter.role) where.role = filter.role;
+          if (filter.isPrimary !== undefined) where.isPrimary = filter.isPrimary;
+          if (filter.hasEmail !== undefined) {
+            if (filter.hasEmail) {
+              where.email = { not: null };
+            } else {
+              where.email = null;
+            }
+          }
+          if (filter.hasPhone !== undefined) {
+            if (filter.hasPhone) {
+              where.phone = { not: null };
+            } else {
+              where.phone = null;
+            }
+          }
+          if (filter.lastContactedAfter) {
+            where.lastContactedAt = { gte: filter.lastContactedAfter };
+          }
+          if (filter.lastContactedBefore) {
+            where.lastContactedAt = { ...where.lastContactedAt, lte: filter.lastContactedBefore };
+          }
+        }
+
         const cursor = after ? { id: after } : undefined;
 
-        // Get contacts
-        const contacts = await prisma.contact.findMany({
-          where,
-          take: first,
-          skip,
-          cursor,
-          orderBy: { createdAt: 'desc' },
-          include: {
-            customer: true
-          }
-        });
+        const [contacts, totalCount] = await Promise.all([
+          prisma.contact.findMany({
+            where,
+            take: first + 1,
+            cursor,
+            orderBy: { createdAt: 'desc' },
+            include: {
+              customer: true,
+              communications: {
+                orderBy: { createdAt: 'desc' },
+                take: 5
+              },
+              activities: {
+                orderBy: { createdAt: 'desc' },
+                take: 5
+              }
+            }
+          }),
+          prisma.contact.count({ where })
+        ]);
 
-        // Build edges
-        const edges = contacts.map(contact => ({
+        const hasNextPage = contacts.length > first;
+        const edges = contacts.slice(0, first).map(contact => ({
           node: contact,
           cursor: contact.id
         }));
 
-        // Build page info
-        const hasNextPage = contacts.length === first;
-        const hasPreviousPage = !!after;
-
-        const pageInfo = {
-          hasNextPage,
-          hasPreviousPage,
-          startCursor: edges.length > 0 ? edges[0].cursor : null,
-          endCursor: edges.length > 0 ? edges[edges.length - 1].cursor : null
-        };
-
         return {
           edges,
-          pageInfo,
+          pageInfo: {
+            hasNextPage,
+            hasPreviousPage: !!after,
+            startCursor: edges[0]?.cursor,
+            endCursor: edges[edges.length - 1]?.cursor
+          },
           totalCount
         };
       } catch (error) {
         logger.error('Error fetching contacts:', error);
-        throw new GraphQLError('Failed to fetch contacts', {
-          extensions: { code: 'INTERNAL_SERVER_ERROR' }
-        });
+        throw error;
       }
     },
 
-    // Get single contact by ID
+    // Get single contact
     contact: async (_, { id }, context) => {
       try {
         const { user } = context;
@@ -201,7 +236,13 @@ const customerResolvers = {
             }
           },
           include: {
-            customer: true
+            customer: true,
+            communications: {
+              orderBy: { createdAt: 'desc' }
+            },
+            activities: {
+              orderBy: { createdAt: 'desc' }
+            }
           }
         });
 
@@ -214,6 +255,210 @@ const customerResolvers = {
         return contact;
       } catch (error) {
         logger.error('Error fetching contact:', error);
+        throw error;
+      }
+    },
+
+    // Get contact communications
+    contactCommunications: async (_, { contactId, first = 10, after, filter }, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        const where = {
+          contact: {
+            customer: {
+              companyId: user.companyId
+            }
+          }
+        };
+
+        if (contactId) {
+          where.contactId = contactId;
+        }
+
+        if (filter) {
+          if (filter.type) where.type = filter.type;
+          if (filter.direction) where.direction = filter.direction;
+          if (filter.status) where.status = filter.status;
+          if (filter.channel) where.channel = filter.channel;
+          if (filter.after || filter.before) {
+            where.createdAt = {};
+            if (filter.after) where.createdAt.gte = filter.after;
+            if (filter.before) where.createdAt.lte = filter.before;
+          }
+        }
+
+        const cursor = after ? { id: after } : undefined;
+
+        const [communications, totalCount] = await Promise.all([
+          prisma.contactCommunication.findMany({
+            where,
+            take: first + 1,
+            cursor,
+            orderBy: { createdAt: 'desc' },
+            include: {
+              contact: true
+            }
+          }),
+          prisma.contactCommunication.count({ where })
+        ]);
+
+        const hasNextPage = communications.length > first;
+        const edges = communications.slice(0, first).map(communication => ({
+          node: communication,
+          cursor: communication.id
+        }));
+
+        return {
+          edges,
+          pageInfo: {
+            hasNextPage,
+            hasPreviousPage: !!after,
+            startCursor: edges[0]?.cursor,
+            endCursor: edges[edges.length - 1]?.cursor
+          },
+          totalCount
+        };
+      } catch (error) {
+        logger.error('Error fetching contact communications:', error);
+        throw error;
+      }
+    },
+
+    // Get single contact communication
+    contactCommunication: async (_, { id }, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        const communication = await prisma.contactCommunication.findFirst({
+          where: {
+            id,
+            contact: {
+              customer: {
+                companyId: user.companyId
+              }
+            }
+          },
+          include: {
+            contact: true
+          }
+        });
+
+        if (!communication) {
+          throw new GraphQLError('Contact communication not found', {
+            extensions: { code: 'NOT_FOUND' }
+          });
+        }
+
+        return communication;
+      } catch (error) {
+        logger.error('Error fetching contact communication:', error);
+        throw error;
+      }
+    },
+
+    // Get contact activities
+    contactActivities: async (_, { contactId, first = 10, after }, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        const where = {
+          contact: {
+            customer: {
+              companyId: user.companyId
+            }
+          }
+        };
+
+        if (contactId) {
+          where.contactId = contactId;
+        }
+
+        const cursor = after ? { id: after } : undefined;
+
+        const [activities, totalCount] = await Promise.all([
+          prisma.contactActivity.findMany({
+            where,
+            take: first + 1,
+            cursor,
+            orderBy: { createdAt: 'desc' },
+            include: {
+              contact: true
+            }
+          }),
+          prisma.contactActivity.count({ where })
+        ]);
+
+        const hasNextPage = activities.length > first;
+        const edges = activities.slice(0, first).map(activity => ({
+          node: activity,
+          cursor: activity.id
+        }));
+
+        return {
+          edges,
+          pageInfo: {
+            hasNextPage,
+            hasPreviousPage: !!after,
+            startCursor: edges[0]?.cursor,
+            endCursor: edges[edges.length - 1]?.cursor
+          },
+          totalCount
+        };
+      } catch (error) {
+        logger.error('Error fetching contact activities:', error);
+        throw error;
+      }
+    },
+
+    // Get single contact activity
+    contactActivity: async (_, { id }, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        const activity = await prisma.contactActivity.findFirst({
+          where: {
+            id,
+            contact: {
+              customer: {
+                companyId: user.companyId
+              }
+            }
+          },
+          include: {
+            contact: true
+          }
+        });
+
+        if (!activity) {
+          throw new GraphQLError('Contact activity not found', {
+            extensions: { code: 'NOT_FOUND' }
+          });
+        }
+
+        return activity;
+      } catch (error) {
+        logger.error('Error fetching contact activity:', error);
         throw error;
       }
     }
@@ -393,6 +638,16 @@ const customerResolvers = {
           }
         });
 
+        // Create initial activity record
+        await prisma.contactActivity.create({
+          data: {
+            contactId: contact.id,
+            activityType: 'TASK_CREATED',
+            description: 'Contact created',
+            createdBy: user.id
+          }
+        });
+
         logger.info(`Contact created: ${contact.id} by user: ${user.id}`);
         return contact;
       } catch (error) {
@@ -452,6 +707,16 @@ const customerResolvers = {
           }
         });
 
+        // Create activity record for update
+        await prisma.contactActivity.create({
+          data: {
+            contactId: contact.id,
+            activityType: 'UPDATED',
+            description: 'Contact information updated',
+            createdBy: user.id
+          }
+        });
+
         logger.info(`Contact updated: ${contact.id} by user: ${user.id}`);
         return contact;
       } catch (error) {
@@ -494,6 +759,325 @@ const customerResolvers = {
         return true;
       } catch (error) {
         logger.error('Error deleting contact:', error);
+        throw error;
+      }
+    },
+
+    // Create contact communication
+    createContactCommunication: async (_, { input }, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        // Check if contact exists and belongs to user's company
+        const contact = await prisma.contact.findFirst({
+          where: {
+            id: input.contactId,
+            customer: {
+              companyId: user.companyId
+            }
+          }
+        });
+
+        if (!contact) {
+          throw new GraphQLError('Contact not found', {
+            extensions: { code: 'NOT_FOUND' }
+          });
+        }
+
+        const communication = await prisma.contactCommunication.create({
+          data: {
+            ...input,
+            createdBy: user.id,
+            updatedBy: user.id
+          },
+          include: {
+            contact: true
+          }
+        });
+
+        // Update contact's last contacted date
+        await prisma.contact.update({
+          where: { id: input.contactId },
+          data: {
+            lastContactedAt: new Date(),
+            updatedBy: user.id
+          }
+        });
+
+        // Create activity record
+        await prisma.contactActivity.create({
+          data: {
+            contactId: input.contactId,
+            activityType: 'CONTACTED',
+            description: `${input.type.toLowerCase()} communication created`,
+            metadata: { communicationId: communication.id },
+            createdBy: user.id
+          }
+        });
+
+        logger.info(`Contact communication created: ${communication.id} by user: ${user.id}`);
+        return communication;
+      } catch (error) {
+        logger.error('Error creating contact communication:', error);
+        throw error;
+      }
+    },
+
+    // Update contact communication
+    updateContactCommunication: async (_, { id, input }, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        // Check if communication exists and belongs to user's company
+        const existingCommunication = await prisma.contactCommunication.findFirst({
+          where: {
+            id,
+            contact: {
+              customer: {
+                companyId: user.companyId
+              }
+            }
+          }
+        });
+
+        if (!existingCommunication) {
+          throw new GraphQLError('Contact communication not found', {
+            extensions: { code: 'NOT_FOUND' }
+          });
+        }
+
+        const communication = await prisma.contactCommunication.update({
+          where: { id },
+          data: {
+            ...input,
+            updatedBy: user.id
+          },
+          include: {
+            contact: true
+          }
+        });
+
+        logger.info(`Contact communication updated: ${communication.id} by user: ${user.id}`);
+        return communication;
+      } catch (error) {
+        logger.error('Error updating contact communication:', error);
+        throw error;
+      }
+    },
+
+    // Delete contact communication
+    deleteContactCommunication: async (_, { id }, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        // Check if communication exists and belongs to user's company
+        const existingCommunication = await prisma.contactCommunication.findFirst({
+          where: {
+            id,
+            contact: {
+              customer: {
+                companyId: user.companyId
+              }
+            }
+          }
+        });
+
+        if (!existingCommunication) {
+          throw new GraphQLError('Contact communication not found', {
+            extensions: { code: 'NOT_FOUND' }
+          });
+        }
+
+        await prisma.contactCommunication.delete({
+          where: { id }
+        });
+
+        logger.info(`Contact communication deleted: ${id} by user: ${user.id}`);
+        return true;
+      } catch (error) {
+        logger.error('Error deleting contact communication:', error);
+        throw error;
+      }
+    },
+
+    // Create contact activity
+    createContactActivity: async (_, { input }, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        // Check if contact exists and belongs to user's company
+        const contact = await prisma.contact.findFirst({
+          where: {
+            id: input.contactId,
+            customer: {
+              companyId: user.companyId
+            }
+          }
+        });
+
+        if (!contact) {
+          throw new GraphQLError('Contact not found', {
+            extensions: { code: 'NOT_FOUND' }
+          });
+        }
+
+        const activity = await prisma.contactActivity.create({
+          data: {
+            ...input,
+            createdBy: user.id
+          },
+          include: {
+            contact: true
+          }
+        });
+
+        logger.info(`Contact activity created: ${activity.id} by user: ${user.id}`);
+        return activity;
+      } catch (error) {
+        logger.error('Error creating contact activity:', error);
+        throw error;
+      }
+    },
+
+    // Set primary contact
+    setPrimaryContact: async (_, { contactId }, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        // Check if contact exists and belongs to user's company
+        const contact = await prisma.contact.findFirst({
+          where: {
+            id: contactId,
+            customer: {
+              companyId: user.companyId
+            }
+          }
+        });
+
+        if (!contact) {
+          throw new GraphQLError('Contact not found', {
+            extensions: { code: 'NOT_FOUND' }
+          });
+        }
+
+        // Unset other primary contacts for this customer
+        await prisma.contact.updateMany({
+          where: {
+            customerId: contact.customerId,
+            isPrimary: true,
+            id: { not: contactId }
+          },
+          data: {
+            isPrimary: false
+          }
+        });
+
+        // Set this contact as primary
+        const updatedContact = await prisma.contact.update({
+          where: { id: contactId },
+          data: {
+            isPrimary: true,
+            updatedBy: user.id
+          },
+          include: {
+            customer: true
+          }
+        });
+
+        // Create activity record
+        await prisma.contactActivity.create({
+          data: {
+            contactId: contactId,
+            activityType: 'UPDATED',
+            description: 'Contact set as primary',
+            createdBy: user.id
+          }
+        });
+
+        logger.info(`Primary contact set: ${contactId} by user: ${user.id}`);
+        return updatedContact;
+      } catch (error) {
+        logger.error('Error setting primary contact:', error);
+        throw error;
+      }
+    },
+
+    // Update contact last contacted
+    updateContactLastContacted: async (_, { contactId }, context) => {
+      try {
+        const { user } = context;
+        if (!user) {
+          throw new GraphQLError('Authentication required', {
+            extensions: { code: 'UNAUTHENTICATED' }
+          });
+        }
+
+        // Check if contact exists and belongs to user's company
+        const contact = await prisma.contact.findFirst({
+          where: {
+            id: contactId,
+            customer: {
+              companyId: user.companyId
+            }
+          }
+        });
+
+        if (!contact) {
+          throw new GraphQLError('Contact not found', {
+            extensions: { code: 'NOT_FOUND' }
+          });
+        }
+
+        const updatedContact = await prisma.contact.update({
+          where: { id: contactId },
+          data: {
+            lastContactedAt: new Date(),
+            updatedBy: user.id
+          },
+          include: {
+            customer: true
+          }
+        });
+
+        // Create activity record
+        await prisma.contactActivity.create({
+          data: {
+            contactId: contactId,
+            activityType: 'CONTACTED',
+            description: 'Contact marked as contacted',
+            createdBy: user.id
+          }
+        });
+
+        logger.info(`Contact last contacted updated: ${contactId} by user: ${user.id}`);
+        return updatedContact;
+      } catch (error) {
+        logger.error('Error updating contact last contacted:', error);
         throw error;
       }
     },
