@@ -2,8 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UserInputError, AuthenticationError } = require('apollo-server-express');
 const { validateEmail, validatePassword } = require('../../shared/utils/validation');
-const { generateSlug } = require('../../shared/utils/helpers');
 const crypto = require('crypto');
+const logger = require('../../shared/utils/logger');
 
 const authResolvers = {
   Query: {
@@ -28,6 +28,7 @@ const authResolvers = {
       await prisma.user.update({
         where: { id: user.id },
         data: {
+          emailVerified: true,
           emailVerifiedAt: new Date(),
           emailVerificationToken: null,
           status: 'ACTIVE'
@@ -77,9 +78,9 @@ const authResolvers = {
             name: companyName,
             slug: companySlug,
             status: 'TRIAL',
-            subscriptionPlan: 'FREE',
-            subscriptionStartDate: new Date(),
-            subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days trial
+            plan: 'FREE',
+            planStartedAt: new Date(),
+            planExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days trial
           }
         });
 
@@ -111,11 +112,14 @@ const authResolvers = {
           companyId: result.user.companyId 
         },
         process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES_IN }
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
       );
 
       // TODO: Send verification email
-      console.log(`Verification token for ${email}: ${emailVerificationToken}`);
+      // For now, log to console in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Verification token for ${email}: ${emailVerificationToken}`);
+      }
 
       return {
         token,
@@ -163,7 +167,7 @@ const authResolvers = {
           companyId: user.companyId 
         },
         process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES_IN }
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
       );
 
       return {
@@ -202,7 +206,10 @@ const authResolvers = {
       });
 
       // TODO: Send password reset email
-      console.log(`Password reset token for ${email}: ${resetToken}`);
+      // For now, log to console in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Password reset token for ${email}: ${resetToken}`);
+      }
 
       return true;
     },
@@ -287,7 +294,10 @@ const authResolvers = {
       });
 
       // TODO: Send verification email
-      console.log(`New verification token for ${userRecord.email}: ${emailVerificationToken}`);
+      // For now, log to console in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`New verification token for ${userRecord.email}: ${emailVerificationToken}`);
+      }
 
       return true;
     },
@@ -295,6 +305,14 @@ const authResolvers = {
 
   Subscription: {},
 };
+
+// Helper function to generate slug from name
+function generateSlug(name) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
 
 // Helper function to generate unique company slug
 async function generateUniqueSlug(name, prisma) {

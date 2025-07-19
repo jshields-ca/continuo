@@ -24,3 +24,39 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Improved accessibility for better contrast */
+.text-gray-600 {
+  color: #1f2937 !important; /* Much darker gray for better contrast */
+}
+
+.text-gray-500 {
+  color: #374151 !important; /* Darker gray for better contrast */
+}
+
+.text-gray-800 {
+  color: #111827 !important; /* Very dark gray for maximum contrast */
+}
+
+/* Input field improvements for better contrast */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+textarea,
+select {
+  color: #111827 !important; /* Very dark text */
+  background-color: #ffffff !important; /* White background */
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="tel"]::placeholder,
+input[type="url"]::placeholder,
+input[type="search"]::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important; /* Medium gray for placeholders */
+}

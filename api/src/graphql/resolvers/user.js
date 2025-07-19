@@ -1,6 +1,7 @@
 const { UserInputError, ForbiddenError } = require('apollo-server-express');
 const { validatePersonName, validatePhone } = require('../../shared/utils/validation');
 const { formatName } = require('../../shared/utils/helpers');
+const logger = require('../../shared/utils/logger');
 
 const userResolvers = {
   Query: {
@@ -167,7 +168,10 @@ const userResolvers = {
       });
 
       // TODO: Send invitation email with temporary password
-      console.log(`Temporary password for ${input.email}: ${tempPassword}`);
+      // For now, log to console in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Temporary password for ${input.email}: ${tempPassword}`);
+      }
 
       return newUser;
     },

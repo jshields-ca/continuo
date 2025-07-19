@@ -164,11 +164,11 @@ export default function DashboardPage() {
                       <dt className="text-sm font-medium text-gray-500">Plan</dt>
                       <dd className="mt-1 text-sm text-gray-900">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          user.company.subscriptionPlan === 'FREE' 
+                          user.company.plan === 'FREE' 
                             ? 'bg-gray-100 text-gray-800'
                             : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {user.company.subscriptionPlan}
+                          {user.company.plan}
                         </span>
                       </dd>
                     </div>

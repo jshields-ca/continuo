@@ -39,6 +39,21 @@ enum SubscriptionPlan {
   ENTERPRISE
 }
 
+enum CustomerStatus {
+  ACTIVE
+  INACTIVE
+  PROSPECT
+  LEAD
+  CUSTOMER
+  FORMER
+}
+
+enum CustomerType {
+  INDIVIDUAL
+  COMPANY
+  ORGANIZATION
+}
+
 model User {
   id          String    @id @default(cuid())
   email       String    @unique
@@ -52,6 +67,7 @@ model User {
   timezone    String    @default("UTC")
   lastLoginAt DateTime?
   emailVerified Boolean @default(false)
+  emailVerifiedAt DateTime?
   emailVerificationToken String?
   resetPasswordToken String?
   resetPasswordExpires DateTime?
@@ -74,6 +90,7 @@ model User {
 model Company {
   id          String        @id @default(cuid())
   name        String
+  slug        String        @unique
   email       String?
   phone       String?
   website     String?
@@ -105,6 +122,7 @@ model Company {
   
   // Relationships
   users       User[]
+  customers   Customer[]
   
   // Audit fields
   createdAt   DateTime      @default(now())
@@ -113,6 +131,66 @@ model Company {
   updatedBy   String?
 
   @@map("companies")
+}
+
+model Customer {
+  id          String        @id @default(cuid())
+  companyId   String
+  name        String
+  type        CustomerType  @default(COMPANY)
+  status      CustomerStatus @default(ACTIVE)
+  email       String?
+  phone       String?
+  website     String?
+  
+  // Address information
+  address     Json?         // JSON object for address details
+  
+  // Business information
+  industry    String?
+  size        String?       // "1-10", "11-50", "51-200", "201-500", "500+"
+  annualRevenue Decimal?    @db.Decimal(15, 2)
+  
+  // Additional information
+  notes       String?
+  tags        String[]      // Array of tags for categorization
+  
+  // Relationships
+  company     Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contacts    Contact[]
+  
+  // Audit fields
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  createdBy   String?
+  updatedBy   String?
+
+  @@map("customers")
+}
+
+model Contact {
+  id          String    @id @default(cuid())
+  customerId  String
+  firstName   String
+  lastName    String
+  email       String?
+  phone       String?
+  role        String?       // "CEO", "Manager", "Contact", etc.
+  isPrimary   Boolean       @default(false)
+  
+  // Additional information
+  notes       String?
+  
+  // Relationships
+  customer    Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  // Audit fields
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  createdBy   String?
+  updatedBy   String?
+
+  @@map("contacts")
 }
 
 model AuditLog {

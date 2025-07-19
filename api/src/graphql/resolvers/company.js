@@ -1,5 +1,6 @@
 const { UserInputError, ForbiddenError } = require('apollo-server-express');
 const { validateCompanyName, validateUrl, validatePhone } = require('../../shared/utils/validation');
+const logger = require('../../shared/utils/logger');
 
 const companyResolvers = {
   Query: {
@@ -93,8 +94,8 @@ const companyResolvers = {
       return await prisma.company.update({
         where: { id: currentUser.companyId },
         data: {
-          subscriptionPlan: plan,
-          subscriptionEndDate,
+          plan: plan,
+          planExpiresAt: subscriptionEndDate,
           status,
         },
         include: { users: true }
@@ -106,6 +107,17 @@ const companyResolvers = {
 
   // Type resolvers
   Company: {
+    slug: (parent) => {
+      // Generate slug from name if not already set
+      if (parent.slug) {
+        return parent.slug;
+      }
+      return parent.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+    },
+
     users: async (parent, args, { prisma }) => {
       return await prisma.user.findMany({
         where: { companyId: parent.id },

@@ -25,6 +25,11 @@ const authLink = setContext((_, { headers }) => {
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path }) => {
+      // Don't log authentication errors for the 'me' query as they're expected
+      if (path && path[0] === 'me' && message.includes('must be logged in')) {
+        return;
+      }
+      
       console.error(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
@@ -35,7 +40,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
     console.error(`[Network error]: ${networkError}`);
     
     // Handle authentication errors
-    if (networkError.statusCode === 401) {
+    if ('statusCode' in networkError && networkError.statusCode === 401) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('authToken');
         // Redirect to login

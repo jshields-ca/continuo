@@ -18,7 +18,7 @@ export const REGISTER_MUTATION = gql`
           id
           name
           slug
-          subscriptionPlan
+          plan
           status
         }
       }
@@ -26,7 +26,7 @@ export const REGISTER_MUTATION = gql`
         id
         name
         slug
-        subscriptionPlan
+        plan
         status
       }
     }
@@ -50,7 +50,7 @@ export const LOGIN_MUTATION = gql`
           id
           name
           slug
-          subscriptionPlan
+          plan
           status
         }
       }
@@ -58,7 +58,7 @@ export const LOGIN_MUTATION = gql`
         id
         name
         slug
-        subscriptionPlan
+        plan
         status
       }
     }
@@ -182,9 +182,9 @@ export const UPDATE_SUBSCRIPTION_MUTATION = gql`
   mutation UpdateSubscription($plan: SubscriptionPlan!) {
     updateSubscription(plan: $plan) {
       id
-      subscriptionPlan
-      subscriptionStartDate
-      subscriptionEndDate
+      plan
+      planStartedAt
+      planExpiresAt
       status
       updatedAt
     }

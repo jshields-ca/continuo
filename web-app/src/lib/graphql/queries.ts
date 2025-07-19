@@ -18,7 +18,7 @@ export const ME_QUERY = gql`
         id
         name
         slug
-        subscriptionPlan
+        plan
         status
       }
       lastLoginAt
@@ -88,9 +88,9 @@ export const GET_MY_COMPANY = gql`
       description
       logo
       status
-      subscriptionPlan
-      subscriptionStartDate
-      subscriptionEndDate
+      plan
+      planStartedAt
+      planExpiresAt
       userCount
       createdAt
       updatedAt
@@ -116,9 +116,9 @@ export const GET_COMPANY = gql`
       description
       logo
       status
-      subscriptionPlan
-      subscriptionStartDate
-      subscriptionEndDate
+      plan
+      planStartedAt
+      planExpiresAt
       users {
         id
         firstName

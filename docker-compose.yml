@@ -1,4 +1,4 @@
-version: '3.8'
+# Docker Compose configuration for BizFlow Platform
 
 services:
   # PostgreSQL Database
@@ -40,6 +40,7 @@ services:
       DATABASE_URL: postgresql://bizflow:bizflow_password@postgres:5432/bizflow_dev
       REDIS_URL: redis://redis:6379
       JWT_SECRET: dev_jwt_secret_key_change_in_production
+      JWT_EXPIRES_IN: 7d
       PORT: 4000
     ports:
       - "4000:4000"

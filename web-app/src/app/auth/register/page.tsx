@@ -90,7 +90,7 @@ export default function RegisterPage() {
             <span className="ml-2 text-2xl font-bold text-gray-900">BizFlow</span>
           </Link>
           <h1 className="text-2xl font-bold text-gray-900">Create your account</h1>
-          <p className="text-gray-600 mt-2">Start your free trial today</p>
+          <p className="text-gray-800 mt-2">Start your free trial today</p>
         </div>
 
         {/* Registration Form */}
@@ -99,7 +99,7 @@ export default function RegisterPage() {
             {/* Name Fields */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-900 mb-2">
                   First name
                 </label>
                 <div className="relative">
@@ -111,13 +111,13 @@ export default function RegisterPage() {
                     required
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
                     placeholder="John"
                   />
                 </div>
               </div>
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-900 mb-2">
                   Last name
                 </label>
                 <div className="relative">
@@ -129,7 +129,7 @@ export default function RegisterPage() {
                     required
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
                     placeholder="Doe"
                   />
                 </div>
@@ -138,7 +138,7 @@ export default function RegisterPage() {
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">
                 Email address
               </label>
               <div className="relative">
@@ -151,7 +151,7 @@ export default function RegisterPage() {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
                   placeholder="john@company.com"
                 />
               </div>
@@ -159,7 +159,7 @@ export default function RegisterPage() {
 
             {/* Company Name Field */}
             <div>
-              <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="companyName" className="block text-sm font-medium text-gray-900 mb-2">
                 Company name
               </label>
               <div className="relative">
@@ -171,7 +171,7 @@ export default function RegisterPage() {
                   required
                   value={formData.companyName}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
                   placeholder="Your Company Inc."
                 />
               </div>
@@ -180,7 +180,7 @@ export default function RegisterPage() {
             {/* Password Fields */}
             <div className="grid grid-cols-1 gap-4">
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
                   Password
                 </label>
                 <div className="relative">
@@ -192,7 +192,7 @@ export default function RegisterPage() {
                     required
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
                     placeholder="Create a strong password"
                   />
                   <button
@@ -205,7 +205,7 @@ export default function RegisterPage() {
                 </div>
               </div>
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-900 mb-2">
                   Confirm password
                 </label>
                 <div className="relative">
@@ -217,7 +217,7 @@ export default function RegisterPage() {
                     required
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
                     placeholder="Confirm your password"
                   />
                 </div>
@@ -233,7 +233,7 @@ export default function RegisterPage() {
                 required
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
+              <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
                 I agree to the{' '}
                 <Link href="/terms" className="text-blue-600 hover:text-blue-500">
                   Terms and Conditions
@@ -271,7 +271,7 @@ export default function RegisterPage() {
 
           {/* Sign in link */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-800">
               Already have an account?{' '}
               <Link href="/auth/login" className="text-blue-600 hover:text-blue-500 font-medium">
                 Sign in

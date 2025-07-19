@@ -2,6 +2,7 @@ const { DateTimeResolver, JSONResolver } = require('graphql-scalars');
 const { authResolvers } = require('./auth');
 const { userResolvers } = require('./user');
 const { companyResolvers } = require('./company');
+const customerResolvers = require('./customer');
 
 const resolvers = {
   DateTime: DateTimeResolver,
@@ -11,12 +12,14 @@ const resolvers = {
     ...authResolvers.Query,
     ...userResolvers.Query,
     ...companyResolvers.Query,
+    ...customerResolvers.Query,
   },
   
   Mutation: {
     ...authResolvers.Mutation,
     ...userResolvers.Mutation,
     ...companyResolvers.Mutation,
+    ...customerResolvers.Mutation,
   },
   
   Subscription: {

@@ -5,6 +5,13 @@ const baseTypes = gql`
   scalar DateTime
   scalar JSON
   
+  type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+  }
+  
   type Query {
     _empty: String
   }
@@ -22,6 +29,7 @@ const baseTypes = gql`
 const { userTypeDefs } = require('./user');
 const { companyTypeDefs } = require('./company');
 const { authTypeDefs } = require('./auth');
+const customerTypeDefs = require('./customer');
 
 // Combine all type definitions
 const typeDefs = [
@@ -29,6 +37,7 @@ const typeDefs = [
   authTypeDefs,
   userTypeDefs,
   companyTypeDefs,
+  customerTypeDefs,
 ];
 
 module.exports = { typeDefs };

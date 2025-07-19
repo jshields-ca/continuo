@@ -51,9 +51,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   const { data, loading, refetch } = useQuery(ME_QUERY, {
-    skip: !isInitialized,
+    skip: !isInitialized || (typeof window !== 'undefined' && !localStorage.getItem('authToken')),
     errorPolicy: 'ignore'
   });
 
@@ -62,10 +63,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [logoutMutation] = useMutation(LOGOUT_MUTATION);
 
   useEffect(() => {
+    // Mark as client-side
+    setIsClient(true);
+    
     // Check if user is logged in on app start
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      setIsInitialized(true);
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        setIsInitialized(true);
+      } else {
+        setIsInitialized(true);
+      }
     } else {
       setIsInitialized(true);
     }
@@ -144,7 +152,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const value = {
     user,
-    loading: loading && isInitialized,
+    loading: (loading && isInitialized) || !isClient,
     login,
     register,
     logout,
