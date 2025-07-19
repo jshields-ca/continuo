@@ -19,8 +19,10 @@ import {
   Eye,
   Edit,
   Archive,
-  MoreHorizontal
+  MoreHorizontal,
+  ArrowLeft
 } from 'lucide-react';
+import Link from 'next/link';
 
 // GraphQL Queries
 const GET_ACCOUNTS = gql`
@@ -214,9 +216,18 @@ export default function AccountsPage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <BarChart3 className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-2xl font-bold text-gray-900">Chart of Accounts</span>
+            <div className="flex items-center space-x-4">
+              <Link
+                href="/dashboard"
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back to Dashboard
+              </Link>
+              <div className="flex items-center">
+                <BarChart3 className="h-8 w-8 text-blue-600" />
+                <span className="ml-2 text-2xl font-bold text-gray-900">Chart of Accounts</span>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <button

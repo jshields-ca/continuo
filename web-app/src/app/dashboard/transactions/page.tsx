@@ -18,8 +18,11 @@ import {
   Edit,
   Trash2,
   Calendar,
-  Receipt
+  Receipt,
+  MoreHorizontal,
+  ArrowLeft
 } from 'lucide-react';
+import Link from 'next/link';
 
 // GraphQL Queries
 const GET_TRANSACTIONS = gql`
@@ -34,7 +37,6 @@ const GET_TRANSACTIONS = gql`
       category
       tags
       date
-      reconciled
       account {
         id
         name
@@ -189,9 +191,18 @@ export default function TransactionsPage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <Receipt className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-2xl font-bold text-gray-900">Transactions</span>
+            <div className="flex items-center space-x-4">
+              <Link
+                href="/dashboard"
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back to Dashboard
+              </Link>
+              <div className="flex items-center">
+                <Receipt className="h-8 w-8 text-blue-600" />
+                <span className="ml-2 text-2xl font-bold text-gray-900">Transactions</span>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <button
