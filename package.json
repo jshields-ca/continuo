@@ -1,6 +1,6 @@
 {
   "name": "bizflow-platform",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "AI-powered business management platform for small businesses",
   "main": "index.js",
   "scripts": {

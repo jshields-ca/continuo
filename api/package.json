@@ -49,7 +49,8 @@
     "nodemailer": "^6.9.7",
     "redis": "^4.6.11",
     "winston": "^3.11.0",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "axios": "^1.6.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.4",

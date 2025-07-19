@@ -3,6 +3,7 @@ const { authResolvers } = require('./auth');
 const { userResolvers } = require('./user');
 const { companyResolvers } = require('./company');
 const customerResolvers = require('./customer');
+const leadResolvers = require('./lead');
 
 const resolvers = {
   DateTime: DateTimeResolver,
@@ -13,6 +14,7 @@ const resolvers = {
     ...userResolvers.Query,
     ...companyResolvers.Query,
     ...customerResolvers.Query,
+    ...leadResolvers.Query,
   },
   
   Mutation: {
@@ -20,6 +22,7 @@ const resolvers = {
     ...userResolvers.Mutation,
     ...companyResolvers.Mutation,
     ...customerResolvers.Mutation,
+    ...leadResolvers.Mutation,
   },
   
   Subscription: {

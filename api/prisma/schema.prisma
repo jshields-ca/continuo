@@ -78,6 +78,9 @@ model User {
   companyId   String
   company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   
+  // Lead assignments
+  assignedLeads Lead[] @relation("AssignedLeads")
+  
   // Audit fields
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -123,6 +126,7 @@ model Company {
   // Relationships
   users       User[]
   customers   Customer[]
+  leads       Lead[]
   
   // Audit fields
   createdAt   DateTime      @default(now())
@@ -244,6 +248,102 @@ model ContactActivity {
   @@map("contact_activities")
 }
 
+// Lead Management System
+model Lead {
+  id          String    @id @default(cuid())
+  companyId   String
+  name        String
+  email       String
+  phone       String?
+  website     String?
+  
+  // Lead details
+  source      LeadSource   @default(WEBSITE)
+  status      LeadStatus   @default(NEW)
+  score       Int          @default(0) // Lead scoring (0-100)
+  
+  // Business information
+  company     String?      // Company name if different from contact name
+  industry    String?
+  size        String?      // "1-10", "11-50", "51-200", "201-500", "500+"
+  annualRevenue Decimal?   @db.Decimal(15, 2)
+  
+  // Assignment and tracking
+  assignedTo  String?      // User ID
+  assignedAt  DateTime?
+  lastContactedAt DateTime?
+  
+  // Additional information
+  notes       String?
+  tags        String[]     // Array of tags for categorization
+  
+  // Conversion tracking
+  convertedToCustomerId String? // Customer ID if converted
+  convertedAt DateTime?
+  
+  // Relationships
+  company_ref Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  assignedUser User?        @relation("AssignedLeads", fields: [assignedTo], references: [id])
+  opportunities Opportunity[]
+  activities   LeadActivity[]
+  
+  // Audit fields
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  createdBy   String?
+  updatedBy   String?
+
+  @@map("leads")
+}
+
+// Lead opportunities (sales pipeline)
+model Opportunity {
+  id          String    @id @default(cuid())
+  leadId      String
+  title       String
+  description String?
+  amount      Decimal?  @db.Decimal(15, 2)
+  stage       OpportunityStage @default(PROSPECTING)
+  probability Int       @default(10) // 0-100 percentage
+  
+  // Timeline
+  expectedCloseDate DateTime?
+  actualCloseDate DateTime?
+  
+  // Additional information
+  notes       String?
+  tags        String[]
+  
+  // Relationships
+  lead        Lead        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  // Audit fields
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  createdBy   String?
+  updatedBy   String?
+
+  @@map("opportunities")
+}
+
+// Lead activity tracking
+model LeadActivity {
+  id          String    @id @default(cuid())
+  leadId      String
+  activityType LeadActivityType
+  description String?
+  metadata    Json?     // Additional activity data
+  
+  // Relationships
+  lead        Lead        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  // Audit fields
+  createdAt   DateTime    @default(now())
+  createdBy   String?
+
+  @@map("lead_activities")
+}
+
 model AuditLog {
   id        String   @id @default(cuid())
   userId    String
@@ -309,5 +409,57 @@ enum ActivityType {
   NOTE_ADDED
   TASK_CREATED
   TASK_COMPLETED
+  OTHER
+}
+
+enum LeadSource {
+  WEBSITE
+  REFERRAL
+  SOCIAL_MEDIA
+  EMAIL_CAMPAIGN
+  PHONE_CALL
+  TRADE_SHOW
+  CONFERENCE
+  PARTNER
+  COLD_OUTREACH
+  ADVERTISING
+  SEARCH_ENGINE
+  OTHER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  NEGOTIATION
+  CONVERTED
+  LOST
+  DISQUALIFIED
+}
+
+enum OpportunityStage {
+  PROSPECTING
+  QUALIFICATION
+  PROPOSAL
+  NEGOTIATION
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum LeadActivityType {
+  CREATED
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  MEETING_SCHEDULED
+  MEETING_COMPLETED
+  FOLLOW_UP
+  CONVERTED
+  LOST
+  REASSIGNED
+  NOTE_ADDED
+  EMAIL_SENT
+  PHONE_CALL
   OTHER
 }
