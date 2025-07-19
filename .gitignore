@@ -220,4 +220,23 @@ bundle-analyzer-report.html
 # Security
 .secrets
 secrets.json
-secrets.yml 
+secrets.yml
+
+# Test files (keep test files but ignore test outputs)
+# api/tests/*.test.js - Keep test files
+api/tests/*.test.output
+api/tests/coverage/
+api/tests/results/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Debug files
+.debug
+debug.log
+
+# Local development files
+.local
+local.* 
