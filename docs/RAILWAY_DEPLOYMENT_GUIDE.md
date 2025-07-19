@@ -55,6 +55,7 @@ Railway Services:
    - Service Name: `continuo-api`
    - Source: Your GitHub repo
    - Root Directory: `api`
+   - **Important**: Make sure to set the root directory to `api` in the service settings
 
 2. **Set Environment Variables**
    ```
@@ -80,6 +81,7 @@ Railway Services:
    - Service Name: `continuo-web`
    - Source: Your GitHub repo
    - Root Directory: `web-app`
+   - **Important**: Make sure to set the root directory to `web-app` in the service settings
 
 2. **Set Environment Variables**
    ```
@@ -196,16 +198,22 @@ Railway Services:
    - Verify all dependencies in package.json
    - Check build logs in Railway dashboard
 
-2. **Database Connection Issues**
+2. **"Dockerfile does not exist" Error**
+   - **Solution**: Make sure to set the correct root directory for each service
+   - API service: Root directory = `api`
+   - Web service: Root directory = `web-app`
+   - The Dockerfiles are in the subdirectories, not the root
+
+3. **Database Connection Issues**
    - Verify DATABASE_URL format
    - Check database service is running
    - Run migrations manually if needed
 
-3. **CORS Errors**
+4. **CORS Errors**
    - Update CORS_ORIGIN to match your domain
    - Check API and web service URLs
 
-4. **Environment Variables**
+5. **Environment Variables**
    - Verify all required variables are set
    - Check variable names match code
    - Restart services after variable changes
