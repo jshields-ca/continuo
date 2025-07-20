@@ -47,11 +47,28 @@ async function startServer() {
   
   // Health check endpoint
   app.get('/health', (req, res) => {
-    res.status(200).json({
-      status: 'healthy',
-      timestamp: new Date().toISOString(),
-      version: process.env.npm_package_version || '0.1.0',
-    });
+    try {
+      const healthData = {
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        version: process.env.npm_package_version || '0.2.3',
+        environment: process.env.NODE_ENV || 'development',
+        database: process.env.DATABASE_URL ? 'configured' : 'not configured',
+        cors: process.env.CORS_ORIGIN || 'default',
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+      };
+      
+      logger.info('Health check requested:', healthData);
+      res.status(200).json(healthData);
+    } catch (error) {
+      logger.error('Health check error:', error);
+      res.status(500).json({
+        status: 'error',
+        message: error.message,
+        timestamp: new Date().toISOString(),
+      });
+    }
   });
   
   // Create Apollo Server
