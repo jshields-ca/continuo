@@ -22,8 +22,8 @@ FROM node:18-alpine AS runner
 
 WORKDIR /app
 
-# Copy only the necessary files from builder
-COPY --from=builder /app/web-app/.next/standalone ./.next/standalone
+# Copy the standalone output to the root of the image
+COPY --from=builder /app/web-app/.next/standalone/ ./
 COPY --from=builder /app/web-app/.next/static ./.next/static
 COPY --from=builder /app/web-app/public ./public
 COPY --from=builder /app/web-app/package.json ./package.json
@@ -32,4 +32,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV NODE_ENV=production
 
-CMD ["node", ".next/standalone/web-app/server.js"] 
+CMD ["node", "server.js"] 
