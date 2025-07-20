@@ -3,14 +3,18 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
-RUN npm ci
+# Copy root package files and web-app package files
+COPY ../../package*.json ./
+COPY ../../web-app/package*.json ./web-app/
 
-# Copy source code
-COPY . .
+# Install all dependencies using workspaces
+RUN npm install
 
-# Build the application
+# Copy the web-app source code
+COPY ../../web-app ./web-app
+
+# Build the Next.js app
+WORKDIR /app/web-app
 RUN npm run build
 
 # ---- Production Stage ----
@@ -18,22 +22,14 @@ FROM node:18-alpine AS runner
 
 WORKDIR /app
 
-# Copy only necessary files from builder
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/.next/ ./.next/
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/next.config.* ./
-COPY --from=builder /app/server.js ./
-
-# Create non-root user
-RUN addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs
-
-USER nextjs
+# Copy only the necessary files from builder
+COPY --from=builder /app/web-app/.next/standalone ./.next/standalone
+COPY --from=builder /app/web-app/.next/static ./.next/static
+COPY --from=builder /app/web-app/public ./public
+COPY --from=builder /app/web-app/package.json ./package.json
 
 EXPOSE 3000
-ENV PORT 3000
-ENV NODE_ENV production
+ENV PORT=3000
+ENV NODE_ENV=production
 
-CMD ["node", ".next/standalone/server.js"] 
+CMD ["node", ".next/standalone/web-app/server.js"] 
