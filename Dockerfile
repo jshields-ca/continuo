@@ -1,12 +1,12 @@
 # Root Dockerfile for Railway deployment
 # This file helps Railway understand the monorepo structure
 
-FROM node:18-alpine
+FROM node:18-slim
 
 WORKDIR /app
 
-# Install required SSL libraries for Prisma
-RUN apk add --no-cache openssl libssl1.1
+# Install required SSL libraries and dependencies for Prisma
+RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 # Copy the entire repository
 COPY . .
