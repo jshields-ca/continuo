@@ -5,6 +5,7 @@
 **Project**: Continuo Platform  
 **Platform**: Railway (Hobby Plan)  
 **Repository**: https://github.com/jshields-ca/Continuo  
+**Production Domain**: https://continuo.pro  
 **Status**: In Progress - API Service Deployment
 
 ## 📋 **Current Setup Status**
@@ -15,6 +16,7 @@
    - ✅ Root directory: `web-app`
    - ✅ Build: Successful
    - ✅ Status: Deployed and running
+   - 🔗 **URL**: https://continuo-web-production.up.railway.app
 
 2. **PostgreSQL Database** (`continuo-db`)
    - ✅ Auto-configured by Railway
@@ -29,11 +31,13 @@
 ### 🔄 **In Progress**
 4. **API Service** (`continuo-api`)
    - 🔄 Currently deploying
-   - 🔄 Using root Dockerfile with `SERVICE_DIR=api`
-   - 🔄 Fixed missing dependencies (`compression`, `morgan`)
-   - 🔄 Status: Auto-redeploying after dependency fix
+   - 🔄 Root directory: `api`
+   - ✅ **FIXED**: npm workspace dependency issue
+   - ✅ **FIXED**: Missing compression and morgan modules
+   - 🔄 Auto-redeploying after Dockerfile fix
+   - 🔗 **URL**: https://continuo-api-production.up.railway.app (pending)
 
-## 🏗️ **Architecture**
+## 🏗️ **Architecture Overview**
 
 ```
 Railway Project: Continuo
@@ -43,82 +47,99 @@ Railway Project: Continuo
 └── continuo-redis (Redis Cache) ✅
 ```
 
+## 🌐 **Domain Configuration**
+
+### **Production Domain**
+- **Domain**: https://continuo.pro
+- **Status**: Acquired and configured
+- **SSL**: Will be auto-configured by Railway
+- **Routing**: To be configured after API deployment
+
+### **Service URLs**
+- **Web App**: https://continuo-web-production.up.railway.app
+- **API**: https://continuo-api-production.up.railway.app (pending)
+- **Production**: https://continuo.pro (pending domain routing)
+
 ## 🔧 **Technical Configuration**
 
 ### **Docker Setup**
-- **Root Dockerfile**: Handles both API and web services
-- **Service Routing**: Uses `SERVICE_DIR` build argument
-- **Port Configuration**: API (4000), Web (3000)
+- **Root Dockerfile**: Handles monorepo with npm workspaces
+- **Build Args**: `SERVICE_DIR` and `SERVICE_PORT`
+- **Workspace Support**: Dependencies installed at root level
+- **Multi-stage**: Optimized for production deployment
 
-### **Build Process**
-- **Web Service**: Next.js build with standalone output
-- **API Service**: Node.js with Prisma client generation
-- **Dependencies**: Auto-installed during build
+### **Environment Variables**
+- **Database**: Auto-configured by Railway
+- **Redis**: Auto-configured by Railway
+- **API**: To be configured after deployment
+- **Web**: To be configured after deployment
 
-## 📊 **Current Issues & Resolutions**
+## ✅ **Resolved Issues**
 
-### **Resolved Issues**
-1. **Repository Rename**: `get-organized` → `Continuo` ✅
-2. **Build Errors**: ESLint/TypeScript errors fixed ✅
-3. **Dockerfile Issues**: Root directory detection fixed ✅
-4. **Dependency Conflicts**: Package-lock.json regenerated ✅
-5. **Missing Dependencies**: Added `compression` and `morgan` ✅
+1. **Repository Rename**: `get-organized` → `Continuo`
+2. **Build Errors**: Fixed Dockerfile configuration
+3. **Missing Dependencies**: Added compression and morgan modules
+4. **npm Workspace Issue**: Fixed dependency installation at root level
+5. **Domain Acquisition**: Secured continuo.pro domain
 
-### **Current Issue**
-- **API Service**: Missing dependencies causing startup failure
-- **Status**: Fixed and auto-redeploying
+## 🔄 **Current Fix Applied**
 
-## 🎯 **Next Steps**
+### **Issue**: API service failing with "Cannot find module 'compression'"
+- **Root Cause**: Dockerfile not handling npm workspace structure correctly
+- **Solution**: Updated Dockerfile to install dependencies at root level first
+- **Status**: Pushed fix, Railway auto-redeploying
+
+## 📋 **Next Steps**
 
 ### **Immediate (After API Deployment)**
-1. **Set Environment Variables** for API service
-2. **Run Database Migrations**
-3. **Test Health Endpoints**
-4. **Connect Web Service to API**
+1. ✅ Verify API service health checks pass
+2. 🔄 Set environment variables for API service
+3. 🔄 Run database migrations on production database
+4. 🔄 Test API endpoints and GraphQL queries
+5. 🔄 Configure web service to connect to API
 
-### **Environment Variables Needed**
-```
-API Service:
-- NODE_ENV=production
-- DATABASE_URL=${{continuo-db.DATABASE_URL}}
-- REDIS_URL=${{continuo-redis.REDIS_URL}}
-- JWT_SECRET=your-super-secure-jwt-secret-here
-- PORT=4000
-- CORS_ORIGIN=https://your-web-domain.railway.app
-- GRAPHQL_PLAYGROUND=false
-- RATE_LIMIT_WINDOW_MS=900000
-- RATE_LIMIT_MAX_REQUESTS=100
-- LOG_FORMAT=combined
+### **Domain Configuration**
+1. 🔄 Configure Railway domain routing to continuo.pro
+2. 🔄 Set up SSL certificates (auto-configured)
+3. 🔄 Test production domain functionality
+4. 🔄 Update DNS settings if needed
 
-Web Service:
-- NODE_ENV=production
-- NEXT_PUBLIC_API_URL=https://your-api-domain.railway.app/graphql
-- PORT=3000
-```
+### **Production Testing**
+1. 🔄 Test full application functionality
+2. 🔄 Verify multi-tenant isolation
+3. 🔄 Test authentication and user management
+4. 🔄 Validate all business modules (CRM, Accounting)
+5. 🔄 Performance testing and optimization
 
-## 📈 **Deployment Metrics**
+## 📊 **Progress Summary**
 
-- **Total Services**: 4
-- **Successfully Deployed**: 3/4 (75%)
-- **Current Status**: API service auto-redeploying
-- **Estimated Completion**: 5-10 minutes
+| Component | Status | Progress |
+|-----------|--------|----------|
+| Web Service | ✅ Complete | 100% |
+| Database | ✅ Complete | 100% |
+| Redis | ✅ Complete | 100% |
+| API Service | 🔄 Deploying | 80% |
+| Domain Setup | 🔄 Pending | 50% |
+| Environment Config | 🔄 Pending | 30% |
+| Production Testing | 🔄 Pending | 0% |
+
+**Overall Progress**: 75% Complete
+
+## 📚 **Related Documentation**
+
+- [Railway Deployment Guide](./RAILWAY_DEPLOYMENT_GUIDE.md)
+- [Railway Troubleshooting](./RAILWAY_TROUBLESHOOTING.md)
+- [Railway Deployment Checklist](./RAILWAY_DEPLOYMENT_CHECKLIST.md)
+- [Production Hosting Requirements](./PRODUCTION_HOSTING_REQUIREMENTS.md)
 
 ## 🔗 **Useful Links**
 
-- **Railway Dashboard**: https://railway.app
+- **Railway Dashboard**: https://railway.app/dashboard
 - **GitHub Repository**: https://github.com/jshields-ca/Continuo
-- **Deployment Guide**: `docs/RAILWAY_DEPLOYMENT_GUIDE.md`
-- **Troubleshooting**: `docs/RAILWAY_TROUBLESHOOTING.md`
-
-## 📝 **Notes**
-
-- Railway auto-deploy feature working perfectly
-- All services using Hobby plan limits (512MB RAM each)
-- Database connections auto-configured by Railway
-- Health checks configured for all services
+- **Linear Project**: https://linear.app/scootr-ca/team/Business%20Dev/active
+- **Production Domain**: https://continuo.pro
 
 ---
 
 **Last Updated**: July 19, 2025  
-**Version**: 0.2.3  
-**Status**: API Service Deploying 
+**Next Update**: After API deployment completion 

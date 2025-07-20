@@ -1,274 +1,284 @@
-# Railway Production Deployment Guide
+# Railway Deployment Guide
 
-## 🚀 Overview
+## 🚀 **Overview**
 
-This guide walks you through deploying Continuo to Railway's production environment.
+This guide covers the complete setup and deployment of the Continuo Platform on Railway, including the new production domain `continuo.pro`.
 
-## 📋 Prerequisites
+## 📋 **Prerequisites**
 
-- [Railway Account](https://railway.app/) (Hobby plan or higher)
-- GitHub repository connected to Railway
-- Domain name (optional, for custom domain)
+- Railway account (Hobby plan or higher)
+- GitHub repository access
+- Domain name (continuo.pro) configured
+- Docker knowledge (basic)
 
-## 🏗️ Architecture
+## 🏗️ **Architecture**
 
+### **Services Overview**
 ```
-Railway Services:
-├── continuo-api (Backend API)
-├── continuo-web (Frontend Web App)
-├── continuo-db (PostgreSQL Database)
-└── continuo-redis (Redis Cache)
+Railway Project: Continuo
+├── continuo-web (Next.js Frontend) - Port 3000
+├── continuo-api (Node.js/Express API) - Port 4000
+├── continuo-db (PostgreSQL Database) - Auto-configured
+└── continuo-redis (Redis Cache) - Auto-configured
 ```
 
-## 🚀 Step-by-Step Deployment
+### **Domain Configuration**
+- **Production Domain**: https://continuo.pro
+- **Web Service**: https://continuo-web-production.up.railway.app
+- **API Service**: https://continuo-api-production.up.railway.app
+- **SSL**: Auto-configured by Railway
 
-### 1. Railway Project Setup
+## 🔧 **Step-by-Step Setup**
 
-1. **Login to Railway**
-   - Go to [railway.app](https://railway.app)
-   - Sign in with GitHub
+### **Phase 1: Project Creation**
 
-2. **Create New Project**
+1. **Create Railway Project**
+   - Go to https://railway.app
    - Click "New Project"
    - Select "Deploy from GitHub repo"
-   - Choose your `Continuo` repository
+   - Choose your Continuo repository
 
-3. **Add Services**
+2. **Configure Project Settings**
+   - **Project Name**: Continuo
+   - **Repository**: https://github.com/jshields-ca/Continuo
+   - **Branch**: main
+   - **Auto-deploy**: Enabled
+
+### **Phase 2: Service Configuration**
+
+#### **Web Service Setup**
+1. **Add Service**
+   - Click "New Service" → "GitHub Repo"
+   - Select your repository
+   - **Service Name**: `continuo-web`
+   - **Root Directory**: `web-app`
+
+2. **Configure Build**
+   - **Build Command**: `npm run build`
+   - **Start Command**: `npm start`
+   - **Port**: 3000
+
+#### **API Service Setup**
+1. **Add Service**
+   - Click "New Service" → "GitHub Repo"
+   - Select your repository
+   - **Service Name**: `continuo-api`
+   - **Root Directory**: `api`
+
+2. **Configure Build**
+   - **Build Command**: `npm install && npx prisma generate`
+   - **Start Command**: `npm start`
+   - **Port**: 4000
+
+#### **Database Setup**
+1. **Add PostgreSQL**
    - Click "New Service" → "Database" → "PostgreSQL"
+   - **Service Name**: `continuo-db`
+   - Railway auto-configures connection variables
+
+#### **Redis Setup**
+1. **Add Redis**
    - Click "New Service" → "Database" → "Redis"
-   - Click "New Service" → "GitHub Repo" → Select your repo
+   - **Service Name**: `continuo-redis`
+   - Railway auto-configures connection variables
 
-### 2. Configure Database Service
+### **Phase 3: Environment Configuration**
 
-1. **PostgreSQL Setup**
-   - Service Name: `continuo-db`
-   - Railway will auto-generate connection details
-   - Note the `DATABASE_URL` from Variables tab
+#### **API Service Environment Variables**
+```bash
+NODE_ENV=production
+DATABASE_URL=${{continuo-db.DATABASE_URL}}
+REDIS_URL=${{continuo-redis.REDIS_URL}}
+JWT_SECRET=your-super-secure-jwt-secret-here
+PORT=4000
+CORS_ORIGIN=https://continuo.pro
+GRAPHQL_PLAYGROUND=false
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+LOG_FORMAT=combined
+```
 
-2. **Redis Setup**
-   - Service Name: `continuo-redis`
-   - Note the `REDIS_URL` from Variables tab
+#### **Web Service Environment Variables**
+```bash
+NODE_ENV=production
+NEXT_PUBLIC_API_URL=https://continuo-api-production.up.railway.app/graphql
+PORT=3000
+```
 
-### 3. Configure API Service
+### **Phase 4: Domain Configuration**
 
-1. **Create API Service**
-   - Service Name: `continuo-api`
-   - Source: Your GitHub repo
-   - Root Directory: `api`
-   - **Important**: Make sure to set the root directory to `api` in the service settings
+#### **Custom Domain Setup**
+1. **Add Custom Domain**
+   - Go to your web service settings
+   - Click "Custom Domains"
+   - Add domain: `continuo.pro`
+   - Railway will provide DNS records
 
-2. **Set Environment Variables**
-   ```
-   NODE_ENV=production
-   DATABASE_URL=${{continuo-db.DATABASE_URL}}
-   REDIS_URL=${{continuo-redis.REDIS_URL}}
-   JWT_SECRET=your-super-secure-jwt-secret-here
-   PORT=4000
-   CORS_ORIGIN=https://your-web-domain.railway.app
-   GRAPHQL_PLAYGROUND=false
-   RATE_LIMIT_WINDOW_MS=900000
-   RATE_LIMIT_MAX_REQUESTS=100
-   LOG_FORMAT=combined
-   ```
+2. **Configure DNS**
+   - Add CNAME record: `continuo.pro` → `continuo-web-production.up.railway.app`
+   - Add CNAME record: `api.continuo.pro` → `continuo-api-production.up.railway.app`
 
-3. **Deploy API**
-   - Railway will auto-deploy when you push to main
-   - Check logs for any build errors
+3. **SSL Configuration**
+   - Railway auto-configures SSL certificates
+   - Wait for certificate validation (5-10 minutes)
 
-### 4. Configure Web Service
+### **Phase 5: Database Migration**
 
-1. **Create Web Service**
-   - Service Name: `continuo-web`
-   - Source: Your GitHub repo
-   - Root Directory: `web-app`
-   - **Important**: Make sure to set the root directory to `web-app` in the service settings
-
-2. **Set Environment Variables**
-   ```
-   NODE_ENV=production
-   NEXT_PUBLIC_API_URL=https://your-api-domain.railway.app/graphql
-   PORT=3000
-   ```
-
-3. **Deploy Web App**
-   - Railway will auto-deploy when you push to main
-   - Check logs for any build errors
-
-### 5. Database Migration
-
-1. **Run Prisma Migrations**
+1. **Run Migrations**
    ```bash
-   # Connect to Railway CLI
-   railway login
-   railway link
-   
-   # Run migrations on production database
    railway run --service continuo-api npx prisma migrate deploy
    ```
 
-2. **Seed Database (Optional)**
+2. **Seed Database** (Optional)
    ```bash
-   railway run --service continuo-api npm run seed
+   railway run --service continuo-api npm run db:seed
    ```
 
-### 6. Domain Configuration
+### **Phase 6: Testing & Validation**
 
-1. **Custom Domain (Optional)**
-   - Go to your web service settings
-   - Click "Domains" tab
-   - Add your custom domain
-   - Update DNS records as instructed
+#### **Health Checks**
+- **Web Service**: https://continuo.pro
+- **API Health**: https://continuo-api-production.up.railway.app/health
+- **GraphQL Playground**: https://continuo-api-production.up.railway.app/graphql
 
-2. **Update CORS Settings**
-   - Update `CORS_ORIGIN` in API service to include your domain
+#### **Functionality Tests**
+1. **Authentication Flow**
+   - User registration
+   - User login
+   - JWT token validation
 
-## 🔧 Environment Variables Reference
+2. **Business Modules**
+   - Customer management
+   - Contact management
+   - Lead management
+   - Chart of accounts
+   - Transaction management
 
-### API Service Variables
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `NODE_ENV` | Environment mode | `production` |
-| `DATABASE_URL` | PostgreSQL connection | `postgresql://...` |
-| `REDIS_URL` | Redis connection | `redis://...` |
-| `JWT_SECRET` | JWT signing secret | `your-secret-here` |
-| `PORT` | API port | `4000` |
-| `CORS_ORIGIN` | Allowed origins | `https://your-domain.com` |
-| `GRAPHQL_PLAYGROUND` | Enable playground | `false` |
+3. **Multi-tenant Isolation**
+   - Company data separation
+   - User permissions
+   - Role-based access
 
-### Web Service Variables
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `NODE_ENV` | Environment mode | `production` |
-| `NEXT_PUBLIC_API_URL` | API endpoint | `https://api.railway.app/graphql` |
-| `PORT` | Web port | `3000` |
+## 🔍 **Monitoring & Maintenance**
 
-## 🧪 Testing Deployment
+### **Railway Dashboard**
+- **URL**: https://railway.app/dashboard
+- **Features**: Logs, metrics, deployments, environment variables
 
-### 1. Health Checks
-- API: `https://your-api-domain.railway.app/health`
-- Web: `https://your-web-domain.railway.app/`
+### **Service Monitoring**
+- **Health Checks**: Automatic monitoring
+- **Logs**: Real-time log streaming
+- **Metrics**: CPU, memory, network usage
 
-### 2. GraphQL Playground
-- URL: `https://your-api-domain.railway.app/graphql`
-- Note: Disabled in production by default
+### **Deployment Monitoring**
+- **Auto-deploy**: Enabled for main branch
+- **Build Status**: Real-time build monitoring
+- **Rollback**: Easy rollback to previous versions
 
-### 3. Application Features
-- User registration/login
-- Dashboard functionality
-- Customer management
-- Lead management
-- Contact management
+## 🚨 **Troubleshooting**
 
-## 🔍 Monitoring & Logs
+### **Common Issues**
 
-### Railway Dashboard
-- **Metrics**: CPU, Memory, Network usage
-- **Logs**: Real-time application logs
-- **Deployments**: Build and deployment history
+#### **Build Failures**
+- Check build logs in Railway dashboard
+- Verify package.json dependencies
+- Ensure correct root directory configuration
 
-### Health Monitoring
-- Railway automatically monitors service health
-- Failed health checks trigger restarts
-- Set up alerts for critical issues
+#### **Runtime Errors**
+- Check service logs
+- Verify environment variables
+- Test database connections
 
-## 🔒 Security Considerations
+#### **Domain Issues**
+- Verify DNS configuration
+- Check SSL certificate status
+- Test domain routing
 
-### Environment Variables
-- Never commit secrets to Git
-- Use Railway's secure variable storage
-- Rotate JWT secrets regularly
-
-### Database Security
-- Railway provides secure database connections
-- Enable SSL for database connections
-- Regular backups (automatic with Railway)
-
-### API Security
-- Rate limiting enabled
-- CORS properly configured
-- Helmet.js security headers
-- Input validation and sanitization
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-1. **Build Failures**
-   - Check Dockerfile syntax
-   - Verify all dependencies in package.json
-   - Check build logs in Railway dashboard
-
-2. **"Dockerfile does not exist" Error**
-   - **Solution**: Make sure to set the correct root directory for each service
-   - API service: Root directory = `api`
-   - Web service: Root directory = `web-app`
-   - The Dockerfiles are in the subdirectories, not the root
-
-3. **Database Connection Issues**
-   - Verify DATABASE_URL format
-   - Check database service is running
-   - Run migrations manually if needed
-
-4. **CORS Errors**
-   - Update CORS_ORIGIN to match your domain
-   - Check API and web service URLs
-
-5. **Environment Variables**
-   - Verify all required variables are set
-   - Check variable names match code
-   - Restart services after variable changes
-
-### Debug Commands
+### **Useful Commands**
 ```bash
-# Check service logs
+# View service logs
 railway logs --service continuo-api
-railway logs --service continuo-web
-
-# Run commands in service
-railway run --service continuo-api npm run test
-railway run --service continuo-api npx prisma studio
 
 # Check service status
 railway status
+
+# Run commands in service
+railway run --service continuo-api npm run db:migrate
+
+# View environment variables
+railway variables --service continuo-api
 ```
 
-## 📈 Scaling
+## 📊 **Performance Optimization**
 
-### Railway Hobby Plan Limits
-- 500 hours/month
-- 512MB RAM per service
-- Shared CPU resources
+### **Hobby Plan Limits**
+- **Memory**: 512MB per service
+- **CPU**: Shared resources
+- **Storage**: 1GB per service
+- **Bandwidth**: 100GB/month
 
-### Upgrading for Production
-- **Pro Plan**: $20/month
-  - Unlimited hours
-  - 1GB RAM per service
-  - Dedicated CPU
-  - Custom domains
-  - Team collaboration
+### **Optimization Tips**
+- Use efficient database queries
+- Implement proper caching
+- Optimize Docker images
+- Monitor resource usage
 
-## 🔄 Continuous Deployment
+## 🔒 **Security Considerations**
 
-### Automatic Deployments
-- Railway auto-deploys on push to main branch
-- Preview deployments for pull requests
-- Rollback to previous deployments
+### **Environment Variables**
+- Use strong JWT secrets
+- Secure database passwords
+- Enable CORS restrictions
+- Configure rate limiting
 
-### Deployment Pipeline
-1. Push code to GitHub
-2. Railway detects changes
-3. Builds Docker images
-4. Runs health checks
-5. Deploys to production
-6. Updates domain routing
+### **SSL/TLS**
+- Railway auto-configures SSL
+- Force HTTPS redirects
+- Validate certificate status
 
-## 📞 Support
+### **Access Control**
+- Implement proper authentication
+- Use role-based permissions
+- Validate user inputs
+- Monitor access logs
 
-- **Railway Documentation**: [docs.railway.app](https://docs.railway.app)
-- **Railway Discord**: [discord.gg/railway](https://discord.gg/railway)
-- **GitHub Issues**: Report bugs in your repository
+## 📚 **Additional Resources**
+
+### **Documentation**
+- [Railway Documentation](https://docs.railway.app/)
+- [Docker Documentation](https://docs.docker.com/)
+- [Next.js Deployment](https://nextjs.org/docs/deployment)
+- [Node.js Best Practices](https://nodejs.org/en/docs/guides/)
+
+### **Support**
+- [Railway Support](https://railway.app/support)
+- [GitHub Issues](https://github.com/jshields-ca/Continuo/issues)
+- [Linear Project](https://linear.app/scootr-ca/team/Business%20Dev/active)
+
+## 🎯 **Success Criteria**
+
+### **Deployment Checklist**
+- [ ] All services deployed successfully
+- [ ] Custom domain configured (continuo.pro)
+- [ ] SSL certificates active
+- [ ] Database migrations completed
+- [ ] Environment variables configured
+- [ ] Health checks passing
+- [ ] Authentication working
+- [ ] All business modules functional
+- [ ] Performance testing completed
+- [ ] Security validation passed
+
+### **Production Readiness**
+- [ ] Monitoring configured
+- [ ] Backup strategy implemented
+- [ ] Error handling tested
+- [ ] Load testing completed
+- [ ] Documentation updated
+- [ ] Team access configured
 
 ---
 
-**Last Updated**: July 2025
-**Version**: 0.2.3 
+**Last Updated**: July 19, 2025  
+**Version**: 0.2.3  
+**Production Domain**: https://continuo.pro 

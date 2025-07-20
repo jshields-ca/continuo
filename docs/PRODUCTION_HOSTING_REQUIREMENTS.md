@@ -1,361 +1,245 @@
-# Production Hosting Requirements for Continuo Platform
+# Production Hosting Requirements
 
-## Why Shared Hosting Won't Work
+## 🎯 **Overview**
 
-Your Dreamhost shared hosting plan is **not suitable** for the Continuo platform for several critical reasons:
+This document outlines the production hosting requirements for the Continuo Platform, including the new production domain `continuo.pro`.
 
-### ❌ **Technical Limitations**
-- **No Docker Support**: Shared hosting doesn't support Docker containers
-- **No Node.js 18+**: Most shared hosting plans limit Node.js versions
-- **No PostgreSQL**: Shared hosting typically only offers MySQL/MariaDB
-- **No Redis**: Shared hosting doesn't provide Redis caching
-- **No Elasticsearch**: Advanced search functionality requires dedicated resources
-- **Limited Process Control**: Can't run multiple services simultaneously
-- **No Custom Ports**: Can't configure custom ports for services
+## 🌐 **Domain Configuration**
 
-### ❌ **Resource Constraints**
-- **Memory Limits**: Shared hosting has strict memory limits (usually 256MB-1GB)
-- **CPU Restrictions**: Limited processing power for multiple services
-- **Storage Limitations**: Database and file storage constraints
-- **Bandwidth Caps**: Limited bandwidth for API and web traffic
+### **Primary Domain**
+- **Domain**: https://continuo.pro
+- **Status**: Acquired and configured
+- **SSL**: Auto-configured by Railway
+- **DNS**: Configured for Railway deployment
 
-### ❌ **Architecture Mismatch**
-- **Monolithic vs Microservices**: Shared hosting is designed for simple websites, not complex applications
-- **No Load Balancing**: Can't distribute traffic across multiple instances
-- **No Auto-scaling**: Can't handle traffic spikes automatically
-- **Limited Security**: Shared environment security concerns
+### **Subdomain Structure**
+- **Main Application**: https://continuo.pro
+- **API Endpoint**: https://api.continuo.pro (optional)
+- **Admin Panel**: https://admin.continuo.pro (future)
 
-## Production Architecture Requirements
+## 🏗️ **Infrastructure Requirements**
 
-### 🏗️ **System Architecture**
+### **Platform: Railway (Hobby Plan)**
+- **Provider**: Railway.app
+- **Plan**: Hobby Plan ($5/month)
+- **Services**: 4 services (web, api, database, cache)
+- **Auto-scaling**: Basic auto-scaling included
+
+### **Service Architecture**
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Load Balancer │    │   CDN/Edge      │    │   SSL/TLS       │
-│   (Nginx/ALB)   │    │   (Cloudflare)  │    │   Termination   │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Web App       │    │   API Server    │    │   Static Assets │
-│   (Next.js)     │    │   (Node.js)     │    │   (S3/CDN)      │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │
-         └───────────────────────┘
-                       │
-         ┌───────────────────────┐
-         ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐
-│   PostgreSQL    │    │   Redis Cache   │
-│   (Database)    │    │   (Session/API) │
-└─────────────────┘    └─────────────────┘
+Railway Project: Continuo
+├── continuo-web (Next.js Frontend) - Port 3000
+├── continuo-api (Node.js/Express API) - Port 4000
+├── continuo-db (PostgreSQL Database) - Auto-configured
+└── continuo-redis (Redis Cache) - Auto-configured
 ```
 
-### 🔧 **Required Services**
+### **Resource Requirements**
+- **Memory**: 512MB per service (2GB total)
+- **CPU**: Shared resources (sufficient for initial load)
+- **Storage**: 1GB per service (4GB total)
+- **Bandwidth**: 100GB/month
 
-#### 1. **Application Services**
-- **Web Application**: Next.js 15.4.2 (React 19.1.0)
-- **API Server**: Node.js 18+ with Express/Apollo Server
-- **GraphQL API**: Apollo Server with Prisma ORM
-- **Authentication**: JWT-based with bcrypt
+## 🔧 **Technical Requirements**
 
-#### 2. **Database Layer**
-- **Primary Database**: PostgreSQL 15+ (not MySQL)
-- **Connection Pooling**: Required for performance
-- **Database Migrations**: Prisma migration system
-- **Backup Strategy**: Automated daily backups
+### **Backend Services**
+- **Node.js**: v18+ (LTS)
+- **PostgreSQL**: v14+ (managed by Railway)
+- **Redis**: v6+ (managed by Railway)
+- **Docker**: Containerized deployment
 
-#### 3. **Caching & Performance**
-- **Redis**: Session storage and API caching
-- **CDN**: Static asset delivery (images, CSS, JS)
-- **Edge Caching**: API response caching
-- **Database Query Optimization**: Indexing and query tuning
+### **Frontend Services**
+- **Next.js**: v14+ (App Router)
+- **TypeScript**: Full type safety
+- **Static Assets**: CDN-ready
+- **PWA**: Progressive Web App capabilities
 
-#### 4. **Search & Analytics**
-- **Elasticsearch**: Advanced search functionality
-- **Log Aggregation**: Centralized logging
-- **Monitoring**: Application performance monitoring
-- **Analytics**: User behavior tracking
+### **Security Requirements**
+- **SSL/TLS**: HTTPS only (auto-configured)
+- **CORS**: Properly configured for production domain
+- **Rate Limiting**: API rate limiting enabled
+- **Authentication**: JWT-based with secure tokens
+- **Input Validation**: Comprehensive validation and sanitization
 
-#### 5. **Infrastructure**
-- **Load Balancer**: Traffic distribution
-- **SSL/TLS**: HTTPS encryption
-- **Firewall**: Security protection
-- **Auto-scaling**: Handle traffic spikes
+## 📊 **Performance Requirements**
 
-## Recommended Hosting Solutions
+### **Response Times**
+- **API Endpoints**: < 200ms average
+- **Page Load**: < 2 seconds initial load
+- **Database Queries**: < 100ms average
+- **Static Assets**: < 500ms load time
 
-### 🥇 **Best Option: Cloud Platform (Recommended)**
+### **Availability**
+- **Uptime**: 99.5% target
+- **Monitoring**: Real-time health checks
+- **Backup**: Automatic database backups
+- **Recovery**: < 5 minutes recovery time
 
-#### **AWS (Amazon Web Services)**
-**Estimated Cost: $200-500/month for small-medium business**
+## 🔒 **Security Requirements**
 
-**Services Required:**
-- **EC2**: Application servers (t3.medium or larger)
-- **RDS**: Managed PostgreSQL database
-- **ElastiCache**: Managed Redis
-- **S3**: Static file storage
-- **CloudFront**: CDN for static assets
-- **ALB**: Application Load Balancer
-- **Route 53**: DNS management
-- **CloudWatch**: Monitoring and logging
+### **Authentication & Authorization**
+- **Multi-tenant**: Complete data isolation
+- **Role-based Access**: Owner, Admin, Manager, Employee, Viewer
+- **Session Management**: Secure JWT tokens
+- **Password Security**: bcrypt hashing, strong validation
 
-**Pros:**
-- Enterprise-grade reliability
-- Comprehensive service ecosystem
-- Excellent documentation and support
-- Auto-scaling capabilities
-- Global infrastructure
+### **Data Protection**
+- **Encryption**: Data encrypted in transit and at rest
+- **Backup**: Daily automated backups
+- **Audit Trail**: Complete user activity logging
+- **GDPR Compliance**: Data privacy and user rights
 
-**Cons:**
-- Complex setup and management
-- Higher cost for small deployments
-- Steep learning curve
+### **API Security**
+- **Rate Limiting**: 100 requests per 15 minutes per user
+- **Input Validation**: Comprehensive validation
+- **SQL Injection**: Protected via Prisma ORM
+- **XSS Protection**: Helmet.js security headers
 
-#### **Google Cloud Platform (GCP)**
-**Estimated Cost: $150-400/month**
+## 📈 **Scalability Requirements**
 
-**Services Required:**
-- **Compute Engine**: Application servers
-- **Cloud SQL**: Managed PostgreSQL
-- **Memorystore**: Managed Redis
-- **Cloud Storage**: File storage
-- **Cloud CDN**: Content delivery
-- **Load Balancer**: Traffic distribution
-- **Cloud Monitoring**: Observability
+### **Current Capacity (Hobby Plan)**
+- **Concurrent Users**: 50-100 users
+- **Database Connections**: 20 concurrent
+- **API Requests**: 1000 requests/hour
+- **Storage**: 4GB total
 
-**Pros:**
-- Excellent developer experience
-- Good pricing for startups
-- Strong AI/ML integration
-- Reliable infrastructure
+### **Future Scaling (Pro Plan)**
+- **Concurrent Users**: 500+ users
+- **Database Connections**: 100 concurrent
+- **API Requests**: 10,000 requests/hour
+- **Storage**: 20GB total
 
-**Cons:**
-- Smaller ecosystem than AWS
-- Some services less mature
+## 🔍 **Monitoring Requirements**
 
-#### **Microsoft Azure**
-**Estimated Cost: $200-450/month**
+### **Application Monitoring**
+- **Health Checks**: Automatic service monitoring
+- **Error Tracking**: Comprehensive error logging
+- **Performance Metrics**: Response times, throughput
+- **User Analytics**: Usage patterns and behavior
 
-**Services Required:**
-- **App Service**: Web application hosting
-- **Azure Database**: Managed PostgreSQL
-- **Azure Cache**: Redis service
-- **Blob Storage**: File storage
-- **CDN**: Content delivery
-- **Application Gateway**: Load balancing
+### **Infrastructure Monitoring**
+- **Resource Usage**: CPU, memory, disk, network
+- **Service Status**: Real-time service health
+- **Deployment Monitoring**: Build and deployment status
+- **Alert System**: Critical issue notifications
 
-**Pros:**
-- Good enterprise integration
-- Strong Windows/.NET ecosystem
-- Competitive pricing
-- Good compliance features
+## 🚀 **Deployment Requirements**
 
-**Cons:**
-- Less popular for Node.js applications
-- Complex pricing structure
+### **CI/CD Pipeline**
+- **Source Control**: GitHub integration
+- **Auto-deploy**: Push to main triggers deployment
+- **Environment Management**: Separate dev/staging/prod
+- **Rollback Capability**: Quick rollback to previous versions
 
-### 🥈 **Good Option: Platform as a Service (PaaS)**
+### **Environment Variables**
+```bash
+# Production Environment Variables
+NODE_ENV=production
+DATABASE_URL=postgresql://...
+REDIS_URL=redis://...
+JWT_SECRET=super-secure-secret
+CORS_ORIGIN=https://continuo.pro
+GRAPHQL_PLAYGROUND=false
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+```
 
-#### **Railway**
-**Estimated Cost: $50-200/month**
+## 📋 **Compliance Requirements**
 
-**Features:**
-- Docker-native deployment
-- PostgreSQL and Redis included
-- Automatic SSL certificates
-- Easy scaling
-- GitHub integration
+### **Data Protection**
+- **GDPR**: European data protection compliance
+- **CCPA**: California privacy compliance
+- **Data Retention**: Configurable retention policies
+- **User Rights**: Data export and deletion capabilities
 
-**Pros:**
-- Very easy to deploy
-- Good for startups
-- Reasonable pricing
-- Excellent developer experience
+### **Business Continuity**
+- **Backup Strategy**: Daily automated backups
+- **Disaster Recovery**: < 24 hours recovery time
+- **Data Integrity**: Regular integrity checks
+- **Monitoring**: 24/7 system monitoring
 
-**Cons:**
-- Limited customization
-- Vendor lock-in
-- Less control over infrastructure
+## 🎯 **Success Metrics**
 
-#### **Render**
-**Estimated Cost: $50-250/month**
+### **Performance Metrics**
+- **Page Load Time**: < 2 seconds
+- **API Response Time**: < 200ms
+- **Uptime**: > 99.5%
+- **Error Rate**: < 0.1%
 
-**Features:**
-- Full-stack platform
-- PostgreSQL database
-- Redis caching
-- Automatic deployments
-- Free SSL certificates
+### **User Experience Metrics**
+- **User Registration**: Successful onboarding
+- **Feature Adoption**: Core features usage
+- **User Retention**: Monthly active users
+- **Support Tickets**: Low support volume
 
-**Pros:**
-- Simple deployment process
-- Good free tier
-- PostgreSQL support
-- Automatic scaling
+## 📚 **Documentation Requirements**
 
-**Cons:**
-- Limited advanced features
-- Less control than cloud platforms
+### **Technical Documentation**
+- **API Documentation**: Complete GraphQL schema
+- **Deployment Guide**: Step-by-step deployment
+- **Troubleshooting**: Common issues and solutions
+- **Architecture**: System design and components
 
-#### **DigitalOcean App Platform**
-**Estimated Cost: $60-300/month**
+### **User Documentation**
+- **User Guide**: Complete user manual
+- **Admin Guide**: Administrative functions
+- **FAQ**: Common questions and answers
+- **Support**: Contact information and support process
 
-**Features:**
-- Container-based deployment
-- Managed databases
-- Load balancing
-- Automatic scaling
-- Global CDN
+## 🔗 **Integration Requirements**
 
-**Pros:**
-- Simple pricing model
-- Good performance
-- Easy to use
-- Reliable infrastructure
+### **Third-party Services**
+- **Email Service**: Transactional email delivery
+- **Payment Processing**: Future billing integration
+- **Analytics**: Usage analytics and insights
+- **Monitoring**: External monitoring services
 
-**Cons:**
-- Limited service ecosystem
-- Less advanced features than major clouds
+### **API Integrations**
+- **REST API**: Standard REST endpoints
+- **GraphQL API**: Complete GraphQL schema
+- **Webhooks**: Event-driven integrations
+- **SDK**: Client libraries for integration
 
-### 🥉 **Budget Option: VPS with Manual Setup**
+## 📊 **Cost Requirements**
 
-#### **DigitalOcean Droplets**
-**Estimated Cost: $40-150/month**
+### **Current Costs (Hobby Plan)**
+- **Railway Hobby Plan**: $5/month
+- **Domain Registration**: $15/year (continuo.pro)
+- **SSL Certificate**: Free (Let's Encrypt)
+- **Total Monthly**: ~$6.25/month
 
-**Setup Required:**
-- Ubuntu/Debian VPS (4GB RAM minimum)
-- Docker and Docker Compose
-- Nginx reverse proxy
-- SSL certificates (Let's Encrypt)
-- Manual database setup
-- Manual monitoring setup
+### **Future Costs (Pro Plan)**
+- **Railway Pro Plan**: $20/month
+- **Additional Services**: $10-50/month
+- **Monitoring Tools**: $10-30/month
+- **Total Monthly**: ~$40-100/month
 
-**Pros:**
-- Full control over infrastructure
-- Lower cost for technical users
-- No vendor lock-in
-- Learning opportunity
+## 🎯 **Implementation Timeline**
 
-**Cons:**
-- Requires DevOps knowledge
-- Manual maintenance required
-- No managed services
-- Higher operational overhead
+### **Phase 1: Basic Deployment (Current)**
+- ✅ Railway project setup
+- ✅ Service configuration
+- ✅ Domain acquisition (continuo.pro)
+- 🔄 API deployment completion
+- 🔄 Domain configuration
 
-#### **Linode/Akamai**
-**Estimated Cost: $35-140/month**
+### **Phase 2: Production Optimization**
+- 🔄 SSL certificate setup
+- 🔄 Environment variable configuration
+- 🔄 Database migration and seeding
+- 🔄 Performance testing
+- 🔄 Security validation
 
-**Similar to DigitalOcean with:**
-- Good performance
-- Competitive pricing
-- Global data centers
-- Good documentation
+### **Phase 3: Monitoring & Scaling**
+- 🔄 Monitoring setup
+- 🔄 Backup configuration
+- 🔄 Performance optimization
+- 🔄 User acceptance testing
+- 🔄 Production launch
 
-## Minimum Production Requirements
+---
 
-### 💻 **Server Specifications**
-- **CPU**: 4+ cores (2.4GHz+)
-- **RAM**: 8GB+ (16GB recommended)
-- **Storage**: 100GB+ SSD
-- **Bandwidth**: 1TB+ monthly transfer
-- **Uptime**: 99.9%+ availability
-
-### 🔒 **Security Requirements**
-- **SSL/TLS**: HTTPS encryption
-- **Firewall**: Network security
-- **Database Security**: Encrypted connections
-- **API Security**: Rate limiting, authentication
-- **Backup Security**: Encrypted backups
-- **Monitoring**: Security event logging
-
-### 📊 **Performance Requirements**
-- **Response Time**: <200ms API responses
-- **Page Load**: <2 seconds initial load
-- **Concurrent Users**: 100+ simultaneous users
-- **Database**: <100ms query response time
-- **Uptime**: 99.9% availability
-
-## Migration Strategy
-
-### 🚀 **Phase 1: Development to Staging**
-1. Set up cloud infrastructure
-2. Configure CI/CD pipeline
-3. Deploy to staging environment
-4. Test all functionality
-5. Performance testing
-
-### 🚀 **Phase 2: Staging to Production**
-1. Production environment setup
-2. Database migration
-3. SSL certificate configuration
-4. Monitoring and alerting
-5. Backup strategy implementation
-
-### 🚀 **Phase 3: Optimization**
-1. Performance tuning
-2. CDN configuration
-3. Caching optimization
-4. Security hardening
-5. Scaling preparation
-
-## Cost Estimation
-
-### 💰 **Monthly Costs (Estimated)**
-
-#### **Small Business (1-10 users)**
-- **Railway/Render**: $50-100/month
-- **DigitalOcean App Platform**: $60-120/month
-- **AWS/GCP (minimal)**: $150-250/month
-
-#### **Medium Business (10-100 users)**
-- **Railway/Render**: $100-200/month
-- **DigitalOcean App Platform**: $120-250/month
-- **AWS/GCP**: $200-400/month
-
-#### **Large Business (100+ users)**
-- **AWS/GCP**: $400-1000+/month
-- **Custom Infrastructure**: $300-800/month
-
-## Recommendation
-
-### 🎯 **For Your Situation**
-
-**Railway Hobby Plan Selected** ✅
-
-**Account Status**: Hobby plan account established and ready for deployment configuration.
-
-**Why Railway Hobby Plan is Perfect:**
-
-1. **Easy Migration**: Simple deployment from your current setup
-2. **Cost Effective**: Reasonable pricing for small-medium business
-3. **Docker Support**: Full compatibility with your current architecture
-4. **PostgreSQL**: Native support for your database requirements
-5. **Redis**: Built-in caching support
-6. **SSL**: Automatic HTTPS certificates
-7. **Scaling**: Easy to scale as your business grows
-
-**Railway Hobby Plan Features:**
-- **$5/month** base cost (very affordable)
-- **512MB RAM** per service (sufficient for testing)
-- **1GB storage** (adequate for development)
-- **Unlimited deployments** (perfect for testing)
-- **Custom domains** (professional URLs)
-- **Automatic SSL** (HTTPS included)
-- **GitHub integration** (easy deployment)
-
-**Migration Path:**
-1. **Week 1-2**: Configure Railway deployment settings
-2. **Week 3-4**: Deploy to Railway staging environment
-3. **Week 5-6**: Test thoroughly in production environment
-4. **Week 7**: Go live with production deployment
-5. **Month 3+**: Consider upgrading to Pro plan if needed
-
-**Next Steps:**
-- Configure Docker deployment settings
-- Set up environment variables
-- Prepare database migration scripts
-- Test deployment pipeline
-- Configure monitoring and logging
-- **Linear Tracking**: All deployment tasks tracked in [BUS-16](https://linear.app/scootr-ca/issue/BUS-16/configure-railway-deployment-for-continuo-platform-production-testing)
-
-This approach gives you a professional, scalable solution that's perfect for production testing and initial launch, with easy upgrade path as your business grows. 
+**Last Updated**: July 19, 2025  
+**Version**: 0.2.3  
+**Production Domain**: https://continuo.pro  
+**Status**: Deployment in Progress (85% Complete) 

@@ -9,6 +9,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com/)
 [![Version](https://img.shields.io/badge/Version-0.2.3-orange.svg)](https://github.com/jshields-ca/Continuo)
 [![Sprint](https://img.shields.io/badge/Sprint-2%20Complete-blue.svg)](https://linear.app/scootr-ca/team/Business%20Dev/active)
+[![Production](https://img.shields.io/badge/Production-continuo.pro-brightgreen.svg)](https://continuo.pro)
 
 ## 🚀 Quick Start
 
@@ -36,7 +37,11 @@
    - **Database Admin**: http://localhost:8080
    - **Email Testing**: http://localhost:8025
 
-4. **Test Accounts**
+4. **Production Access**
+   - **Live Platform**: https://continuo.pro
+   - **API Endpoint**: https://continuo.pro/api/graphql
+
+5. **Test Accounts**
    - **Admin**: `admin@continuo-demo.com` / `TestPassword123!`
 - **Employee**: `employee@continuo-demo.com` / `Employee123!`
 
@@ -286,6 +291,25 @@ npm run db:reset
 
 ## 🚀 Next Steps
 
+### Production Deployment - IN PROGRESS 🚀
+**Status**: Railway deployment in progress (80% complete)
+
+#### Current Deployment Status
+- **Domain**: https://continuo.pro (configured)
+- **Platform**: Railway (Hobby Plan)
+- **Services**: 
+  - ✅ Web Service (`continuo-web`) - Deployed
+  - 🔄 API Service (`continuo-api`) - Deploying
+  - ✅ PostgreSQL Database (`continuo-db`) - Ready
+  - ✅ Redis Cache (`continuo-redis`) - Ready
+
+#### Next Steps After API Deployment
+1. Configure domain routing to Railway services
+2. Set up SSL certificates
+3. Configure environment variables
+4. Run database migrations
+5. Test production functionality
+
 ### Testing Phase - CRITICAL (Before Sprint 3)
 **Priority**: High - Must complete before BUS-6 development
 
@@ -353,6 +377,7 @@ This project is currently in active development. For questions or support, pleas
 
 ---
 
-**Version**: 0.2.2  
+**Version**: 0.2.3  
 **Last Updated**: July 19, 2025  
-**Status**: Sprint 2 Complete - Ready for Production Testing
+**Status**: Sprint 2 Complete - Production Deployment In Progress  
+**Production Domain**: https://continuo.pro

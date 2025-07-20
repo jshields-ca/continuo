@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Production Domain Acquisition**
+  - Acquired `continuo.pro` domain for production deployment
+  - Updated all documentation to reflect new production domain
+  - Configured domain for Railway deployment platform
+
 ## [0.2.3] - 2025-07-19
 
 ### Added
@@ -27,6 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Resolved lead creation foreign key constraint violations
   - Updated all GraphQL queries to use proper connection structure
   - Fixed transaction and contact page pagination issues
+
+- **Production Deployment Preparation**
+  - Railway deployment configuration (80% complete)
+  - Domain configuration for https://continuo.pro
+  - Docker workspace support for npm dependencies
+  - Production environment setup
 
 ### Fixed
 - **GraphQL Query Structure**
