@@ -1,8 +1,6 @@
-# Sprint 2 Planning - Core Business Features (Version 0.2.0)
+# Sprint 2 Planning - Core Business Features
 
-> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
-
-## 🎯 Sprint Overview
+## 🎯 **Sprint 2 Overview**
 
 **Sprint**: 2 - Core Business Features  
 **Version**: 0.2.0  

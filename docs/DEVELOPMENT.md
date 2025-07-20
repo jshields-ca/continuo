@@ -1,12 +1,6 @@
-# Continuo Development Guide
+# Development Guide
 
-> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
-
-## Overview
-
-This guide provides comprehensive information for developers working on the Continuo platform, including setup, architecture, coding standards, and best practices.
-
-## 🚀 Quick Start
+## 🚀 **Getting Started**
 
 ### Prerequisites
 

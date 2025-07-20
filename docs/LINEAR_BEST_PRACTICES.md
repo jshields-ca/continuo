@@ -1,12 +1,6 @@
-# Linear Best Practices for Continuo Platform
+# Linear Best Practices for Continuo Development
 
-> **Note**: "Continuo" is a placeholder name and may not reflect the final chosen name for the software.
-
-## 🎯 Overview
-
-This document outlines best practices for using Linear with the Continuo Platform project, including workflows, conventions, and recommendations for effective project management.
-
-## 📋 Linear Setup & Configuration
+## 📋 **Linear Setup Overview**
 
 ### Project Structure
 - **Team**: Business Dev (f42ec684-5540-47fd-8ff2-6a488004cac3)
