@@ -10,6 +10,10 @@ restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
 port = 8080
 
+# Service dependencies
+[[deploy.dependencies]]
+service = "continuo-db"
+
 # Build arguments for different services
 [build.args]
 SERVICE_DIR = "api"
