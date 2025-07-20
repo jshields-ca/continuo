@@ -8,7 +8,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com/)
 [![Version](https://img.shields.io/badge/Version-0.2.3-orange.svg)](https://github.com/jshields-ca/Continuo)
-[![Sprint](https://img.shields.io/badge/Sprint-2%20Complete-blue.svg)](https://linear.app/scootr-ca/team/Business%20Dev/active)
+[![Sprint](https://img.shields.io/badge/Sprint-2%2086%25%20Complete-yellow.svg)](https://linear.app/scootr-ca/team/Business%20Dev/active)
 [![Production](https://img.shields.io/badge/Production-continuo.pro-brightgreen.svg)](https://continuo.pro)
 
 ## 🚀 Quick Start
@@ -81,8 +81,8 @@
 - **Authentication Context**: Complete auth state management
 - **Responsive Design**: Mobile-first approach with modern UI
 
-### ✅ Sprint 2 - Complete (Version 0.2.3)
-**Status**: 100% Complete - Real Data Integration & Bug Fixes
+### ✅ Sprint 2 - In Progress (Version 0.2.3)
+**Status**: 86% Complete - Real Data Integration & Bug Fixes
 
 #### ✅ Completed Features
 
@@ -146,7 +146,7 @@
 - **Epic**: Sprint 2: Core Business Features (Version 0.2.0)
 - **Story Points**: ~100 points
 - **Duration**: 6 weeks (August-September 2025)
-- **Status**: Complete with all major features implemented
+- **Status**: 86% Complete - BUS-7 (Invoice Generation) pending
 
 ## 🤖 Development Approach
 
