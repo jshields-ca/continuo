@@ -29,7 +29,6 @@ COPY --from=builder /app/web-app/public ./public
 COPY --from=builder /app/web-app/package.json ./package.json
 
 EXPOSE 3000
-ENV PORT=3000
 ENV NODE_ENV=production
 
 CMD ["node", "server.js"] 
