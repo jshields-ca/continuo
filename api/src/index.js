@@ -61,6 +61,9 @@ async function startServer() {
     context: createContext,
     introspection: process.env.NODE_ENV !== 'production',
     playground: process.env.GRAPHQL_PLAYGROUND === 'true',
+    persistedQueries: {
+      cache: 'bounded',
+    },
     formatError: (error) => {
       logger.error('GraphQL Error:', error);
       return {

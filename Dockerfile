@@ -5,6 +5,9 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Install required SSL libraries for Prisma
+RUN apk add --no-cache openssl libssl1.1
+
 # Copy the entire repository
 COPY . .
 
