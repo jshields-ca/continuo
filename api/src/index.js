@@ -50,6 +50,7 @@ async function startServer() {
     try {
       const healthData = {
         status: 'healthy',
+        service: 'continuo-api',
         timestamp: new Date().toISOString(),
         version: process.env.npm_package_version || '0.2.3',
         environment: process.env.NODE_ENV || 'development',
@@ -57,6 +58,7 @@ async function startServer() {
         cors: process.env.CORS_ORIGIN || 'default',
         uptime: process.uptime(),
         memory: process.memoryUsage(),
+        message: 'Continuo API is running successfully!'
       };
       
       logger.info('Health check requested:', healthData);
@@ -65,10 +67,30 @@ async function startServer() {
       logger.error('Health check error:', error);
       res.status(500).json({
         status: 'error',
+        service: 'continuo-api',
         message: error.message,
         timestamp: new Date().toISOString(),
       });
     }
+  });
+
+  // Alternative health check endpoint
+  app.get('/api/health', (req, res) => {
+    res.status(200).json({
+      status: 'healthy',
+      service: 'continuo-api',
+      message: 'Continuo API is running successfully!',
+      timestamp: new Date().toISOString(),
+    });
+  });
+
+  // Simple test endpoint
+  app.get('/test', (req, res) => {
+    res.status(200).json({
+      message: 'Continuo API is working!',
+      timestamp: new Date().toISOString(),
+      env: process.env.NODE_ENV || 'development',
+    });
   });
   
   // Create Apollo Server
