@@ -146,7 +146,7 @@ This document summarizes all documentation updates made to sync the project docu
 
 ### Linear Integration
 - **Team**: Business Dev (f42ec684-5540-47fd-8ff2-6a488004cac3)
-- **Project**: Get-Organized (e9205c7b-a881-498d-acdf-8361f3bfcdd4)
+- **Project**: Continuo (e9205c7b-a881-498d-acdf-8361f3bfcdd4)
 - **Epic**: Sprint 2: Core Business Features (Version 0.2.0) - BUS-1
 - **Workflow**: Backlog → Todo → In Progress → In Review → Done
 

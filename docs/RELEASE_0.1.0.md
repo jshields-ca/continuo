@@ -92,7 +92,7 @@ After the release completes:
 
 After release, you can find:
 
-- **GitHub Release**: https://github.com/jshields-ca/get-organized/releases/tag/v0.1.0
+- **GitHub Release**: https://github.com/jshields-ca/continuo/releases/tag/v0.1.0
 - **Release Summary**: `RELEASE_SUMMARY.md`
 - **Changelog**: `CHANGELOG.md`
 - **Documentation**: `docs/`

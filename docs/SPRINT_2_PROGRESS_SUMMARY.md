@@ -230,7 +230,7 @@
 - **[Sprint 2 Planning](docs/SPRINT_2_PLANNING.md)** - Original sprint plan
 - **[BUS-2 Completion](docs/SPRINT_2_DEVELOPMENT_START.md)** - Customer database implementation
 - **[BUS-3 Completion](docs/BUS_3_CONTACT_MANAGEMENT_COMPLETE.md)** - Contact management system
-- **[Linear Project](https://linear.app/scootr-ca/team/BUS/project/Get-Organized)** - Project management
+- **[Linear Project](https://linear.app/scootr-ca/team/BUS/project/Continuo)** - Project management
 
 ## 🚀 **Ready for Next Phase**
 

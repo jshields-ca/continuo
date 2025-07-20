@@ -39,7 +39,7 @@
 
 4. **Production Access**
    - **Live Platform**: https://continuo.pro
-   - **API Endpoint**: https://continuo.pro/api/graphql
+   - **API Endpoint**: https://continuo-api-production.up.railway.app/graphql
 
 5. **Test Accounts**
    - **Admin**: `admin@continuo-demo.com` / `TestPassword123!`
@@ -292,26 +292,31 @@ npm run db:reset
 ## 🚀 Next Steps
 
 ### Production Deployment - IN PROGRESS 🚀
-**Status**: Railway deployment in progress (80% complete)
+**Status**: Railway deployment in progress (90% complete)
 
 #### Current Deployment Status
 - **Domain**: https://continuo.pro (configured)
 - **Platform**: Railway (Hobby Plan)
 - **Services**: 
-  - ✅ Web Service (`continuo-web`) - Deployed
-  - 🔄 API Service (`continuo-api`) - Deploying
+  - ✅ API Service (`continuo-api`) - Deployed and running
+  - 🔄 Web Service (`continuo-web`) - Redeploying after fixes
   - ✅ PostgreSQL Database (`continuo-db`) - Ready
   - ✅ Redis Cache (`continuo-redis`) - Ready
 
-#### Next Steps After API Deployment
-1. Configure domain routing to Railway services
-2. Set up SSL certificates
-3. Configure environment variables
-4. Run database migrations
-5. Test production functionality
+#### Recent Deployment Fixes
+- **Issue**: Next.js standalone deployment error
+- **Solution**: Added fallback server.js and updated start script
+- **Status**: Auto-redeploying with fixes applied
+
+#### Next Steps After Web Service Deployment
+1. Configure environment variables for web service
+2. Test login functionality with Admin test user
+3. Verify API connectivity from web service
+4. Configure domain routing to Railway services
+5. Set up SSL certificates
 
 ### Testing Phase - CRITICAL (Before Sprint 3)
-**Priority**: High - Must complete before BUS-6 development
+**Priority**: High - Must complete before BUS-7 development
 
 #### Comprehensive Testing Requirements
 1. **Dashboard Functionality Testing**
@@ -327,7 +332,7 @@ npm run db:reset
    - Search, filtering, and export functionality
    - User assignment and activity tracking
 
-3. **Accounting Module Testing (BUS-5)**
+3. **Accounting Module Testing (BUS-5, BUS-6)**
    - Chart of accounts hierarchy and management
    - Transaction creation, editing, and deletion
    - Account balance calculations and reconciliation
@@ -353,7 +358,7 @@ npm run db:reset
 - **Exit Criteria**: All critical issues resolved, performance validated
 
 ### Sprint 3 Planning (Version 0.3.0) - AFTER Testing Phase
-- **Invoice & Billing System (BUS-6)**: Complete billing functionality
+- **Invoice & Billing System (BUS-7)**: Complete billing functionality
 - **Project Management**: Task tracking and project workflows
 - **Reporting & Analytics**: Business intelligence and reporting
 - **Enhanced UI/UX**: Improved user experience and mobile optimization
@@ -378,6 +383,6 @@ This project is currently in active development. For questions or support, pleas
 ---
 
 **Version**: 0.2.3  
-**Last Updated**: July 19, 2025  
+**Last Updated**: July 20, 2025  
 **Status**: Sprint 2 Complete - Production Deployment In Progress  
 **Production Domain**: https://continuo.pro

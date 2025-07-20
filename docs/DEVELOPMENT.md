@@ -25,7 +25,7 @@ This guide provides comprehensive information for developers working on the Cont
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd get-organized
+   cd continuo
    ```
 
 2. **Start the development environment**

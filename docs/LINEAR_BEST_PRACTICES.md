@@ -10,7 +10,7 @@ This document outlines best practices for using Linear with the Continuo Platfor
 
 ### Project Structure
 - **Team**: Business Dev (f42ec684-5540-47fd-8ff2-6a488004cac3)
-- **Project**: Get-Organized (e9205c7b-a881-498d-acdf-8361f3bfcdd4)
+- **Project**: Continuo (e9205c7b-a881-498d-acdf-8361f3bfcdd4)
 - **Issue Statuses**: Todo, In Progress, In Review, Done, Backlog, Canceled, Duplicate
 
 ### Issue Status Workflow

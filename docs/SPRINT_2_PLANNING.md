@@ -33,7 +33,7 @@ Transform the foundation into a functional business management platform by imple
 
 ### Linear Setup
 - **Team**: Business Dev (f42ec684-5540-47fd-8ff2-6a488004cac3)
-- **Project**: Get-Organized (e9205c7b-a881-498d-acdf-8361f3bfcdd4)
+- **Project**: Continuo (e9205c7b-a881-498d-acdf-8361f3bfcdd4)
 - **Epic Issue**: Sprint 2: Core Business Features (Version 0.2.0) - BUS-1
 - **Total Tasks**: 14 detailed tasks created
 - **Story Points**: ~100 points estimated

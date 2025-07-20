@@ -35,7 +35,7 @@
 ## 📁 **New File Structure**
 
 ```
-get-organized/
+continuo/
 ├── README.md                    # Main project documentation
 ├── CHANGELOG.md                 # Project changelog
 ├── LICENSE                      # Project license

@@ -101,7 +101,7 @@ Sprint 1 of the Continuo platform has been successfully implemented with all cor
 1. **Clone and start**:
    ```bash
    git clone <repository-url>
-   cd get-organized
+   cd continuo
    docker-compose up -d
    ```
 
