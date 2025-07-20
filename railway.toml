@@ -8,8 +8,9 @@ healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
+port = 8080
 
 # Build arguments for different services
 [build.args]
 SERVICE_DIR = "api"
-SERVICE_PORT = "4000" 
+SERVICE_PORT = "8080" 
