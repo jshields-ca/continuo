@@ -20,15 +20,15 @@ RUN npm run build
 # ---- Production Stage ----
 FROM node:18-alpine AS runner
 
-WORKDIR /app/web-app
+WORKDIR /app
 
-# Copy the standalone output to /app/web-app where Railway expects it
+# Copy the standalone output to /app where Railway expects it when running from monorepo root
 COPY --from=builder /app/web-app/.next/standalone/ ./
 COPY --from=builder /app/web-app/.next/static ./.next/static
 COPY --from=builder /app/web-app/public ./public
 COPY --from=builder /app/web-app/package.json ./package.json
 
-EXPOSE 3000
+EXPOSE 8080
 ENV NODE_ENV=production
 
 CMD ["node", "server.js"] 
