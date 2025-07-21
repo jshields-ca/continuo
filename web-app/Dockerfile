@@ -32,4 +32,4 @@ EXPOSE 8080
 ENV PORT=8080
 ENV NODE_ENV=production
 
-CMD ["node", "web-app/server.js"] 
+CMD ["node", ".next/standalone/server.js"] 
