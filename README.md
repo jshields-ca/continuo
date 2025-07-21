@@ -7,7 +7,7 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com/)
-[![Version](https://img.shields.io/badge/Version-0.2.3-orange.svg)](https://github.com/jshields-ca/Continuo)
+![Version](https://img.shields.io/badge/Version-0.2.4-orange.svg)](https://github.com/jshields-ca/Continuo)
 [![Sprint](https://img.shields.io/badge/Sprint-2%2086%25%20Complete-yellow.svg)](https://linear.app/scootr-ca/team/Business%20Dev/active)
 [![Production](https://img.shields.io/badge/Production-continuo.pro-brightgreen.svg)](https://continuo.pro)
 
@@ -81,7 +81,7 @@
 - **Authentication Context**: Complete auth state management
 - **Responsive Design**: Mobile-first approach with modern UI
 
-### ✅ Sprint 2 - In Progress (Version 0.2.3)
+### ✅ Sprint 2 - In Progress (Version 0.2.4)
 **Status**: 86% Complete - Real Data Integration & Bug Fixes
 
 #### ✅ Completed Features
@@ -382,7 +382,32 @@ This project is currently in active development. For questions or support, pleas
 
 ---
 
-**Version**: 0.2.3  
-**Last Updated**: July 20, 2025  
-**Status**: Sprint 2 Complete - Production Deployment In Progress  
+**Version**: 0.2.4  
+**Last Updated**: July 21, 2025  
+**Status**: Sprint 2 Complete - Production & Dev Environments Stable  
 **Production Domain**: https://continuo.pro
+
+## 🚀 Deployment Status (July 2025)
+
+- **Production**: https://continuo.pro (live, stable)
+- **Dev Web**: https://continuo-web-dev.up.railway.app (live, health endpoint returns status 'ok')
+- **Dev API**: https://continuo-api-dev.up.railway.app (live, health endpoint returns status 'ok')
+- **Database/Redis**: Both environments use the same Railway Postgres and Redis instance for now
+- **CORS/API Connectivity**: Dynamic CORS origin handling, all network issues resolved
+- **Next Steps**: Continue feature development, follow documented workflow for seeding, deployment, and environment management
+
+## 🔄 Branch & Deployment Workflow
+
+- **main branch**: Ongoing development and dev deployments
+- **production branch**: Production deployments
+- **Push Workflow**: See [RAILWAY_DEPLOYMENT.md](./docs/RAILWAY_DEPLOYMENT.md) for full details
+
+## 📄 Documentation
+
+- All deployment, environment, and workflow docs consolidated in [docs/RAILWAY_DEPLOYMENT.md](./docs/RAILWAY_DEPLOYMENT.md)
+- For database, see [docs/DATABASE_MIGRATIONS.md](./docs/DATABASE_MIGRATIONS.md)
+- For API, see [docs/API.md](./docs/API.md)
+
+## ⚠️ Note on Environments
+
+For simplicity and rapid iteration, both dev and production currently share the same database and Redis instance. This may be split in the future as the project grows.

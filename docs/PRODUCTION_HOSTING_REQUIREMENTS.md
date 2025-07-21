@@ -240,6 +240,6 @@ RATE_LIMIT_MAX_REQUESTS=100
 ---
 
 **Last Updated**: July 19, 2025  
-**Version**: 0.2.3  
+**Version**: 0.2.4  
 **Production Domain**: https://continuo.pro  
 **Status**: Deployment in Progress (90% Complete) 

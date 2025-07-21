@@ -1,6 +1,6 @@
 {
   "name": "continuo-platform",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Continuo - AI-powered business management platform for small businesses",
   "private": true,
   "workspaces": [
