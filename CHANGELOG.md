@@ -7,32 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_No unreleased changes. See [0.2.4] for the latest updates._
+
+## [0.2.4] - 2025-07-21
+
+### Major Changes
+- **Environment & Deployment Overhaul**: All environments (dev, prod, localhost) now use clear, dedicated domains and correct CORS settings. Dev and prod use shared Railway Postgres/Redis for simplicity.
+- **GraphQL Query Fixes**: All dashboard queries updated to use 'limit' instead of 'first' for backend compatibility. Fixed all related data loading and pagination bugs.
+- **CORS & Networking**: Dynamic CORS origin handling implemented. All CORS/network errors resolved for dev and prod.
+- **Database Seeding**: Automated seeding process for dev environment, with test users and demo data. Documented workflow for seeding and restoring environments.
+- **Production Readiness**: Health endpoints, Dockerfile, and Railway config reviewed and fixed for robust deployment.
+- **Documentation Consolidation**: Combined and updated all deployment, environment, and workflow docs. Removed outdated/duplicate files. All references now point to the latest, correct docs.
+
 ### Added
-- **Production Domain Acquisition**
-  - Acquired `continuo.pro` domain for production deployment
-  - Updated all documentation to reflect new production domain
-  - Configured domain for Railway deployment platform
+- **Dedicated Dev Domains**: https://continuo-web-dev.up.railway.app, https://continuo-api-dev.up.railway.app
+- **Dynamic CORS Middleware**: Only allows whitelisted origins, fixing browser CORS errors.
+- **Automated DB Seeding**: Reliable process for resetting dev data.
 
 ### Fixed
-- **Next.js Deployment Issues**
-  - Fixed Next.js standalone deployment error on Railway
-  - Added fallback server.js for deployment reliability
-  - Updated package.json start script with fallback handling
-  - Resolved module not found errors in production deployment
+- **GraphQL Query Arguments**: All dashboard modules now use 'limit' for pagination.
+- **CORS/Network Errors**: All cross-origin and network issues resolved for dev and prod.
+- **API Accessibility**: API now listens on 0.0.0.0 and correct port for Railway.
 
 ### Changed
-- **Production Deployment Status**
-  - Railway deployment progress updated to 90% complete
-  - API service successfully deployed and running
-  - Web service redeploying with deployment fixes
-  - Database migrations completed successfully
+- **Docs**: All deployment, environment, and workflow documentation consolidated and updated for v0.2.4.
+- **README**: Updated with new domains, workflow, and troubleshooting steps.
 
-- **Documentation Consolidation**
-  - Consolidated 5 Railway deployment files into single `RAILWAY_DEPLOYMENT.md`
-  - Merged 4 Sprint 2 progress files into `SPRINT_2_COMPLETE.md`
-  - Removed redundant documentation files to improve maintainability
-  - Updated all cross-references to reflect consolidated structure
-  - Streamlined documentation following best practices
+---
 
 ## [0.2.3] - 2025-07-19
 
