@@ -20,8 +20,8 @@ import {
 
 // GraphQL Queries
 const GET_ACCOUNTS = gql`
-  query GetAccounts($filter: AccountFilterInput, $first: Int) {
-    accounts(filter: $filter, first: $first) {
+  query GetAccounts($filter: AccountFilterInput, $limit: Int) {
+    accounts(filter: $filter, limit: $limit) {
       edges {
         node {
           id
@@ -109,7 +109,7 @@ export default function AccountsPage() {
         type: selectedType || undefined,
         category: selectedCategory || undefined,
       },
-      first: 100,
+      limit: 100,
     },
   });
 

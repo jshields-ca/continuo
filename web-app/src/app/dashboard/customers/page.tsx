@@ -23,8 +23,8 @@ import {
 
 // GraphQL Queries
 const GET_CUSTOMERS = gql`
-  query GetCustomers($filter: CustomerFilterInput, $first: Int) {
-    customers(filter: $filter, first: $first) {
+  query GetCustomers($filter: CustomerFilterInput, $limit: Int) {
+    customers(filter: $filter, limit: $limit) {
       edges {
         node {
           id
@@ -114,7 +114,7 @@ export default function CustomersPage() {
         status: selectedStatus || undefined,
         industry: selectedIndustry || undefined,
       },
-      first: 50,
+      limit: 50,
     },
   });
 

@@ -23,8 +23,8 @@ import {
 
 // GraphQL Queries
 const GET_CONTACTS = gql`
-  query GetContacts($filter: ContactFilterInput, $first: Int) {
-    contacts(filter: $filter, first: $first) {
+  query GetContacts($filter: ContactFilterInput, $limit: Int) {
+    contacts(filter: $filter, limit: $limit) {
       edges {
         node {
           id
@@ -106,7 +106,7 @@ export default function ContactsPage() {
         customerId: selectedCustomer || undefined,
         role: selectedRole || undefined,
       },
-      first: 50,
+      limit: 50,
     },
   });
 

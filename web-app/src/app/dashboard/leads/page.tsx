@@ -26,8 +26,8 @@ import {
 
 // GraphQL Queries
 const GET_LEADS = gql`
-  query GetLeads($filter: LeadFilterInput, $first: Int, $after: String) {
-    leads(filter: $filter, first: $first, after: $after) {
+  query GetLeads($filter: LeadFilterInput, $limit: Int) {
+    leads(filter: $filter, limit: $limit) {
       edges {
         node {
           id
@@ -62,12 +62,6 @@ const GET_LEADS = gql`
           createdAt
           updatedAt
         }
-      }
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-        startCursor
-        endCursor
       }
       totalCount
     }
@@ -161,8 +155,7 @@ export default function LeadsPage() {
         source: selectedSource || undefined,
         assignedTo: selectedAssignee || undefined,
       },
-      first: 50,
-      after: null,
+      limit: 50,
     },
   });
 

@@ -21,8 +21,8 @@ import {
 
 // GraphQL Queries
 const GET_TRANSACTIONS = gql`
-  query GetTransactions($filter: TransactionFilterInput, $first: Int) {
-    transactions(filter: $filter, first: $first) {
+  query GetTransactions($filter: TransactionFilterInput, $limit: Int) {
+    transactions(filter: $filter, limit: $limit) {
       edges {
         node {
           id
@@ -109,7 +109,7 @@ export default function TransactionsPage() {
         type: selectedType || undefined,
         category: selectedCategory || undefined,
       },
-      first: 50,
+      limit: 50,
     },
   });
 
