@@ -24,8 +24,8 @@ WORKDIR /app
 
 # Copy the standalone output to /app where Railway expects it when running from monorepo root
 COPY --from=builder /app/web-app/.next/standalone/ ./
-COPY --from=builder /app/web-app/.next/static ./.next/static
-COPY --from=builder /app/web-app/public ./public
+COPY --from=builder /app/web-app/.next/static ./web-app/.next/static
+COPY --from=builder /app/web-app/public ./web-app/public
 COPY --from=builder /app/web-app/package.json ./package.json
 
 EXPOSE 8080

@@ -30,6 +30,8 @@ services:
       context: ./api
       dockerfile: Dockerfile.dev
     container_name: continuo-api
+    env_file:
+      - ./api/.env
     environment:
       NODE_ENV: development
       DATABASE_URL: postgresql://continuo:continuo_password@postgres:5432/continuo_dev
@@ -52,6 +54,8 @@ services:
       context: ./web-app
       dockerfile: Dockerfile.dev
     container_name: continuo-web
+    env_file:
+      - ./web-app/.env
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:4000/graphql
       NODE_ENV: development
