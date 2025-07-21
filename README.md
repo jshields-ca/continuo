@@ -1,15 +1,15 @@
 # Continuo Platform
 
-**AI-powered business management platform for small businesses**
-
-
-
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com/)
-![Version](https://img.shields.io/badge/Version-0.2.4-orange.svg)](https://github.com/jshields-ca/Continuo)
+![Version](https://img.shields.io/badge/Version-0.2.4-orange.svg)
 [![Sprint](https://img.shields.io/badge/Sprint-2%2086%25%20Complete-yellow.svg)](https://linear.app/scootr-ca/team/Business%20Dev/active)
 [![Production](https://img.shields.io/badge/Production-continuo.pro-brightgreen.svg)](https://continuo.pro)
+
+**AI-powered business management platform for small businesses**
+
+---
 
 ## 🚀 Quick Start
 
@@ -32,168 +32,54 @@
    ```
 
 3. **Access the application**
-   - **Web App**: http://localhost:3000
-   - **API**: http://localhost:4000/graphql
+   - **Web App (Production)**: https://continuo.pro
+   - **Web App (Dev)**: https://continuo-web-dev.up.railway.app
+   - **API (Production)**: https://continuo-api-production.up.railway.app/graphql
+   - **API (Dev)**: https://continuo-api-dev.up.railway.app/graphql
+   - **Local Web App**: http://localhost:3000
+   - **Local API**: http://localhost:4000/graphql
    - **Database Admin**: http://localhost:8080
    - **Email Testing**: http://localhost:8025
 
-4. **Production Access**
-   - **Live Platform**: https://continuo.pro
-   - **API Endpoint**: https://continuo-api-production.up.railway.app/graphql
+| Environment      | Web App URL                                   | API URL                                         | Status   |
+|------------------|-----------------------------------------------|-------------------------------------------------|----------|
+| Production       | https://continuo.pro                          | https://continuo-api-production.up.railway.app/graphql | Live     |
+| Dev (Railway)    | https://continuo-web-dev.up.railway.app       | https://continuo-api-dev.up.railway.app/graphql | Live     |
+| Localhost        | http://localhost:3000                         | http://localhost:4000/graphql                   | Local    |
 
-5. **Test Accounts**
+4. **Test Accounts**
    - **Admin**: `admin@continuo-demo.com` / `TestPassword123!`
-- **Employee**: `employee@continuo-demo.com` / `Employee123!`
+   - **Employee**: `employee@continuo-demo.com` / `Employee123!`
 
-## 📋 Current Status
-
-### ✅ Sprint 1 - Completed (Version 0.1.0)
-**Status**: Released and Stable
-
-#### Authentication & User Management
-- **User Registration**: Complete registration flow with company creation
-- **User Login**: Secure JWT-based authentication
-- **Role-Based Access Control**: Owner, Admin, Manager, Employee, Viewer roles
-- **User Status Management**: Active, Pending, Suspended, Inactive
-- **Password Security**: Strong password validation and bcrypt hashing
-- **Email Verification**: Backend ready (email service integration pending)
-
-#### Company Management
-- **Multi-Tenant Architecture**: Complete company isolation
-- **Company Profiles**: Full company information management
-- **Subscription Plans**: Free, Starter, Professional, Enterprise tiers
-- **Company Settings**: Customizable business settings and preferences
-- **User Invitations**: Backend ready for team member invitations
-
-#### Infrastructure & Security
-- **GraphQL API**: Complete Apollo Server implementation
-- **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: JWT tokens with proper expiration
-- **Security**: Helmet, CORS, rate limiting, input validation
-- **Error Handling**: Comprehensive error handling and logging
-- **Docker**: Full containerization for development and production
-
-#### Frontend Application
-- **Next.js 14**: Modern React framework with App Router
-- **TypeScript**: Full type safety throughout the application
-- **Tailwind CSS**: Beautiful, responsive design system
-- **Apollo Client**: GraphQL client with error handling
-- **Authentication Context**: Complete auth state management
-- **Responsive Design**: Mobile-first approach with modern UI
-
-### ✅ Sprint 2 - In Progress (Version 0.2.4)
-**Status**: 86% Complete - Real Data Integration & Bug Fixes
-
-#### ✅ Completed Features
-
-##### Customer Relationship Management (CRM) Module - COMPLETED ✅
-- **Customer Database (BUS-2)**: Complete customer management with industry categorization
-- **Contact Management (BUS-3)**: Contact directory with customer relationships and role management
-- **Lead Management (BUS-4)**: Lead pipeline with scoring, qualification, and opportunity tracking
-- **Frontend Implementation**: Complete React/TypeScript UI for all CRM features
-- **Real-time Updates**: Live data synchronization across all modules
-- **Advanced Filtering**: Multi-criteria search and filtering capabilities
-- **User Assignment**: Team member assignment and tracking
-- **Activity Tracking**: Complete interaction history and audit trail
-- **Pipeline Analytics**: Real-time metrics and conversion tracking
-- **Mobile Responsive**: Professional mobile-friendly interface
-
-##### Accounting Module - COMPLETED ✅
-- **Chart of Accounts (BUS-5)**: Complete account hierarchy and management system ✅
-- **Transaction Management (BUS-6)**: Complete transaction processing and CRUD operations ✅
-- **Invoice Generation (BUS-7)**: Pending - invoice creation and management system 🟡
-
-**Technical Implementation:**
-- **Backend**: Complete GraphQL API with 30+ operations for CRM and accounting
-- **Frontend**: Next.js 14 with TypeScript and Tailwind CSS
-- **Database**: Customer, Contact, Lead, Opportunity, Account, Transaction models with relationships
-- **Testing**: 100% backend test coverage with comprehensive API validation
-- **Performance**: < 150ms average API response time
-- **Security**: Multi-tenant isolation with JWT authentication
-- **UI/UX**: Professional interface with real-time updates and form validation
-- **Real Data Integration**: All dashboard components use live GraphQL data
-- **GraphQL Connections**: Proper connection-based pagination and data access
-
-#### 🟡 Pending Features
-
-##### Invoice Generation (BUS-7)
-- **Invoice Creation**: Invoice creation, line item management, PDF generation
-- **Payment Tracking**: Payment status and integration with customer system
-- **Financial Reporting**: Advanced financial analytics and reporting
-
-#### 📊 Sprint 2 Progress Summary
-| Task | Status | Completion | Priority |
-|------|--------|------------|----------|
-| BUS-1 | ✅ Complete | 100% | Foundation |
-| BUS-2 | ✅ Complete | 100% | Foundation |
-| BUS-3 | ✅ Complete | 100% | Foundation |
-| BUS-4 | ✅ Complete | 100% | High |
-| BUS-5 | ✅ Complete | 100% | High |
-| BUS-6 | ✅ Complete | 100% | High |
-| BUS-7 | 🟡 Pending | 0% | High |
-
-**Overall Sprint 2 Progress**: 86% Complete (6/7 tasks)
-
-**Module Completion Status:**
-- **CRM Module**: 100% Complete (Backend + Frontend) ✅
-- **Accounting Module**: 86% Complete (BUS-5, BUS-6) ✅
-- **Project Management**: 0% Complete
-- **Reporting & Analytics**: 0% Complete
-- **Enhanced UI/UX**: 100% Complete ✅
-
-#### Linear Project Management
-- **Team**: Business Dev (14 tasks created)
-- **Epic**: Sprint 2: Core Business Features (Version 0.2.0)
-- **Story Points**: ~100 points
-- **Duration**: 6 weeks (August-September 2025)
-- **Status**: 86% Complete - BUS-7 (Invoice Generation) pending
-
-## 🤖 Development Approach
-
-### AI-Assisted Development
-This project is developed using a **human-AI collaboration model**:
-
-- **Primary Developer**: Jeremy Shields (Human)
-- **AI Assistant**: Claude Sonnet 4 (Cursor IDE)
-- **Development Style**: Pair programming with AI assistance
-- **Code Review**: Human oversight with AI suggestions
-- **Testing**: Automated testing with human validation
-- **Documentation**: AI-assisted with human review
-
-### Benefits of This Approach
-- **Rapid Development**: AI accelerates coding and problem-solving
-- **Code Quality**: AI provides best practices and error detection
-- **Consistency**: AI maintains coding standards across the project
-- **Learning**: Human developer gains insights from AI suggestions
-- **Efficiency**: Faster iteration and bug fixing cycles
+---
 
 ## 🏗️ Architecture
 
 ### Backend Stack
-- **Node.js** with Express
-- **Apollo Server** for GraphQL
-- **PostgreSQL** database
-- **Prisma** ORM
-- **Redis** for caching (configured)
-- **JWT** for authentication
-- **bcrypt** for password hashing
+- Node.js with Express
+- Apollo Server for GraphQL
+- PostgreSQL database
+- Prisma ORM
+- Redis for caching (configured)
+- JWT for authentication
+- bcrypt for password hashing
 
 ### Frontend Stack
-- **Next.js 14** with App Router
-- **TypeScript** for type safety
-- **Tailwind CSS** for styling
-- **Apollo Client** for GraphQL
-- **Lucide React** for icons
-- **React Hooks** for state management
+- Next.js 14 with App Router
+- TypeScript for type safety
+- Tailwind CSS for styling
+- Apollo Client for GraphQL
+- Lucide React for icons
+- React Hooks for state management
 
 ### DevOps & Tools
-- **Docker** containerization
-- **Docker Compose** for orchestration
-- **ESLint** for code linting
-- **Prettier** for code formatting
-- **Linear** for project management
-- **Release-it** for automated releases
-- **Conventional Commits** for version control
+- Docker containerization
+- Docker Compose for orchestration
+- ESLint for code linting
+- Prettier for code formatting
+- Linear for project management
+- Release-it for automated releases
+- Conventional Commits for version control
 
 ## 📁 Project Structure
 
@@ -227,25 +113,30 @@ Continuo/
 ├── docs/                  # Project documentation
 │   ├── DEVELOPMENT_PLAN.md
 │   ├── PROJECT_ROADMAP.md
-│   ├── SPRINT_2_PLANNING.md
-│   ├── SPRINT_2_COMPLETE.md
-│   ├── SPRINT_1_COMPLETION.md
-│   ├── LINEAR_BEST_PRACTICES.md
-│   ├── LINEAR_SETUP_CORRECTED.md
-│   ├── RELEASE_WORKFLOW.md
-│   ├── RELEASE_SETUP_COMPLETE.md
-│   ├── RELEASE_0.1.0.md
 │   ├── PROJECT_STATUS_SUMMARY.md
-│   ├── API.md
-│   ├── SECURITY.md
-│   ├── DEVELOPMENT.md
-│   └── RAILWAY_DEPLOYMENT.md
+│   ├── ...
 ├── scripts/               # Build and deployment scripts
 ├── docker-compose.yml     # Docker services configuration
 ├── README.md              # Main project documentation
 ├── CHANGELOG.md           # Project changelog
 └── LICENSE                # Project license
 ```
+
+---
+
+## 📄 Documentation
+
+For detailed project status, roadmap, and development planning, see:
+- [Project Status Summary](./docs/PROJECT_STATUS_SUMMARY.md)
+- [Project Roadmap](./docs/PROJECT_ROADMAP.md)
+- [Development Plan](./docs/DEVELOPMENT_PLAN.md)
+
+Additional documentation:
+- [API Reference](./docs/API.md)
+- [Security](./docs/SECURITY.md)
+- [Release Workflow](./docs/RELEASE_WORKFLOW.md)
+
+---
 
 ## 🔧 Development
 
@@ -289,88 +180,7 @@ npm run db:seed
 npm run db:reset
 ```
 
-## 🚀 Next Steps
-
-### Production Deployment - IN PROGRESS 🚀
-**Status**: Railway deployment in progress (90% complete)
-
-#### Current Deployment Status
-- **Domain**: https://continuo.pro (configured)
-- **Platform**: Railway (Hobby Plan)
-- **Services**: 
-  - ✅ API Service (`continuo-api`) - Deployed and running
-  - 🔄 Web Service (`continuo-web`) - Redeploying after fixes
-  - ✅ PostgreSQL Database (`continuo-db`) - Ready
-  - ✅ Redis Cache (`continuo-redis`) - Ready
-
-#### Recent Deployment Fixes
-- **Issue**: Next.js standalone deployment error
-- **Solution**: Added fallback server.js and updated start script
-- **Status**: Auto-redeploying with fixes applied
-
-#### Next Steps After Web Service Deployment
-1. Configure environment variables for web service
-2. Test login functionality with Admin test user
-3. Verify API connectivity from web service
-4. Configure domain routing to Railway services
-5. Set up SSL certificates
-
-### Testing Phase - CRITICAL (Before Sprint 3)
-**Priority**: High - Must complete before BUS-7 development
-
-#### Comprehensive Testing Requirements
-1. **Dashboard Functionality Testing**
-   - Navigation and routing between all pages
-   - Authentication flow and session management
-   - User role permissions and access control
-   - Real-time data updates and synchronization
-
-2. **CRM Module Testing (BUS-2, BUS-3, BUS-4)**
-   - Customer database CRUD operations
-   - Contact management and relationships
-   - Lead pipeline and opportunity tracking
-   - Search, filtering, and export functionality
-   - User assignment and activity tracking
-
-3. **Accounting Module Testing (BUS-5, BUS-6)**
-   - Chart of accounts hierarchy and management
-   - Transaction creation, editing, and deletion
-   - Account balance calculations and reconciliation
-   - Date handling and validation
-   - Export functionality and data integrity
-
-4. **Integration Testing**
-   - Cross-module data relationships
-   - Multi-tenant isolation and security
-   - API performance under load
-   - Error handling and user feedback
-
-5. **User Experience Testing**
-   - Form validation and error messages
-   - Mobile responsiveness
-   - Loading states and performance
-   - Accessibility and usability
-
-#### Testing Timeline
-- **Duration**: 2-3 weeks
-- **Focus**: End-to-end testing of all implemented features
-- **Deliverable**: Test report with bug fixes and improvements
-- **Exit Criteria**: All critical issues resolved, performance validated
-
-### Sprint 3 Planning (Version 0.3.0) - AFTER Testing Phase
-- **Invoice & Billing System (BUS-7)**: Complete billing functionality
-- **Project Management**: Task tracking and project workflows
-- **Reporting & Analytics**: Business intelligence and reporting
-- **Enhanced UI/UX**: Improved user experience and mobile optimization
-- **Performance Optimization**: Database optimization and caching
-- **Security Enhancements**: Advanced security features and audit trails
-
-### Production Readiness
-- **Deployment Pipeline**: CI/CD setup for production
-- **Monitoring**: Application monitoring and logging
-- **Backup Strategy**: Database backup and recovery
-- **Documentation**: User guides and API documentation
-- **Testing**: End-to-end testing and performance testing
+---
 
 ## 📄 License
 
@@ -382,32 +192,46 @@ This project is currently in active development. For questions or support, pleas
 
 ---
 
-**Version**: 0.2.4  
-**Last Updated**: July 21, 2025  
-**Status**: Sprint 2 Complete - Production & Dev Environments Stable  
-**Production Domain**: https://continuo.pro
+## 📚 Full Documentation Index
 
-## 🚀 Deployment Status (July 2025)
+### Canonical Docs
+- [Project Status Summary](./docs/PROJECT_STATUS_SUMMARY.md) *(Single source for current status, sprints, and progress)*
+- [Project Roadmap](./docs/PROJECT_ROADMAP.md) *(Single source for future plans and features)*
+- [Development Plan](./docs/DEVELOPMENT_PLAN.md) *(Single source for technical approach and methodology)*
+- [API Reference](./docs/API.md)
+- [Security](./docs/SECURITY.md)
+- [Release Workflow](./docs/RELEASE_WORKFLOW.md)
+- [Changelog](./CHANGELOG.md)
 
-- **Production**: https://continuo.pro (live, stable)
-- **Dev Web**: https://continuo-web-dev.up.railway.app (live, health endpoint returns status 'ok')
-- **Dev API**: https://continuo-api-dev.up.railway.app (live, health endpoint returns status 'ok')
-- **Database/Redis**: Both environments use the same Railway Postgres and Redis instance for now
-- **CORS/API Connectivity**: Dynamic CORS origin handling, all network issues resolved
-- **Next Steps**: Continue feature development, follow documented workflow for seeding, deployment, and environment management
+### Technical & Environment Docs
+- [Localhost Testing Fixes](./docs/LOCALHOST_TESTING_FIXES.md)
+- [Production Hosting Requirements](./docs/PRODUCTION_HOSTING_REQUIREMENTS.md)
+- [Railway Deployment](./docs/RAILWAY_DEPLOYMENT.md)
+- [Database Migrations](./docs/DATABASE_MIGRATIONS.md)
 
-## 🔄 Branch & Deployment Workflow
+### Process & Best Practices
+- [Linear Best Practices](./docs/LINEAR_BEST_PRACTICES.md)
+- [Linear Setup Corrected](./docs/LINEAR_SETUP_CORRECTED.md)
+- [File Structure Reorganization](./docs/FILE_STRUCTURE_REORGANIZATION_COMPLETE.md)
+- [Security](./docs/SECURITY.md)
 
-- **main branch**: Ongoing development and dev deployments
-- **production branch**: Production deployments
-- **Push Workflow**: See [RAILWAY_DEPLOYMENT.md](./docs/RAILWAY_DEPLOYMENT.md) for full details
+### Historical & Sprint Docs
+- [Sprint 2 Planning](./docs/SPRINT_2_PLANNING.md)
+- [Sprint 2 Complete](./docs/SPRINT_2_COMPLETE.md)
+- [Sprint 1 Completion](./docs/SPRINT_1_COMPLETION.md)
+- [Release 0.1.0](./docs/RELEASE_0.1.0.md)
+- [Release Setup Complete](./docs/RELEASE_SETUP_COMPLETE.md)
+- [Rebranding to Continuo Complete](./docs/REBRANDING_TO_CONTINUO_COMPLETE.md)
+- [BUS_3 Contact Management Complete](./docs/BUS_3_CONTACT_MANAGEMENT_COMPLETE.md)
+- [BUS_5 Frontend Implementation](./docs/BUS_5_FRONTEND_IMPLEMENTATION.md)
+- [CRM Frontend Implementation](./docs/CRM_FRONTEND_IMPLEMENTATION.md)
+- [Testing Phase Plan](./docs/TESTING_PHASE_PLAN.md)
 
-## 📄 Documentation
+---
 
-- All deployment, environment, and workflow docs consolidated in [docs/RAILWAY_DEPLOYMENT.md](./docs/RAILWAY_DEPLOYMENT.md)
-- For database, see [docs/DATABASE_MIGRATIONS.md](./docs/DATABASE_MIGRATIONS.md)
-- For API, see [docs/API.md](./docs/API.md)
+## 🗂️ Issues & Project Management
 
-## ⚠️ Note on Environments
+- **Internal Planning & Status:** Use [Linear](https://linear.app/scootr-ca/team/Business%20Dev/active) for all sprint, epic, and planning issues. All internal docs link to Linear issues/epics.
+- **Public Bug Reports & Feature Requests:** Use [GitHub Issues](https://github.com/jshields-ca/Continuo/issues) for open source contributions and public tracking. Public docs link to GitHub issues.
 
-For simplicity and rapid iteration, both dev and production currently share the same database and Redis instance. This may be split in the future as the project grows.
+---

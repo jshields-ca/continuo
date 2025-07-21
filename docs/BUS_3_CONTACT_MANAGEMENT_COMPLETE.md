@@ -1,3 +1,6 @@
+<!--
+HISTORICAL DOCUMENT: This file is retained for historical reference only. For the current project status and planning, see [PROJECT_STATUS_SUMMARY.md](./PROJECT_STATUS_SUMMARY.md) and [PROJECT_ROADMAP.md](./PROJECT_ROADMAP.md).
+-->
 # BUS-3: Contact Management System - Complete
 
 ## ✅ **Contact Management Implementation Complete**
