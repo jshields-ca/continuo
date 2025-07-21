@@ -121,7 +121,7 @@ async function startServer() {
   
   const PORT = process.env.PORT || 4000;
   
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
     logger.info(`📊 Health check available at http://localhost:${PORT}/health`);
   });
