@@ -1,0 +1,52 @@
+name: Issue Title Lint
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  lint-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check issue title format
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const requiredPattern = /^\[.+\] .+/;
+            const title = context.payload.issue.title;
+            const issue_number = context.payload.issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            if (!requiredPattern.test(title)) {
+              // Add a comment if not already present
+              const commentBody = `🚨 **Issue Title Format Error** 🚨\n\nYour issue title does not match the required format:\n\n\`[Module] Brief description of the feature/task\`\n\n**Examples:**\n- [CRM Module] Customer Database Implementation\n- [UX] Responsive Design Implementation\n\nPlease edit your issue title to match this format. Thank you!`;
+
+              // Add a comment
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: commentBody
+              });
+
+              // Add a label
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number,
+                labels: ['needs-title-fix']
+              });
+            } else {
+              // Remove the label if present
+              try {
+                await github.rest.issues.removeLabel({
+                  owner,
+                  repo,
+                  issue_number,
+                  name: 'needs-title-fix'
+                });
+              } catch (e) {
+                // Ignore if label not present
+              }
+            } 
