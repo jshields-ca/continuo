@@ -5,12 +5,23 @@
 ### Project Structure
 - **Team**: Business Dev (f42ec684-5540-47fd-8ff2-6a488004cac3)
 - **Project**: Continuo (e9205c7b-a881-498d-acdf-8361f3bfcdd4)
-- **Issue Statuses**: Todo, In Progress, In Review, Done, Backlog, Canceled, Duplicate
+- **Issue Statuses**: Backlog, Todo, In Progress, localhost Testing, Prod Testing, In Review, Done, Canceled, Duplicate
 
 ### Issue Status Workflow
 ```
-Backlog → Todo → In Progress → In Review → Done
+Backlog → Todo → In Progress → localhost Testing → Prod Testing → In Review → Done
 ```
+- **Backlog**: Not yet planned for work, future consideration.
+- **Todo**: Planned and ready to be worked on in the current or next sprint.
+- **In Progress**: Actively being worked on by an assignee.
+- **localhost Testing**: Feature/bugfix is ready for or undergoing local environment testing.
+- **Prod Testing**: Feature/bugfix is deployed to production or staging for final verification.
+- **In Review**: Awaiting code review, QA, or stakeholder approval.
+- **Done**: Completed, merged, and deployed as appropriate.
+- **Canceled**: Work was stopped and will not be completed.
+- **Duplicate**: Issue is a duplicate of another and will not be worked on.
+
+> **Note:** If any labels listed in this document are not present in Linear, they should be created to ensure consistent issue tracking and filtering.
 
 ### Priority Levels
 - **Urgent (1)**: Critical bugs, security issues, blocking issues
@@ -57,10 +68,12 @@ Backlog → Todo → In Progress → In Review → Done
 ```
 
 Examples:
-- `CRM Module: Customer Database Implementation`
-- `Accounting Module: Invoice Generation System`
-- `Project Management: Time Tracking System`
-- `Enhanced UI/UX: Responsive Design Implementation`
+- `[CRM Module] Customer Database Implementation`
+- `[Accounting Module] Invoice Generation System`
+- `[Project Management] Time Tracking System`
+- `[UX] Responsive Design Implementation`
+
+> **All new issues must use this bracketed format. Automated checks will flag issues that do not comply.**
 
 ### Issue Description Template
 ```markdown
@@ -310,3 +323,18 @@ Examples:
 
 *Linear Best Practices Guide - Version 1.0 - July 19, 2025*
 *Status: Sprint 2 Linear Setup Complete* 
+
+## Automated Issue Title Checks
+
+A GitHub Action is now in place to enforce the required issue title convention:
+
+- **Required Format:** `[Module] Brief description of the feature/task`
+- When a new issue is created or edited on GitHub, the action will:
+  - Check the title for compliance.
+  - If the title does not match, comment on the issue and add a `needs-title-fix` label.
+  - When the title is corrected, the label will be removed automatically.
+- This helps maintain a clean, searchable, and professional issue tracker.
+
+> **Note:** This automation applies to all issues created or edited on GitHub. For Linear-native issues, please follow the same convention manually.
+
+If you have questions about the correct format, refer to the examples above or ask the project maintainer. 
