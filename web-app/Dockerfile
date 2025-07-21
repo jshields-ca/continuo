@@ -29,6 +29,7 @@ COPY --from=builder /app/web-app/public ./public
 COPY --from=builder /app/web-app/package.json ./package.json
 
 EXPOSE 8080
+ENV PORT=8080
 ENV NODE_ENV=production
 
-CMD ["node", "server.js"] 
+CMD ["node", "web-app/server.js"] 
