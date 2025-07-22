@@ -94,15 +94,19 @@ Continuo Platform is an AI-powered business management platform designed for sma
 #### 📊 Sprint 2 Progress Summary
 | Task | Status | Completion | Priority |
 |------|--------|------------|----------|
-| BUS-1 | ✅ Complete | 100% | Foundation |
-| BUS-2 | ✅ Complete | 100% | Foundation |
-| BUS-3 | ✅ Complete | 100% | Foundation |
-| BUS-4 | ✅ Complete | 100% | High |
-| BUS-5 | ✅ Complete | 100% | High |
-| BUS-6 | ✅ Complete | 100% | High |
+| BUS-1 | 🟡 In Progress | 75% | Foundation |
+| BUS-2 | ✅ Dev Testing | 100% | Foundation |
+| BUS-3 | ✅ Dev Testing | 100% | Foundation |
+| BUS-4 | ✅ Dev Testing | 100% | High |
+| BUS-5 | ✅ Dev Testing | 100% | High |
+| BUS-6 | ✅ Dev Testing | 100% | High |
 | BUS-7 | 🟡 In Progress | 25% | High |
+| BUS-15 | ✅ Done | 100% | High |
+| BUS-16 | 🔄 Prod Testing | 90% | High |
+| BUS-22 | 🔄 Prod Testing | 90% | High |
+| BUS-25 | ✅ Dev Testing | 100% | High |
 
-**Overall Sprint 2 Progress**: 75% Complete (6/7 tasks implemented, 1 in progress)
+**Overall Sprint 2 Progress**: 75% Complete (9/11 core tasks implemented, 2 in progress)
 
 **Module Completion Status:**
 - **CRM Module**: 100% Complete (Backend + Frontend) ✅
@@ -116,7 +120,7 @@ Continuo Platform is an AI-powered business management platform designed for sma
 - **Epic**: Sprint 2: Core Business Features (Version 0.2.5)
 - **Story Points**: ~100 points
 - **Duration**: 6 weeks (July 2025)
-- **Status**: In Progress (75% Complete) - 8 issues in Dev Testing, 1 in progress
+- **Status**: In Progress (75% Complete) - 6 issues in Dev Testing, 2 in progress, 2 in Prod Testing
 
 ## 🚀 Production Deployment Status
 
