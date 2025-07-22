@@ -32,20 +32,12 @@
    ```
 
 3. **Access the application**
-   - **Web App (Production)**: https://continuo.pro
-   - **Web App (Dev)**: https://continuo-web-dev.up.railway.app
-   - **API (Production)**: https://api.continuo.pro/graphql
-   - **API (Dev)**: https://continuo-api-dev.up.railway.app/graphql
-   - **Local Web App**: http://localhost:3000
-   - **Local API**: http://localhost:4000/graphql
-   - **Database Admin**: http://localhost:8080
-   - **Email Testing**: http://localhost:8025
 
-| Environment      | Web App URL                                   | API URL                                         | Status   |
-|------------------|-----------------------------------------------|-------------------------------------------------|----------|
-| Production       | https://continuo.pro                          | https://api.continuo.pro/graphql                | Live     |
-| Dev (Railway)    | https://continuo-web-dev.up.railway.app       | https://continuo-api-dev.up.railway.app/graphql | Live     |
-| Localhost        | http://localhost:3000                         | http://localhost:4000/graphql                   | Local    |
+| Environment      | Web App URL                                   | API URL                                         | Database Admin | Email Testing | Status   |
+|------------------|-----------------------------------------------|-------------------------------------------------|----------------|---------------|----------|
+| Production       | https://continuo.pro                          | https://api.continuo.pro/graphql                | -              | -             | Live     |
+| Dev (Railway)    | https://continuo-web-dev.up.railway.app       | https://continuo-api-dev.up.railway.app/graphql | -              | -             | Live     |
+| Localhost        | http://localhost:3000                         | http://localhost:4000/graphql                   | http://localhost:8080 | http://localhost:8025 | Local    |
 
 4. **Test Accounts**
    - **Admin**: `admin@continuo-demo.com` / `TestPassword123!`
