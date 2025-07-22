@@ -33,7 +33,13 @@ const leadResolvers = {
           }
           if (filter.source) where.source = filter.source;
           if (filter.status) where.status = filter.status;
-          if (filter.assignedTo) where.assignedTo = filter.assignedTo;
+          if (filter.assignedTo !== undefined) {
+            if (filter.assignedTo === null) {
+              where.assignedTo = null; // Filter for unassigned leads
+            } else {
+              where.assignedTo = filter.assignedTo; // Filter for specific user
+            }
+          }
           if (filter.industry) where.industry = filter.industry;
           if (filter.tags && filter.tags.length > 0) {
             where.tags = { hasSome: filter.tags };
@@ -558,6 +564,35 @@ const leadResolvers = {
           });
         }
 
+        // Track changes for activity logging
+        const changes = {};
+        const changeDescriptions = [];
+
+        // Compare each field to track what changed
+        Object.keys(input).forEach(key => {
+          if (input[key] !== undefined && input[key] !== existingLead[key]) {
+            changes[key] = {
+              from: existingLead[key],
+              to: input[key]
+            };
+            
+            // Create human-readable change descriptions
+            if (key === 'status') {
+              changeDescriptions.push(`Status changed from ${existingLead[key]} to ${input[key]}`);
+            } else if (key === 'score') {
+              changeDescriptions.push(`Score changed from ${existingLead[key]} to ${input[key]}`);
+            } else if (key === 'source') {
+              changeDescriptions.push(`Source changed from ${existingLead[key]} to ${input[key]}`);
+            } else if (key === 'assignedTo') {
+              changeDescriptions.push(`Assignment changed from ${existingLead[key] || 'Unassigned'} to ${input[key] || 'Unassigned'}`);
+            } else if (key === 'notes') {
+              changeDescriptions.push('Notes updated');
+            } else {
+              changeDescriptions.push(`${key.charAt(0).toUpperCase() + key.slice(1)} updated`);
+            }
+          }
+        });
+
         const lead = await prisma.lead.update({
           where: { id },
           data: {
@@ -571,15 +606,21 @@ const leadResolvers = {
           }
         });
 
-        // Create activity record for update
-        await prisma.leadActivity.create({
-          data: {
-            leadId: lead.id,
-            activityType: 'NOTE_ADDED',
-            description: 'Lead information updated',
-            createdBy: user.id
-          }
-        });
+        // Create detailed activity record for update
+        if (Object.keys(changes).length > 0) {
+          await prisma.leadActivity.create({
+            data: {
+              leadId: lead.id,
+              activityType: 'OTHER',
+              description: changeDescriptions.join(', '),
+              metadata: {
+                changes,
+                updatedFields: Object.keys(changes)
+              },
+              createdBy: user.id
+            }
+          });
+        }
 
         logger.info(`Lead updated: ${lead.id} by user: ${user.id}`);
         return lead;
@@ -661,6 +702,17 @@ const leadResolvers = {
           }
         });
 
+        // Log activity
+        await prisma.leadActivity.create({
+          data: {
+            leadId: input.leadId,
+            activityType: 'OTHER',
+            description: `Created opportunity '${opportunity.title}'`,
+            metadata: { opportunityId: opportunity.id },
+            createdBy: user.id
+          }
+        });
+
         logger.info(`Opportunity created: ${opportunity.id} by user: ${user.id}`);
         return opportunity;
       } catch (error) {
@@ -695,6 +747,37 @@ const leadResolvers = {
           });
         }
 
+        // Track changes for activity logging
+        const changes = {};
+        const changeDescriptions = [];
+
+        // Compare each field to track what changed
+        Object.keys(input).forEach(key => {
+          if (input[key] !== undefined && input[key] !== existingOpportunity[key]) {
+            changes[key] = {
+              from: existingOpportunity[key],
+              to: input[key]
+            };
+            
+            // Create human-readable change descriptions
+            if (key === 'stage') {
+              changeDescriptions.push(`Stage changed from ${existingOpportunity[key]} to ${input[key]}`);
+            } else if (key === 'probability') {
+              changeDescriptions.push(`Probability changed from ${existingOpportunity[key]}% to ${input[key]}%`);
+            } else if (key === 'amount') {
+              changeDescriptions.push(`Amount changed from $${existingOpportunity[key] || 0} to $${input[key] || 0}`);
+            } else if (key === 'expectedCloseDate') {
+              changeDescriptions.push('Expected close date updated');
+            } else if (key === 'title') {
+              changeDescriptions.push(`Title changed from "${existingOpportunity[key]}" to "${input[key]}"`);
+            } else if (key === 'notes') {
+              changeDescriptions.push('Notes updated');
+            } else {
+              changeDescriptions.push(`${key.charAt(0).toUpperCase() + key.slice(1)} updated`);
+            }
+          }
+        });
+
         const opportunity = await prisma.opportunity.update({
           where: { id },
           data: {
@@ -706,6 +789,23 @@ const leadResolvers = {
             lead: true
           }
         });
+
+        // Log detailed activity
+        if (Object.keys(changes).length > 0) {
+          await prisma.leadActivity.create({
+            data: {
+              leadId: opportunity.leadId,
+              activityType: 'OTHER',
+              description: `Updated opportunity '${opportunity.title}': ${changeDescriptions.join(', ')}`,
+              metadata: { 
+                opportunityId: opportunity.id,
+                changes,
+                updatedFields: Object.keys(changes)
+              },
+              createdBy: user.id
+            }
+          });
+        }
 
         logger.info(`Opportunity updated: ${opportunity.id} by user: ${user.id}`);
         return opportunity;
@@ -743,6 +843,17 @@ const leadResolvers = {
 
         await prisma.opportunity.delete({
           where: { id }
+        });
+
+        // Log activity
+        await prisma.leadActivity.create({
+          data: {
+            leadId: existingOpportunity.leadId,
+            activityType: 'OTHER',
+            description: `Deleted opportunity '${existingOpportunity.title}'`,
+            metadata: { opportunityId: existingOpportunity.id },
+            createdBy: user.id
+          }
         });
 
         logger.info(`Opportunity deleted: ${id} by user: ${user.id}`);

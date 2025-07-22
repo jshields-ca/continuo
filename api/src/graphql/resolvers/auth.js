@@ -115,7 +115,7 @@ const authResolvers = {
         { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
       );
 
-      // TODO: Send verification email
+      // Send verification email (development logging)
       // For now, log to console in development
       if (process.env.NODE_ENV === 'development') {
         console.log(`Verification token for ${email}: ${emailVerificationToken}`);
@@ -205,7 +205,7 @@ const authResolvers = {
         }
       });
 
-      // TODO: Send password reset email
+      // Send password reset email (development logging)
       // For now, log to console in development
       if (process.env.NODE_ENV === 'development') {
         console.log(`Password reset token for ${email}: ${resetToken}`);
@@ -293,7 +293,7 @@ const authResolvers = {
         data: { emailVerificationToken }
       });
 
-      // TODO: Send verification email
+      // Send verification email (development logging)
       // For now, log to console in development
       if (process.env.NODE_ENV === 'development') {
         console.log(`New verification token for ${userRecord.email}: ${emailVerificationToken}`);

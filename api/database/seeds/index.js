@@ -180,7 +180,8 @@ async function main() {
         name: 'Cash',
         type: 'ASSET',
         category: 'CURRENT_ASSETS',
-        description: 'Cash and cash equivalents'
+        description: 'Cash and cash equivalents',
+        isTaxable: false
       }
     }),
     prisma.account.upsert({
@@ -197,7 +198,8 @@ async function main() {
         name: 'Accounts Receivable',
         type: 'ASSET',
         category: 'CURRENT_ASSETS',
-        description: 'Amounts owed by customers'
+        description: 'Amounts owed by customers',
+        isTaxable: false
       }
     }),
     // Liabilities
@@ -215,7 +217,8 @@ async function main() {
         name: 'Accounts Payable',
         type: 'LIABILITY',
         category: 'CURRENT_LIABILITIES',
-        description: 'Amounts owed to suppliers'
+        description: 'Amounts owed to suppliers',
+        isTaxable: false
       }
     }),
     // Equity
@@ -233,7 +236,8 @@ async function main() {
         name: 'Owner\'s Equity',
         type: 'EQUITY',
         category: 'OWNERS_EQUITY',
-        description: 'Owner\'s investment in the business'
+        description: 'Owner\'s investment in the business',
+        isTaxable: false
       }
     }),
     // Revenue
@@ -251,7 +255,8 @@ async function main() {
         name: 'Sales Revenue',
         type: 'REVENUE',
         category: 'OPERATING_REVENUE',
-        description: 'Revenue from sales of goods and services'
+        description: 'Revenue from sales of goods and services',
+        isTaxable: true
       }
     }),
     // Expenses
@@ -269,24 +274,8 @@ async function main() {
         name: 'Cost of Goods Sold',
         type: 'EXPENSE',
         category: 'COST_OF_GOODS_SOLD',
-        description: 'Direct costs of producing goods sold'
-      }
-    }),
-    prisma.account.upsert({
-      where: { 
-        companyId_code: { 
-          companyId: demoCompany.id, 
-          code: '6000' 
-        } 
-      },
-      update: {},
-      create: {
-        companyId: demoCompany.id,
-        code: '6000',
-        name: 'Operating Expenses',
-        type: 'EXPENSE',
-        category: 'OPERATING_EXPENSES',
-        description: 'General operating expenses'
+        description: 'Direct costs of producing goods sold',
+        isTaxable: true
       }
     })
   ]);

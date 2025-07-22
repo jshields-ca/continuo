@@ -21,6 +21,7 @@ Welcome to the Continuo documentation hub. This page serves as the entry point a
 
 ## 📋 Process & Best Practices
 - [Linear Best Practices](./LINEAR_BEST_PRACTICES.md)
+- [Linear Labels Reference](./LINEAR_LABELS_REFERENCE.md)
 - [Linear Setup Corrected](./LINEAR_SETUP_CORRECTED.md)
 - [File Structure Reorganization](./FILE_STRUCTURE_REORGANIZATION_COMPLETE.md)
 - [Security](./SECURITY.md)

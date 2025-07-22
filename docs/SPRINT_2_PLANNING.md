@@ -39,7 +39,7 @@ Transform the foundation into a functional business management platform by imple
 - **Total Tasks**: 14 detailed tasks created
 - **Story Points**: ~100 points estimated
 - **Priority Distribution**: 12 High, 2 Medium priority tasks
-- **Workflow**: Backlog → Todo → In Progress → In Review → Done
+- **Workflow**: Backlog → Todo → In Progress → Dev (Localhost) Testing → Dev (Railway) Testing → Prod Testing → Ready for Release → In Review → PR Approved → Done
 
 ### Task Breakdown ✅ COMPLETE
 

@@ -61,7 +61,7 @@ async function startServer() {
         status: 'healthy',
         service: 'continuo-api',
         timestamp: new Date().toISOString(),
-        version: process.env.npm_package_version || '0.2.4',
+        version: process.env.npm_package_version || '0.2.5',
         environment: process.env.NODE_ENV || 'development',
         database: process.env.DATABASE_URL ? 'configured' : 'not configured',
         cors: process.env.CORS_ORIGIN || 'default',

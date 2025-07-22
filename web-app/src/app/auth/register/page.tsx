@@ -111,7 +111,7 @@ export default function RegisterPage() {
                     required
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
                     placeholder="John"
                   />
                 </div>
@@ -129,7 +129,7 @@ export default function RegisterPage() {
                     required
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
                     placeholder="Doe"
                   />
                 </div>
@@ -151,7 +151,7 @@ export default function RegisterPage() {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
                   placeholder="john@company.com"
                 />
               </div>
@@ -171,7 +171,7 @@ export default function RegisterPage() {
                   required
                   value={formData.companyName}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
                   placeholder="Your Company Inc."
                 />
               </div>
@@ -192,7 +192,7 @@ export default function RegisterPage() {
                     required
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
+                    className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
                     placeholder="Create a strong password"
                   />
                   <button
@@ -217,7 +217,7 @@ export default function RegisterPage() {
                     required
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white"
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
                     placeholder="Confirm your password"
                   />
                 </div>
@@ -231,7 +231,7 @@ export default function RegisterPage() {
                 name="terms"
                 type="checkbox"
                 required
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
               />
               <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
                 I agree to the{' '}

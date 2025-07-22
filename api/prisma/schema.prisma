@@ -81,6 +81,9 @@ model User {
   // Lead assignments
   assignedLeads Lead[] @relation("AssignedLeads")
   
+  // Audit logs
+  auditLogs AuditLog[]
+  
   // Audit fields
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -358,6 +361,9 @@ model AuditLog {
   ipAddress String?
   userAgent String?
   createdAt DateTime @default(now())
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("audit_logs")
 }

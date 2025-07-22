@@ -167,7 +167,7 @@ const userResolvers = {
         include: { company: true }
       });
 
-      // TODO: Send invitation email with temporary password
+      // Send invitation email with temporary password (development logging)
       // For now, log to console in development
       if (process.env.NODE_ENV === 'development') {
         console.log(`Temporary password for ${input.email}: ${tempPassword}`);

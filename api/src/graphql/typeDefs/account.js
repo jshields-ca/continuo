@@ -84,6 +84,28 @@ const accountTypeDefs = gql`
     updatedBy: String
   }
 
+  # Audit Log Type
+  type AuditLog {
+    id: ID!
+    userId: ID!
+    user: User!
+    companyId: ID!
+    action: String!
+    entity: String!
+    entityId: String
+    oldValues: JSON
+    newValues: JSON
+    ipAddress: String
+    userAgent: String
+    createdAt: DateTime!
+  }
+
+  # Transaction History Type
+  type TransactionHistory {
+    transaction: Transaction!
+    auditLogs: [AuditLog!]!
+  }
+
   # Transaction Type
   type Transaction {
     id: ID!
@@ -211,6 +233,7 @@ const accountTypeDefs = gql`
     transactions(filter: TransactionFilterInput, limit: Int, offset: Int): [Transaction!]!
     transaction(id: ID!): Transaction
     accountTransactions(accountId: ID!, limit: Int, offset: Int): [Transaction!]!
+    transactionHistory(transactionId: ID!): TransactionHistory!
     
     # Chart of Accounts queries
     chartOfAccounts: [Account!]!

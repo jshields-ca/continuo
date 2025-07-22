@@ -5,9 +5,59 @@ All notable changes to the Continuo Platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.5] - 2025-07-22
+
+### Major Changes
+- **Modal UX Consistency**: Implemented professional modal designs across all modules (Accounts, Transactions, Customers, Contacts) with consistent styling, accessibility features, and visual hierarchy.
+- **Cross-Module Design Standards**: Applied uniform design patterns, enhanced summary cards, improved filters, tables, loading states, and empty states across all business modules.
+- **Dashboard Activity Feed**: Enhanced dashboard with real activity data from leads, transactions, and other sources, including performance optimization and rate limiting management.
+- **Lead Management Enhancements**: Completed opportunity management, activity logging, assignment functionality, and enhanced UX with professional styling.
+- **Production Readiness**: Application is now production-ready with stable API performance, comprehensive error handling, and professional user interface.
+
+### Added
+- **Professional Modal System**: Consistent modal designs with sectioned layouts, icons, and enhanced accessibility
+- **Real Activity Feed**: Dashboard now displays live business activities with proper categorization and timestamps
+- **Opportunity Management**: Complete CRUD operations for opportunities within lead details
+- **Assignment Functionality**: Full user assignment and filtering capabilities for leads
+- **Enhanced Error Handling**: Rate limiting detection and user-friendly error messages
+- **Accessibility Improvements**: Enhanced ARIA labels, keyboard navigation, and screen reader support
+
+### Changed
+- **UI/UX Standards**: All modules now follow consistent design patterns and professional styling
+- **Performance Optimization**: Implemented staggered loading to prevent API rate limiting
+- **GraphQL Query Structure**: Fixed query arguments and data access patterns for production reliability
+- **Modal Interactions**: Enhanced user experience with better data organization and visual hierarchy
+
+### Fixed
+- **Rate Limiting Issues**: Resolved 429 errors with optimized API call scheduling
+- **GraphQL Query Errors**: Fixed query structure and data access patterns
+- **Modal UX Inconsistencies**: Standardized modal designs across all business modules
+- **Accessibility Issues**: Enhanced keyboard navigation and screen reader support
+
+### Technical Improvements
+- **API Performance**: Reduced simultaneous API calls and improved response times
+- **Error Recovery**: Implemented graceful error handling and user feedback mechanisms
+- **Data Validation**: Enhanced form validation and error handling across all modules
+- **Production Stability**: Application is now stable and ready for production deployment
+
+---
+
 ## [Unreleased]
 
-_No unreleased changes. See [0.2.4] for the latest updates._
+### Added
+- **Comprehensive Linear Label Structure**: Introduced a new, unique, and granular label system for Linear issues, including Feature, Type, Component, Environment, Sprint, Complexity, and Impact categories. Added `complexity/moderate` to avoid naming conflicts.
+- **Linear Labels Reference Guide**: Created `docs/LINEAR_LABELS_REFERENCE.md` as a quick reference for all available Linear labels, usage guidelines, and best practices.
+
+### Changed
+- **Documentation Navigation**: Updated both `README.md` and `docs/README.md` to include the new Linear Labels Reference and ensure all navigation follows the single source of truth approach.
+- **Best Practices Update**: Expanded `docs/LINEAR_BEST_PRACTICES.md` to include the new label structure, usage guidelines, and example combinations. Updated all references from `complexity/medium` to `complexity/moderate`.
+- **Label Consistency**: Ensured all documentation and examples use unique label names and reference the new structure.
+
+### Fixed
+- **Label Naming Conflict**: Resolved duplicate 'medium' label issue by renaming complexity label to `complexity/moderate`.
+- **Documentation Consistency**: Audited and updated all documentation to reference the new label structure and navigation, ensuring no outdated references remain.
+
+_No unreleased code changes. All updates in this section are related to project management, documentation, and process improvements._
 
 ## [0.2.4] - 2025-07-21
 
@@ -30,7 +80,7 @@ _No unreleased changes. See [0.2.4] for the latest updates._
 - **API Accessibility**: API now listens on 0.0.0.0 and correct port for Railway.
 
 ### Changed
-- **Docs**: All deployment, environment, and workflow documentation consolidated and updated for v0.2.4.
+- **Docs**: All deployment, environment, and workflow documentation consolidated and updated for v0.2.5.
 - **README**: Updated with new domains, workflow, and troubleshooting steps.
 
 ---

@@ -59,7 +59,12 @@
 - **Backlog**: New tasks and ideas
 - **Todo**: Ready for development
 - **In Progress**: Currently being worked on
-- **In Review**: Code review and testing
+- **Dev (Localhost) Testing**: Local development testing
+- **Dev (Railway) Testing**: Railway development environment testing
+- **Prod Testing**: Production environment testing
+- **Ready for Release**: Ready for next release/PR
+- **In Review**: Pull request is being reviewed
+- **PR Approved**: Pull request approved and ready for merge
 - **Done**: Completed and deployed
 
 ## 📊 **Benefits of Correct Setup**

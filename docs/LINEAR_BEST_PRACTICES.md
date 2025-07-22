@@ -1,22 +1,29 @@
 # Linear Best Practices for Continuo Development
 
+> **📝 Update Notice (July 22, 2025)**: This document has been updated to reflect the new Linear status workflow and corrected label naming to avoid conflicts. The status workflow now includes more granular testing stages, and priority is tracked using Linear's built-in priority field instead of labels.
+
+> **🏷️ Label Update (July 22, 2025)**: Added comprehensive label structure including Environment, Sprint, Complexity, and Impact labels for better issue categorization and tracking. See the Label Usage Guidelines section for best practices.
+
 ## 📋 **Linear Setup Overview**
 
 ### Project Structure
 - **Team**: Business Dev (f42ec684-5540-47fd-8ff2-6a488004cac3)
 - **Project**: Continuo (e9205c7b-a881-498d-acdf-8361f3bfcdd4)
-- **Issue Statuses**: Backlog, Todo, In Progress, localhost Testing, Prod Testing, In Review, Done, Canceled, Duplicate
+- **Issue Statuses**: Backlog, Todo, In Progress, Dev (Localhost) Testing, Dev (Railway) Testing, Prod Testing, Ready for Release, In Review, PR Approved, Done, Canceled, Duplicate
 
 ### Issue Status Workflow
 ```
-Backlog → Todo → In Progress → localhost Testing → Prod Testing → In Review → Done
+Backlog → Todo → In Progress → Dev (Localhost) Testing → Dev (Railway) Testing → Prod Testing → Ready for Release → In Review → PR Approved → Done
 ```
-- **Backlog**: Not yet planned for work, future consideration.
+- **Backlog**: Not yet planned for work, future consideration (Default status).
 - **Todo**: Planned and ready to be worked on in the current or next sprint.
 - **In Progress**: Actively being worked on by an assignee.
-- **localhost Testing**: Feature/bugfix is ready for or undergoing local environment testing.
-- **Prod Testing**: Feature/bugfix is deployed to production or staging for final verification.
-- **In Review**: Awaiting code review, QA, or stakeholder approval.
+- **Dev (Localhost) Testing**: Feature/bugfix is ready for or undergoing localhost 'dev' environment testing.
+- **Dev (Railway) Testing**: Feature/bugfix is deployed to Railway 'development' environment for testing.
+- **Prod Testing**: Feature/bugfix is deployed to production environment for final verification.
+- **Ready for Release**: Feature/bugfix is complete and ready for next release/PR.
+- **In Review**: Pull request is being reviewed.
+- **PR Approved**: Pull Request has been approved and is ready for merge.
 - **Done**: Completed, merged, and deployed as appropriate.
 - **Canceled**: Work was stopped and will not be completed.
 - **Duplicate**: Issue is a duplicate of another and will not be worked on.
@@ -32,26 +39,45 @@ Backlog → Todo → In Progress → localhost Testing → Prod Testing → In R
 
 ## 🏷️ Issue Labeling Strategy
 
+### Label Usage Guidelines
+- **Feature Labels**: Use 1-2 feature labels to identify the main module(s) affected
+- **Type Labels**: Use 1 type label to categorize the work type
+- **Component Labels**: Use 1-2 component labels to identify technical areas
+- **Environment Labels**: Use when the issue is environment-specific
+- **Sprint Labels**: Use to track which sprint the work belongs to
+- **Complexity Labels**: Use for estimation and planning purposes
+- **Impact Labels**: Use to indicate user/business impact for prioritization
+
+### Label Combinations Examples
+- **New Feature**: `feature/crm` + `type/new-feature` + `component/frontend` + `complexity/moderate` + `impact/high`
+- **Bug Fix**: `feature/accounting` + `type/bug` + `component/backend` + `complexity/simple` + `impact/critical`
+- **Deployment**: `type/deployment` + `component/devops` + `env/production` + `complexity/moderate` + `impact/high`
+- **Performance**: `type/performance` + `component/database` + `complexity/complex` + `impact/medium`
+
 ### Feature Labels
 - `feature/crm` - Customer Relationship Management
 - `feature/accounting` - Accounting and Finance
 - `feature/projects` - Project Management
 - `feature/reporting` - Reporting and Analytics
 - `feature/ui-ux` - User Interface and Experience
+- `feature/integrations` - Third-party integrations
+- `feature/mobile` - Mobile-specific features
+- `feature/analytics` - Advanced analytics and reporting
+- `feature/enterprise` - Enterprise-level features
 
 ### Type Labels
-- `type/feature` - New functionality
+- `type/new-feature` - New functionality
 - `type/bug` - Bug fixes
 - `type/enhancement` - Improvements to existing features
 - `type/documentation` - Documentation updates
 - `type/refactor` - Code refactoring
 - `type/testing` - Testing and quality assurance
+- `type/deployment` - Deployment and infrastructure issues
+- `type/performance` - Performance optimization work
+- `type/migration` - Database migrations and schema changes
+- `type/audit` - Audit trail and compliance work
 
-### Priority Labels
-- `priority/critical` - Must be addressed immediately
-- `priority/high` - Important for current sprint
-- `priority/medium` - Important but not urgent
-- `priority/low` - Nice to have
+> **Note:** Priority is tracked directly on the issue using Linear's built-in priority field (Urgent, High, Medium, Low, No Priority). No separate priority labels are needed.
 
 ### Component Labels
 - `component/backend` - Backend/API work
@@ -59,6 +85,34 @@ Backlog → Todo → In Progress → localhost Testing → Prod Testing → In R
 - `component/database` - Database schema and migrations
 - `component/security` - Security-related work
 - `component/devops` - Infrastructure and deployment
+- `component/graphql` - GraphQL schema and resolvers
+- `component/api` - API endpoints and integrations
+- `component/caching` - Redis and caching layer
+- `component/monitoring` - Application monitoring and logging
+
+### Environment Labels
+- `env/localhost` - Local development environment issues
+- `env/railway-dev` - Railway development environment issues
+- `env/production` - Production environment issues
+- `env/staging` - Staging environment issues
+
+### Sprint Labels
+- `sprint/1` - Sprint 1 issues
+- `sprint/2` - Sprint 2 issues
+- `sprint/3` - Sprint 3 issues
+- `sprint/4` - Sprint 4 issues
+
+### Complexity Labels
+- `complexity/simple` - Simple tasks (< 2 hours)
+- `complexity/moderate` - Moderate complexity (2-8 hours)
+- `complexity/complex` - Complex tasks (1-3 days)
+- `complexity/epic` - Epic-level work (1+ weeks)
+
+### Impact Labels
+- `impact/critical` - Critical system functionality
+- `impact/high` - High user impact
+- `impact/medium` - Medium user impact
+- `impact/low` - Low user impact
 
 ## 📝 Issue Creation Guidelines
 
@@ -99,8 +153,17 @@ Brief description of what this issue accomplishes.
 
 ## Estimation
 - **Story Points**: X
-- **Priority**: High/Medium/Low
+- **Priority**: Urgent/High/Medium/Low/No Priority (use Linear's built-in priority field)
 - **Dependencies**: List any dependencies
+
+## Labels
+- **Feature**: [Select appropriate feature label(s)]
+- **Type**: [Select appropriate type label]
+- **Component**: [Select appropriate component label(s)]
+- **Environment**: [Select if environment-specific]
+- **Sprint**: [Select appropriate sprint label]
+- **Complexity**: [Select appropriate complexity label]
+- **Impact**: [Select appropriate impact label]
 
 ## Related Issues
 - Links to related issues
@@ -135,8 +198,13 @@ Brief description of what this issue accomplishes.
 ### Issue Status Transitions
 - **Backlog → Todo**: Issue is planned and ready for work
 - **Todo → In Progress**: Work has started on the issue
-- **In Progress → In Review**: Code is complete, ready for review
-- **In Review → Done**: Code is reviewed and approved
+- **In Progress → Dev (Localhost) Testing**: Feature is ready for local development testing
+- **Dev (Localhost) Testing → Dev (Railway) Testing**: Feature is deployed to Railway development environment
+- **Dev (Railway) Testing → Prod Testing**: Feature is deployed to production for final testing
+- **Prod Testing → Ready for Release**: Feature is complete and ready for release
+- **Ready for Release → In Review**: Pull request is created and under review
+- **In Review → PR Approved**: Pull request is approved and ready for merge
+- **PR Approved → Done**: Code is merged and deployed
 - **Done**: Issue is complete and deployed
 
 ### Branch Naming Convention
@@ -208,7 +276,9 @@ Examples:
 - **Resolution Time**: Time to resolve issues
 - **Reopened Issues**: Issues that were reopened
 - **Bug Rate**: Number of bugs per feature
-- **Code Review Time**: Time in review status
+- **Code Review Time**: Time in In Review and PR Approved statuses
+- **Testing Time**: Time in Dev (Localhost) Testing, Dev (Railway) Testing, and Prod Testing statuses
+- **Release Readiness**: Time in Ready for Release status
 
 ### Team Metrics
 - **Capacity**: Team availability and workload
@@ -321,8 +391,8 @@ Examples:
 
 ---
 
-*Linear Best Practices Guide - Version 1.0 - July 19, 2025*
-*Status: Sprint 2 Linear Setup Complete* 
+*Linear Best Practices Guide - Version 1.2 - July 22, 2025*
+*Status: Updated with new status workflow, corrected labels, and comprehensive label structure* 
 
 ## Automated Issue Title Checks
 

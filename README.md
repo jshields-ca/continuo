@@ -3,7 +3,7 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com/)
-![Version](https://img.shields.io/badge/Version-0.2.4-orange.svg)
+![Version](https://img.shields.io/badge/Version-0.2.5-orange.svg)
 [![Sprint](https://img.shields.io/badge/Sprint-2%2086%25%20Complete-yellow.svg)](https://linear.app/scootr-ca/team/Business%20Dev/active)
 [![Production](https://img.shields.io/badge/Production-continuo.pro-brightgreen.svg)](https://continuo.pro)
 
@@ -34,7 +34,7 @@
 3. **Access the application**
    - **Web App (Production)**: https://continuo.pro
    - **Web App (Dev)**: https://continuo-web-dev.up.railway.app
-   - **API (Production)**: https://continuo-api-production.up.railway.app/graphql
+   - **API (Production)**: https://api.continuo.pro/graphql
    - **API (Dev)**: https://continuo-api-dev.up.railway.app/graphql
    - **Local Web App**: http://localhost:3000
    - **Local API**: http://localhost:4000/graphql
@@ -43,7 +43,7 @@
 
 | Environment      | Web App URL                                   | API URL                                         | Status   |
 |------------------|-----------------------------------------------|-------------------------------------------------|----------|
-| Production       | https://continuo.pro                          | https://continuo-api-production.up.railway.app/graphql | Live     |
+| Production       | https://continuo.pro                          | https://api.continuo.pro/graphql                | Live     |
 | Dev (Railway)    | https://continuo-web-dev.up.railway.app       | https://continuo-api-dev.up.railway.app/graphql | Live     |
 | Localhost        | http://localhost:3000                         | http://localhost:4000/graphql                   | Local    |
 
@@ -211,6 +211,7 @@ This project is currently in active development. For questions or support, pleas
 
 ### Process & Best Practices
 - [Linear Best Practices](./docs/LINEAR_BEST_PRACTICES.md)
+- [Linear Labels Reference](./docs/LINEAR_LABELS_REFERENCE.md)
 - [Linear Setup Corrected](./docs/LINEAR_SETUP_CORRECTED.md)
 - [File Structure Reorganization](./docs/FILE_STRUCTURE_REORGANIZATION_COMPLETE.md)
 - [Security](./docs/SECURITY.md)

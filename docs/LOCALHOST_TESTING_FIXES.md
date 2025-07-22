@@ -1,7 +1,7 @@
-# Localhost Testing Fixes Summary - Version 0.2.4
+# Localhost Testing Fixes Summary - Version 0.2.5
 
 ## Overview
-This document summarizes all the fixes applied based on localhost testing feedback to resolve GraphQL errors, foreign key constraints, and UI issues for Version 0.2.4.
+This document summarizes all the fixes applied based on localhost testing feedback to resolve GraphQL errors, foreign key constraints, and UI issues for Version 0.2.5.
 
 ## Issues Identified and Fixed
 

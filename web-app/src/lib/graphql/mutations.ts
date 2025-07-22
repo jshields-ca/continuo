@@ -190,3 +190,56 @@ export const UPDATE_SUBSCRIPTION_MUTATION = gql`
     }
   }
 `;
+
+// Transaction Mutations
+export const CREATE_TRANSACTION_MUTATION = gql`
+  mutation CreateTransaction($input: CreateTransactionInput!) {
+    createTransaction(input: $input) {
+      id
+      accountId
+      type
+      amount
+      description
+      reference
+      category
+      tags
+      date
+      createdAt
+      updatedAt
+      account {
+        id
+        name
+        code
+      }
+    }
+  }
+`;
+
+export const UPDATE_TRANSACTION_MUTATION = gql`
+  mutation UpdateTransaction($id: ID!, $input: UpdateTransactionInput!) {
+    updateTransaction(id: $id, input: $input) {
+      id
+      accountId
+      type
+      amount
+      description
+      reference
+      category
+      tags
+      date
+      createdAt
+      updatedAt
+      account {
+        id
+        name
+        code
+      }
+    }
+  }
+`;
+
+export const DELETE_TRANSACTION_MUTATION = gql`
+  mutation DeleteTransaction($id: ID!) {
+    deleteTransaction(id: $id)
+  }
+`;

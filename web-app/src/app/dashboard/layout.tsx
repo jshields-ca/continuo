@@ -88,6 +88,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [comingSoonModal, setComingSoonModal] = useState<null | 'settings' | 'help' | 'profile'>(null);
 
   if (!user) {
     return (
@@ -220,22 +221,34 @@ export default function DashboardLayout({
             {/* Right side actions */}
             <div className="flex items-center space-x-4">
               {/* Help link */}
-              <Link
-                href="/help"
-                className="p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-                aria-label="Help and support"
-              >
-                <HelpCircle className="h-5 w-5" />
-              </Link>
+              <div className="relative group">
+                <button
+                  type="button"
+                  onClick={() => setComingSoonModal('help')}
+                  className="p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                  aria-label="Help and support"
+                >
+                  <HelpCircle className="h-5 w-5" />
+                </button>
+                <div className="absolute z-50 left-1/2 -translate-x-1/2 mt-2 px-2 py-1 rounded bg-gray-900 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  Help (Coming Soon)
+                </div>
+              </div>
 
               {/* Settings link */}
-              <Link
-                href="/settings"
-                className="p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-                aria-label="Settings"
-              >
-                <Settings className="h-5 w-5" />
-              </Link>
+              <div className="relative group">
+                <button
+                  type="button"
+                  onClick={() => setComingSoonModal('settings')}
+                  className="p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                  aria-label="Settings"
+                >
+                  <Settings className="h-5 w-5" />
+                </button>
+                <div className="absolute z-50 left-1/2 -translate-x-1/2 mt-2 px-2 py-1 rounded bg-gray-900 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  Settings (Coming Soon)
+                </div>
+              </div>
 
               {/* User menu */}
               <div className="relative">
@@ -256,13 +269,15 @@ export default function DashboardLayout({
                       <p className="text-xs text-gray-500">{user.email}</p>
                     </div>
                     <Link
-                      href="/profile"
+                      href="#"
+                      onClick={e => { e.preventDefault(); setComingSoonModal('profile'); }}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     >
                       Your Profile
                     </Link>
                     <Link
-                      href="/settings"
+                      href="#"
+                      onClick={e => { e.preventDefault(); setComingSoonModal('settings'); }}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     >
                       Settings
@@ -293,6 +308,30 @@ export default function DashboardLayout({
           onClick={() => setUserMenuOpen(false)}
           aria-hidden="true"
         />
+      )}
+
+      {/* Shared Coming Soon Modal */}
+      {comingSoonModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">
+              {comingSoonModal === 'settings' && 'Settings Coming Soon'}
+              {comingSoonModal === 'help' && 'Help & Support Coming Soon'}
+              {comingSoonModal === 'profile' && 'User Profile Coming Soon'}
+            </h2>
+            <p className="mb-6 text-gray-700">
+              {comingSoonModal === 'settings' && 'User profile and application settings will be available in a future update. Stay tuned for customization options, security settings, and more!'}
+              {comingSoonModal === 'help' && 'Help and support resources will be available soon, including documentation, FAQs, and contact options.'}
+              {comingSoonModal === 'profile' && 'User profile management will be available soon, including editing your information, changing your password, and more.'}
+            </p>
+            <button
+              onClick={() => setComingSoonModal(null)}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Close
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

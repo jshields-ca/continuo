@@ -1,4 +1,4 @@
-# Railway Deployment & Environment Workflow (v0.2.4)
+# Railway Deployment & Environment Workflow (v0.2.5)
 
 ## Current State
 - **Production**: https://continuo.pro (live, stable)
@@ -21,4 +21,4 @@
 
 ---
 
-*All other outdated or duplicate deployment/environment docs have been removed or merged here for v0.2.4.* 
+*All other outdated or duplicate deployment/environment docs have been removed or merged here for v0.2.5.* 

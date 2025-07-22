@@ -1,6 +1,31 @@
 const { UserInputError, AuthenticationError, ForbiddenError } = require('apollo-server-express');
 const logger = require('../../shared/utils/logger');
 
+// Helper function to create audit logs
+const createAuditLog = async (prisma, user, action, entity, entityId, oldValues = null, newValues = null) => {
+  try {
+    console.log('createAuditLog called with:', { action, entity, entityId, userId: user.id });
+    const auditLog = await prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        companyId: user.companyId,
+        action,
+        entity,
+        entityId,
+        oldValues: oldValues ? JSON.stringify(oldValues) : null,
+        newValues: newValues ? JSON.stringify(newValues) : null,
+        ipAddress: null, // Could be added from context if needed
+        userAgent: null, // Could be added from context if needed
+      },
+    });
+    console.log('Audit log created successfully:', auditLog.id);
+  } catch (error) {
+    console.error('Failed to create audit log:', error);
+    logger.error('Failed to create audit log:', error);
+    // Don't throw error to avoid breaking the main operation
+  }
+};
+
 const accountResolvers = {
   Query: {
     // Account queries
@@ -236,6 +261,78 @@ const accountResolvers = {
         take: limit,
         skip: offset,
       });
+    },
+
+    transactionHistory: async (parent, { transactionId }, { user, prisma, requireAuth }) => {
+      requireAuth();
+      
+      // Verify transaction belongs to user's company
+      const transaction = await prisma.transaction.findFirst({
+        where: {
+          id: transactionId,
+          companyId: user.companyId,
+        },
+        include: {
+          account: true,
+          company: true,
+        },
+      });
+
+      if (!transaction) {
+        throw new UserInputError('Transaction not found');
+      }
+
+      // Get audit logs for this transaction
+      const auditLogs = await prisma.auditLog.findMany({
+        where: {
+          entity: 'Transaction',
+          entityId: transactionId,
+          companyId: user.companyId,
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      // Fetch user data for each audit log
+      const auditLogsWithUsers = await Promise.all(
+        auditLogs.map(async (log) => {
+          try {
+            const user = await prisma.user.findUnique({
+              where: { id: log.userId },
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            });
+            return {
+              ...log,
+              user: user || {
+                id: log.userId,
+                firstName: 'Unknown',
+                lastName: 'User',
+                email: 'unknown@example.com',
+              },
+            };
+          } catch (error) {
+            console.error('Error fetching user for audit log:', error);
+            return {
+              ...log,
+              user: {
+                id: log.userId,
+                firstName: 'Unknown',
+                lastName: 'User',
+                email: 'unknown@example.com',
+              },
+            };
+          }
+        })
+      );
+
+      return {
+        transaction,
+        auditLogs: auditLogsWithUsers,
+      };
     },
 
     // Chart of Accounts queries
@@ -565,6 +662,19 @@ const accountResolvers = {
         },
       });
 
+      // Create audit log for transaction creation
+      await createAuditLog(prisma, user, 'CREATE', 'Transaction', transaction.id, null, {
+        id: transaction.id,
+        accountId: transaction.accountId,
+        type: transaction.type,
+        amount: transaction.amount,
+        description: transaction.description,
+        reference: transaction.reference,
+        category: transaction.category,
+        tags: transaction.tags,
+        date: transaction.date,
+      });
+
       logger.info(`Transaction created: ${transaction.id} by user: ${user.id}`);
       return transaction;
     },
@@ -622,6 +732,34 @@ const accountResolvers = {
         });
       }
 
+      // Create audit log for transaction update
+      const oldValues = {
+        id: transaction.id,
+        accountId: transaction.accountId,
+        type: transaction.type,
+        amount: transaction.amount,
+        description: transaction.description,
+        reference: transaction.reference,
+        category: transaction.category,
+        tags: transaction.tags,
+        date: transaction.date,
+      };
+
+      const newValues = {
+        id: updatedTransaction.id,
+        accountId: updatedTransaction.accountId,
+        type: updatedTransaction.type,
+        amount: updatedTransaction.amount,
+        description: updatedTransaction.description,
+        reference: updatedTransaction.reference,
+        category: updatedTransaction.category,
+        tags: updatedTransaction.tags,
+        date: updatedTransaction.date,
+      };
+
+      console.log('Creating audit log for transaction update:', { id, userId: user.id, action: 'UPDATE' });
+      await createAuditLog(prisma, user, 'UPDATE', 'Transaction', id, oldValues, newValues);
+
       logger.info(`Transaction updated: ${id} by user: ${user.id}`);
       return updatedTransaction;
     },
@@ -639,6 +777,19 @@ const accountResolvers = {
       if (!transaction) {
         throw new UserInputError('Transaction not found');
       }
+
+      // Create audit log for transaction deletion (before deleting)
+      await createAuditLog(prisma, user, 'DELETE', 'Transaction', id, {
+        id: transaction.id,
+        accountId: transaction.accountId,
+        type: transaction.type,
+        amount: transaction.amount,
+        description: transaction.description,
+        reference: transaction.reference,
+        category: transaction.category,
+        tags: transaction.tags,
+        date: transaction.date,
+      }, null);
 
       // Reverse the account balance
       const balanceChange = transaction.type === 'CREDIT' ? -transaction.amount : transaction.amount;
@@ -666,33 +817,29 @@ const accountResolvers = {
       
       const defaultAccounts = [
         // Assets
-        { name: 'Cash', code: '1000', type: 'ASSET', category: 'CURRENT_ASSETS', description: 'Cash and cash equivalents' },
-        { name: 'Accounts Receivable', code: '1100', type: 'ASSET', category: 'CURRENT_ASSETS', description: 'Money owed by customers' },
-        { name: 'Inventory', code: '1200', type: 'ASSET', category: 'CURRENT_ASSETS', description: 'Product inventory' },
-        { name: 'Equipment', code: '1500', type: 'ASSET', category: 'FIXED_ASSETS', description: 'Office equipment and machinery' },
-        { name: 'Buildings', code: '1600', type: 'ASSET', category: 'FIXED_ASSETS', description: 'Buildings and structures' },
-        
+        { name: 'Cash', code: '1000', type: 'ASSET', category: 'CURRENT_ASSETS', description: 'Cash and cash equivalents', isTaxable: false },
+        { name: 'Accounts Receivable', code: '1100', type: 'ASSET', category: 'CURRENT_ASSETS', description: 'Money owed by customers', isTaxable: false },
+        { name: 'Inventory', code: '1200', type: 'ASSET', category: 'CURRENT_ASSETS', description: 'Product inventory', isTaxable: false },
+        { name: 'Equipment', code: '1500', type: 'ASSET', category: 'FIXED_ASSETS', description: 'Office equipment and machinery', isTaxable: false },
+        { name: 'Buildings', code: '1600', type: 'ASSET', category: 'FIXED_ASSETS', description: 'Buildings and structures', isTaxable: false },
         // Liabilities
-        { name: 'Accounts Payable', code: '2000', type: 'LIABILITY', category: 'CURRENT_LIABILITIES', description: 'Money owed to suppliers' },
-        { name: 'Notes Payable', code: '2100', type: 'LIABILITY', category: 'CURRENT_LIABILITIES', description: 'Short-term loans' },
-        { name: 'Long-term Debt', code: '2200', type: 'LIABILITY', category: 'LONG_TERM_LIABILITIES', description: 'Long-term loans and bonds' },
-        
+        { name: 'Accounts Payable', code: '2000', type: 'LIABILITY', category: 'CURRENT_LIABILITIES', description: 'Money owed to suppliers', isTaxable: false },
+        { name: 'Notes Payable', code: '2100', type: 'LIABILITY', category: 'CURRENT_LIABILITIES', description: 'Short-term loans', isTaxable: false },
+        { name: 'Long-term Debt', code: '2200', type: 'LIABILITY', category: 'LONG_TERM_LIABILITIES', description: 'Long-term loans and bonds', isTaxable: false },
         // Equity
-        { name: 'Common Stock', code: '3000', type: 'EQUITY', category: 'COMMON_STOCK', description: 'Common stock equity' },
-        { name: 'Retained Earnings', code: '3100', type: 'EQUITY', category: 'RETAINED_EARNINGS', description: 'Accumulated profits' },
-        
+        { name: 'Common Stock', code: '3000', type: 'EQUITY', category: 'COMMON_STOCK', description: 'Common stock equity', isTaxable: false },
+        { name: 'Retained Earnings', code: '3100', type: 'EQUITY', category: 'RETAINED_EARNINGS', description: 'Accumulated profits', isTaxable: false },
         // Revenue
-        { name: 'Sales Revenue', code: '4000', type: 'REVENUE', category: 'OPERATING_REVENUE', description: 'Revenue from sales' },
-        { name: 'Service Revenue', code: '4100', type: 'REVENUE', category: 'OPERATING_REVENUE', description: 'Revenue from services' },
-        { name: 'Interest Income', code: '4200', type: 'REVENUE', category: 'NON_OPERATING_REVENUE', description: 'Interest earned' },
-        
+        { name: 'Sales Revenue', code: '4000', type: 'REVENUE', category: 'OPERATING_REVENUE', description: 'Revenue from sales', isTaxable: true },
+        { name: 'Service Revenue', code: '4100', type: 'REVENUE', category: 'OPERATING_REVENUE', description: 'Revenue from services', isTaxable: true },
+        { name: 'Interest Income', code: '4200', type: 'REVENUE', category: 'NON_OPERATING_REVENUE', description: 'Interest earned', isTaxable: true },
         // Expenses
-        { name: 'Cost of Goods Sold', code: '5000', type: 'EXPENSE', category: 'COST_OF_GOODS_SOLD', description: 'Direct costs of goods sold' },
-        { name: 'Salaries and Wages', code: '6000', type: 'EXPENSE', category: 'OPERATING_EXPENSES', description: 'Employee salaries and wages' },
-        { name: 'Rent Expense', code: '6100', type: 'EXPENSE', category: 'OPERATING_EXPENSES', description: 'Office and equipment rent' },
-        { name: 'Utilities', code: '6200', type: 'EXPENSE', category: 'OPERATING_EXPENSES', description: 'Electricity, water, internet, etc.' },
-        { name: 'Marketing', code: '6300', type: 'EXPENSE', category: 'MARKETING_EXPENSES', description: 'Marketing and advertising expenses' },
-        { name: 'Office Supplies', code: '6400', type: 'EXPENSE', category: 'ADMINISTRATIVE_EXPENSES', description: 'Office supplies and materials' },
+        { name: 'Cost of Goods Sold', code: '5000', type: 'EXPENSE', category: 'COST_OF_GOODS_SOLD', description: 'Direct costs of goods sold', isTaxable: true },
+        { name: 'Salaries and Wages', code: '6000', type: 'EXPENSE', category: 'OPERATING_EXPENSES', description: 'Employee salaries and wages', isTaxable: true },
+        { name: 'Rent Expense', code: '6100', type: 'EXPENSE', category: 'OPERATING_EXPENSES', description: 'Office and equipment rent', isTaxable: true },
+        { name: 'Utilities', code: '6200', type: 'EXPENSE', category: 'OPERATING_EXPENSES', description: 'Electricity, water, internet, etc.', isTaxable: true },
+        { name: 'Marketing', code: '6300', type: 'EXPENSE', category: 'MARKETING_EXPENSES', description: 'Marketing and advertising expenses', isTaxable: true },
+        { name: 'Office Supplies', code: '6400', type: 'EXPENSE', category: 'ADMINISTRATIVE_EXPENSES', description: 'Office supplies and materials', isTaxable: true },
       ];
 
       const createdAccounts = [];
@@ -953,6 +1100,20 @@ const accountResolvers = {
     company: async (parent, args, { prisma }) => {
       return await prisma.company.findUnique({
         where: { id: parent.companyId },
+      });
+    },
+  },
+
+  AuditLog: {
+    user: async (parent, args, { prisma }) => {
+      return await prisma.user.findUnique({
+        where: { id: parent.userId },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
       });
     },
   },

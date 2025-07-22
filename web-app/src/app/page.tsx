@@ -80,7 +80,7 @@ export default function Home() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
                 <Link
-                  className="inline-flex h-14 items-center justify-center rounded-xl border-2 border-gray-300 bg-white px-8 text-base font-semibold text-gray-900 shadow-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                  className="inline-flex h-14 items-center justify-center rounded-xl border-2 border-gray-300 bg-white px-8 text-base font-semibold text-gray-900 shadow-lg hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
                   href="#demo"
                 >
                   Watch Demo
