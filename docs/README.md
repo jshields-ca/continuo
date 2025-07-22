@@ -28,7 +28,7 @@ Welcome to the Continuo documentation hub. This page serves as the entry point a
 
 ## 🕰️ Historical & Sprint Docs
 - [Sprint 2 Planning](./SPRINT_2_PLANNING.md)
-- [Sprint 2 Complete](./SPRINT_2_COMPLETE.md)
+- [Sprint 2 Status](./SPRINT_2_COMPLETE.md)
 - [Sprint 1 Completion](./SPRINT_1_COMPLETION.md)
 - [Release 0.1.0](./RELEASE_0.1.0.md)
 - [Release Setup Complete](./RELEASE_SETUP_COMPLETE.md)

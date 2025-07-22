@@ -14,7 +14,7 @@ This document outlines the release workflow for the Continuo platform using rele
 
 ### Version Progression
 - **0.1.0**: Sprint 1 Complete (Foundation)
-- **0.2.0**: Sprint 2 Complete (Core Business Features)
+- **0.2.5**: Sprint 2 In Progress (Core Business Features - 75% Complete)
 - **0.3.0**: Sprint 3 Complete (Advanced Features)
 - **0.4.0**: Sprint 4 Complete (AI & Automation)
 - **1.0.0**: Beta Release (Complete feature set)

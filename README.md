@@ -4,7 +4,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com/)
 ![Version](https://img.shields.io/badge/Version-0.2.5-orange.svg)
-[![Sprint](https://img.shields.io/badge/Sprint-2%2086%25%20Complete-yellow.svg)](https://linear.app/scootr-ca/team/Business%20Dev/active)
+[![Sprint](https://img.shields.io/badge/Sprint-2%2075%25%20In%20Progress-yellow.svg)](https://linear.app/scootr-ca/team/Business%20Dev/active)
 [![Production](https://img.shields.io/badge/Production-continuo.pro-brightgreen.svg)](https://continuo.pro)
 
 **AI-powered business management platform for small businesses**
@@ -218,7 +218,7 @@ This project is currently in active development. For questions or support, pleas
 
 ### Historical & Sprint Docs
 - [Sprint 2 Planning](./docs/SPRINT_2_PLANNING.md)
-- [Sprint 2 Complete](./docs/SPRINT_2_COMPLETE.md)
+- [Sprint 2 Status](./docs/SPRINT_2_COMPLETE.md)
 - [Sprint 1 Completion](./docs/SPRINT_1_COMPLETION.md)
 - [Release 0.1.0](./docs/RELEASE_0.1.0.md)
 - [Release Setup Complete](./docs/RELEASE_SETUP_COMPLETE.md)
