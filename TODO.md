@@ -69,6 +69,11 @@
 ### 🔄 **IN PROGRESS**
 - [ ] **[BUS-34](https://linear.app/scootr-ca/issue/BUS-34/testing-comprehensive-sprint-2-feature-testing) Comprehensive Sprint 2 Testing**: Test all features on localhost and dev environment
 - [ ] **[BUS-22](https://linear.app/scootr-ca/issue/BUS-22/production-add-prod-env-cache-database-configure-environment-variables) Production Environment**: Setup production database, cache, and environment variables
+- [ ] **Linear Issue Updates**: Update Linear project issues via MCP to reflect recent progress
+  - [ ] **BUS-7**: Mark as Complete - Invoice Generation System (100% done with item CRUD and audit trail)
+  - [ ] **BUS-33**: Mark as Complete - Invoice Detail & Edit Pages (100% done with professional UI/UX)
+  - [ ] **BUS-34**: Update status to In Progress - Next priority for comprehensive testing
+  - [ ] **BUS-22**: Update status to In Progress - Production deployment preparation
 
 ### 📋 **REMAINING TASKS**
 
