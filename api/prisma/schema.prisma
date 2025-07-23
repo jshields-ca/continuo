@@ -83,6 +83,9 @@ model User {
   
   // Audit logs
   auditLogs AuditLog[]
+
+  // Invoice history
+  invoiceHistory InvoiceHistory[]
   
   // Audit fields
   createdAt   DateTime  @default(now())
@@ -132,6 +135,7 @@ model Company {
   leads       Lead[]
   accounts    Account[]
   transactions Transaction[]
+  invoices    Invoice[]
   
   // Audit fields
   createdAt   DateTime      @default(now())
@@ -167,6 +171,7 @@ model Customer {
   // Relationships
   company     Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
   contacts    Contact[]
+  invoices    Invoice[]
   
   // Audit fields
   createdAt   DateTime      @default(now())
@@ -591,4 +596,121 @@ model Transaction {
   updatedBy   String?
 
   @@map("transactions")
+}
+
+model Invoice {
+  id             String      @id @default(cuid())
+  companyId      String
+  customerId     String
+  number         String      @unique
+  status         InvoiceStatus @default(DRAFT)
+  issueDate      DateTime
+  dueDate        DateTime?
+  currency       Currency    @default(CAD)
+  subtotal       Decimal     @db.Decimal(15, 2)
+  taxAmount      Decimal     @db.Decimal(15, 2)
+  vatAmount      Decimal     @db.Decimal(15, 2)
+  total          Decimal     @db.Decimal(15, 2)
+  notes          String?
+  pdfUrl         String?
+  customFields   Json?       // User-defined custom fields
+  // Frozen customer/company info for legal compliance
+  customerName   String
+  customerAddress String
+  customerTaxId  String?
+  companyName    String
+  companyAddress String
+  companyTaxId   String?
+  // Relationships
+  company        Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customer       Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items          InvoiceItem[]
+  payments       Payment[]
+  history        InvoiceHistory[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  VOID
+}
+
+enum Currency {
+  CAD
+  USD
+  EUR
+  GBP
+}
+
+model InvoiceItem {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  description String
+  quantity    Decimal  @db.Decimal(10, 2)
+  unitPrice   Decimal  @db.Decimal(15, 2)
+  taxRate     Decimal  @db.Decimal(5, 2) // e.g., 0.13 for 13%
+  vatRate     Decimal  @db.Decimal(5, 2) // e.g., 0.20 for 20% VAT
+  amount      Decimal  @db.Decimal(15, 2)
+  customFields Json?   // User-defined custom fields per item
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Payment {
+  id          String      @id @default(cuid())
+  invoiceId   String
+  amount      Decimal     @db.Decimal(15, 2)
+  currency    Currency    @default(CAD)
+  paymentDate DateTime    @default(now())
+  paymentMethod PaymentMethod
+  reference   String?     // External payment reference
+  notes       String?
+  status      PaymentStatus @default(PENDING)
+  invoice     Invoice     @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum PaymentMethod {
+  CASH
+  CHECK
+  BANK_TRANSFER
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  STRIPE
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+model InvoiceHistory {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  userId      String
+  action      String   // e.g., 'FIELD_UPDATED', 'ITEM_ADDED', 'ITEM_UPDATED', 'ITEM_DELETED'
+  field       String?  // e.g., 'status', 'notes', 'item.description', etc.
+  itemId      String?  // If the change is related to a specific item
+  oldValue    Json?
+  newValue    Json?
+  createdAt   DateTime @default(now())
+
+  // Relations
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+  @@index([userId])
+  @@map("invoice_history")
 }

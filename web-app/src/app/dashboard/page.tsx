@@ -6,6 +6,7 @@ import { gql } from '@apollo/client';
 import { Users, DollarSign, Calendar, Building, BookOpen, Receipt, Target, TrendingUp, ArrowRight, Plus, Eye, Edit, Trash2, User, Mail, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { GET_INVOICE_STATS, GET_INVOICES } from '@/lib/graphql/queries';
 
 // GraphQL Queries
 const GET_CUSTOMER_SUMMARY = gql`
@@ -189,6 +190,23 @@ export default function DashboardPage() {
     notifyOnNetworkStatusChange: false,
     fetchPolicy: 'cache-and-network',
     skip: !showActivityFeed,
+  });
+
+  // Invoice queries
+  const { data: invoiceStatsData, loading: invoiceStatsLoading, error: invoiceStatsError } = useQuery(GET_INVOICE_STATS, {
+    errorPolicy: 'all',
+    notifyOnNetworkStatusChange: false,
+  });
+  
+  const { data: recentInvoicesData, loading: recentInvoicesLoading, error: recentInvoicesError } = useQuery(GET_INVOICES, {
+    variables: {
+      limit: 5,
+      offset: 0,
+      orderBy: { field: 'CREATED_AT', direction: 'DESC' }
+    },
+    errorPolicy: 'all',
+    notifyOnNetworkStatusChange: false,
+    fetchPolicy: 'cache-and-network',
   });
 
   // Enable activity feed after initial load
@@ -470,6 +488,33 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* Invoices */}
+        <div className="bg-white overflow-hidden shadow rounded-lg border border-gray-200">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <Receipt className="h-5 w-5 text-indigo-600" />
+                </div>
+              </div>
+              <div className="ml-4 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">
+                    Total Invoices
+                  </dt>
+                  <dd className="text-2xl font-bold text-gray-900">
+                    {invoiceStatsLoading ? (
+                      <div className="animate-pulse bg-gray-200 h-8 w-16 rounded"></div>
+                    ) : (
+                      invoiceStatsData?.invoiceStats?.totalInvoices || 0
+                    )}
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Quick Actions */}
@@ -499,6 +544,20 @@ export default function DashboardPage() {
               <div className="ml-4 flex-1">
                 <h3 className="text-lg font-medium text-gray-900">Transactions</h3>
                 <p className="text-sm text-gray-500">Create and manage financial transactions</p>
+              </div>
+              <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-colors" />
+            </div>
+          </Link>
+          
+          <Link
+            href="/dashboard/invoices"
+            className="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow group"
+          >
+            <div className="flex items-center">
+              <Receipt className="h-8 w-8 text-indigo-600" />
+              <div className="ml-4 flex-1">
+                <h3 className="text-lg font-medium text-gray-900">Invoices</h3>
+                <p className="text-sm text-gray-500">Create and manage customer invoices</p>
               </div>
               <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-gray-600 transition-colors" />
             </div>

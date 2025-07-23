@@ -26,10 +26,21 @@ This document outlines the production hosting requirements for the Continuo Plat
 - **Auto-scaling**: Basic auto-scaling included
 
 ### **Service Architecture**
+
+**Production Environment:**
 ```
 Railway Project: Continuo
 ├── continuo-web (Next.js Frontend) - Port 3000
 ├── continuo-api (Node.js/Express API) - Port 4000
+├── continuo-db (PostgreSQL Database) - Auto-configured
+└── continuo-redis (Redis Cache) - Auto-configured
+```
+
+**Development Environment:**
+```
+Railway Project: Continuo (Dev)
+├── continuo-web-dev (Next.js Frontend) - Port 3000
+├── continuo-api-dev (Node.js/Express API) - Port 4000
 ├── continuo-db (PostgreSQL Database) - Auto-configured
 └── continuo-redis (Redis Cache) - Auto-configured
 ```

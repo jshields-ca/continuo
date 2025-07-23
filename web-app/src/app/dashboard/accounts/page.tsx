@@ -389,7 +389,7 @@ export default function AccountsPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Chart of Accounts</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Chart of Accounts</h1>
             <p className="mt-1 text-sm text-gray-600">Manage your financial accounts and transactions</p>
           </div>
           <div className="flex items-center space-x-4">

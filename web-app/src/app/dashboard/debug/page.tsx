@@ -72,7 +72,7 @@ export default function DebugPage() {
 
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Debug Information</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Debug</h1>
         <p className="mt-1 text-sm text-gray-600">
           System diagnostics and authentication status for development purposes
         </p>

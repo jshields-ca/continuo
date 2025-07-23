@@ -52,19 +52,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
 
 const client = new ApolloClient({
   link: from([errorLink, authLink, httpLink]),
-  cache: new InMemoryCache({
-    typePolicies: {
-      User: {
-        fields: {
-          fullName: {
-            read(existing, { readField }) {
-              return existing || `${readField('firstName')} ${readField('lastName')}`;
-            }
-          }
-        }
-      }
-    }
-  }),
+  cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {
       errorPolicy: 'all',

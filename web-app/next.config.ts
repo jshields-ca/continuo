@@ -13,9 +13,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    optimizeFonts: true,
-  },
+
 };
 
 export default nextConfig;

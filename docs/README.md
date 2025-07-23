@@ -4,7 +4,7 @@ Welcome to the Continuo documentation hub. This page serves as the entry point a
 
 ---
 
-## 📖 Canonical Docs (Single Source of Truth)
+## 📚 Canonical Docs (Single Source of Truth)
 - [Project Status Summary](./PROJECT_STATUS_SUMMARY.md)
 - [Project Roadmap](./PROJECT_ROADMAP.md)
 - [Development Plan](./DEVELOPMENT_PLAN.md)
@@ -21,22 +21,7 @@ Welcome to the Continuo documentation hub. This page serves as the entry point a
 
 ## 📋 Process & Best Practices
 - [Linear Best Practices](./LINEAR_BEST_PRACTICES.md)
-- [Linear Labels Reference](./LINEAR_LABELS_REFERENCE.md)
-- [Linear Setup Corrected](./LINEAR_SETUP_CORRECTED.md)
-- [File Structure Reorganization](./FILE_STRUCTURE_REORGANIZATION_COMPLETE.md)
 - [Security](./SECURITY.md)
-
-## 🕰️ Historical & Sprint Docs
-- [Sprint 2 Planning](./SPRINT_2_PLANNING.md)
-- [Sprint 2 Status](./SPRINT_2_COMPLETE.md)
-- [Sprint 1 Completion](./SPRINT_1_COMPLETION.md)
-- [Release 0.1.0](./RELEASE_0.1.0.md)
-- [Release Setup Complete](./RELEASE_SETUP_COMPLETE.md)
-- [Rebranding to Continuo Complete](./REBRANDING_TO_CONTINUO_COMPLETE.md)
-- [BUS_3 Contact Management Complete](./BUS_3_CONTACT_MANAGEMENT_COMPLETE.md)
-- [BUS_5 Frontend Implementation](./BUS_5_FRONTEND_IMPLEMENTATION.md)
-- [CRM Frontend Implementation](./CRM_FRONTEND_IMPLEMENTATION.md)
-- [Testing Phase Plan](./TESTING_PHASE_PLAN.md)
 
 ---
 

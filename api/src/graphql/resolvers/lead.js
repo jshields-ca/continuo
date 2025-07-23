@@ -568,6 +568,30 @@ const leadResolvers = {
         const changes = {};
         const changeDescriptions = [];
 
+        // Get user names for assignment changes
+        let fromUserName = 'Unassigned';
+        let toUserName = 'Unassigned';
+        
+        if (input.assignedTo !== undefined && input.assignedTo !== existingLead.assignedTo) {
+          // Get the "from" user name
+          if (existingLead.assignedTo) {
+            const fromUser = await prisma.user.findUnique({
+              where: { id: existingLead.assignedTo },
+              select: { firstName: true, lastName: true }
+            });
+            fromUserName = fromUser ? `${fromUser.firstName} ${fromUser.lastName}` : 'Unknown User';
+          }
+          
+          // Get the "to" user name
+          if (input.assignedTo) {
+            const toUser = await prisma.user.findUnique({
+              where: { id: input.assignedTo },
+              select: { firstName: true, lastName: true }
+            });
+            toUserName = toUser ? `${toUser.firstName} ${toUser.lastName}` : 'Unknown User';
+          }
+        }
+
         // Compare each field to track what changed
         Object.keys(input).forEach(key => {
           if (input[key] !== undefined && input[key] !== existingLead[key]) {
@@ -584,7 +608,7 @@ const leadResolvers = {
             } else if (key === 'source') {
               changeDescriptions.push(`Source changed from ${existingLead[key]} to ${input[key]}`);
             } else if (key === 'assignedTo') {
-              changeDescriptions.push(`Assignment changed from ${existingLead[key] || 'Unassigned'} to ${input[key] || 'Unassigned'}`);
+              changeDescriptions.push(`Assignment changed from ${fromUserName} to ${toUserName}`);
             } else if (key === 'notes') {
               changeDescriptions.push('Notes updated');
             } else {

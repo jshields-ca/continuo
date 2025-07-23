@@ -5,6 +5,7 @@ const { companyResolvers } = require('./company');
 const customerResolvers = require('./customer');
 const leadResolvers = require('./lead');
 const accountResolvers = require('./account');
+const invoiceResolvers = require('./invoice');
 
 const resolvers = {
   DateTime: DateTimeResolver,
@@ -17,6 +18,7 @@ const resolvers = {
     ...customerResolvers.Query,
     ...leadResolvers.Query,
     ...accountResolvers.Query,
+    ...invoiceResolvers.Query,
   },
   
   Mutation: {
@@ -26,6 +28,7 @@ const resolvers = {
     ...customerResolvers.Mutation,
     ...leadResolvers.Mutation,
     ...accountResolvers.Mutation,
+    ...invoiceResolvers.Mutation,
   },
   
   Subscription: {
@@ -39,6 +42,9 @@ const resolvers = {
   Company: companyResolvers.Company,
   Account: accountResolvers.Account,
   Transaction: accountResolvers.Transaction,
+  Invoice: invoiceResolvers.Invoice,
+  InvoiceItem: invoiceResolvers.InvoiceItem,
+  Payment: invoiceResolvers.Payment,
 };
 
 module.exports = { resolvers };

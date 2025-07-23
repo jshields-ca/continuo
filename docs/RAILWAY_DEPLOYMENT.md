@@ -2,6 +2,7 @@
 
 ## Current State
 - **Production**: https://continuo.pro (live, stable)
+- **Production API**: https://api.continuo.pro (live, stable)
 - **Dev Web**: https://continuo-web-dev.up.railway.app (live, health endpoint returns status 'ok')
 - **Dev API**: https://continuo-api-dev.up.railway.app (live, health endpoint returns status 'ok')
 - **Database/Redis**: Both environments use the same Railway Postgres and Redis instance for now

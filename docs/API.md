@@ -9,7 +9,7 @@ The Continuo API is built with GraphQL using Apollo Server, providing a flexible
 ## Base URL
 
 - **Development**: http://localhost:4000/graphql
-- **Production**: https://api.[final-domain].com/graphql
+- **Production**: https://api.continuo.pro/graphql
 
 ## Authentication
 
@@ -631,7 +631,7 @@ query GetUsers($companyId: String!, $first: Int, $after: String) {
 Real-time features are planned for future sprints. The WebSocket endpoint will be available at:
 
 - **Development**: ws://localhost:4000/graphql
-- **Production**: wss://api.[final-domain].com/graphql
+- **Production**: wss://api.continuo.pro/graphql
 
 ## Health Check
 

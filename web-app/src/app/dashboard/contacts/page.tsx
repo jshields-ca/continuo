@@ -273,8 +273,8 @@ export default function ContactsPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Contacts</h1>
-            <p className="mt-1 text-sm text-gray-600">Manage customer contacts and relationships</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Contacts</h1>
+            <p className="text-sm text-gray-600">Manage customer contacts and relationships</p>
           </div>
           <div className="flex items-center space-x-4">
             <button

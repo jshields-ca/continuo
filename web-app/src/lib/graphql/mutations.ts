@@ -89,6 +89,246 @@ export const CHANGE_PASSWORD_MUTATION = gql`
   }
 `;
 
+// Invoice Mutations
+export const CREATE_INVOICE_MUTATION = gql`
+  mutation CreateInvoice($input: CreateInvoiceInput!) {
+    createInvoice(input: $input) {
+      id
+      companyId
+      customerId
+      number
+      status
+      issueDate
+      dueDate
+      currency
+      subtotal
+      taxAmount
+      vatAmount
+      total
+      notes
+      pdfUrl
+      customFields
+      customerName
+      customerAddress
+      customerTaxId
+      companyName
+      companyAddress
+      companyTaxId
+      customer {
+        id
+        name
+        email
+        phone
+      }
+      items {
+        id
+        description
+        quantity
+        unitPrice
+        taxRate
+        vatRate
+        amount
+        customFields
+      }
+      payments {
+        id
+        amount
+        currency
+        paymentDate
+        paymentMethod
+        reference
+        notes
+        status
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const UPDATE_INVOICE_MUTATION = gql`
+  mutation UpdateInvoice($id: ID!, $input: UpdateInvoiceInput!) {
+    updateInvoice(id: $id, input: $input) {
+      id
+      companyId
+      customerId
+      number
+      status
+      issueDate
+      dueDate
+      currency
+      subtotal
+      taxAmount
+      vatAmount
+      total
+      notes
+      pdfUrl
+      customFields
+      customerName
+      customerAddress
+      customerTaxId
+      companyName
+      companyAddress
+      companyTaxId
+      customer {
+        id
+        name
+        email
+        phone
+      }
+      items {
+        id
+        description
+        quantity
+        unitPrice
+        taxRate
+        vatRate
+        amount
+        customFields
+      }
+      payments {
+        id
+        amount
+        currency
+        paymentDate
+        paymentMethod
+        reference
+        notes
+        status
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const DELETE_INVOICE_MUTATION = gql`
+  mutation DeleteInvoice($id: ID!) {
+    deleteInvoice(id: $id)
+  }
+`;
+
+export const SEND_INVOICE_MUTATION = gql`
+  mutation SendInvoice($id: ID!) {
+    sendInvoice(id: $id) {
+      id
+      status
+      updatedAt
+    }
+  }
+`;
+
+export const VOID_INVOICE_MUTATION = gql`
+  mutation VoidInvoice($id: ID!) {
+    voidInvoice(id: $id) {
+      id
+      status
+      updatedAt
+    }
+  }
+`;
+
+export const DUPLICATE_INVOICE_MUTATION = gql`
+  mutation DuplicateInvoice($id: ID!) {
+    duplicateInvoice(id: $id) {
+      id
+      number
+      status
+      createdAt
+    }
+  }
+`;
+
+export const ADD_INVOICE_ITEM_MUTATION = gql`
+  mutation AddInvoiceItem($invoiceId: ID!, $input: CreateInvoiceItemInput!) {
+    addInvoiceItem(invoiceId: $invoiceId, input: $input) {
+      id
+      invoiceId
+      description
+      quantity
+      unitPrice
+      taxRate
+      vatRate
+      amount
+      customFields
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const UPDATE_INVOICE_ITEM_MUTATION = gql`
+  mutation UpdateInvoiceItem($id: ID!, $input: UpdateInvoiceItemInput!) {
+    updateInvoiceItem(id: $id, input: $input) {
+      id
+      invoiceId
+      description
+      quantity
+      unitPrice
+      taxRate
+      vatRate
+      amount
+      customFields
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const DELETE_INVOICE_ITEM_MUTATION = gql`
+  mutation DeleteInvoiceItem($id: ID!) {
+    deleteInvoiceItem(id: $id)
+  }
+`;
+
+export const CREATE_PAYMENT_MUTATION = gql`
+  mutation CreatePayment($input: CreatePaymentInput!) {
+    createPayment(input: $input) {
+      id
+      invoiceId
+      amount
+      currency
+      paymentDate
+      paymentMethod
+      reference
+      notes
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const UPDATE_PAYMENT_MUTATION = gql`
+  mutation UpdatePayment($id: ID!, $input: UpdatePaymentInput!) {
+    updatePayment(id: $id, input: $input) {
+      id
+      invoiceId
+      amount
+      currency
+      paymentDate
+      paymentMethod
+      reference
+      notes
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const DELETE_PAYMENT_MUTATION = gql`
+  mutation DeletePayment($id: ID!) {
+    deletePayment(id: $id)
+  }
+`;
+
+export const GENERATE_INVOICE_PDF_MUTATION = gql`
+  mutation GenerateInvoicePDF($id: ID!) {
+    generateInvoicePDF(id: $id)
+  }
+`;
+
 export const RESEND_VERIFICATION_EMAIL_MUTATION = gql`
   mutation ResendVerificationEmail {
     resendVerificationEmail

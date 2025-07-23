@@ -143,7 +143,18 @@ const GET_TRANSACTION_HISTORY = gql`
 
 export default function TransactionsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingTransaction, setEditingTransaction] = useState<any>(null);
+  interface EditingTransaction {
+  id: string;
+  type: string;
+  amount: string;
+  description: string;
+  reference: string;
+  category: string;
+  date: string;
+  tags: string[];
+}
+
+const [editingTransaction, setEditingTransaction] = useState<EditingTransaction | null>(null);
   const [viewingTransaction, setViewingTransaction] = useState<any>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [newTransaction, setNewTransaction] = useState({
@@ -271,6 +282,9 @@ export default function TransactionsPage() {
 
   const handleUpdateTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!editingTransaction) return;
+    
     try {
       const dateString = editingTransaction.date;
       const dateTime = dateString ? new Date(dateString + 'T00:00:00.000Z').toISOString() : new Date().toISOString();
@@ -295,11 +309,12 @@ export default function TransactionsPage() {
       });
       console.log('Transaction update result:', result);
 
+      const currentEditingId = editingTransaction.id;
       setEditingTransaction(null);
       refetchTransactions();
       
       // Refetch history if currently viewing history for this transaction
-      if (showHistory && viewingTransaction?.id === editingTransaction.id) {
+      if (showHistory && viewingTransaction?.id === currentEditingId) {
         refetchHistory();
       }
     } catch (error) {
@@ -398,7 +413,7 @@ export default function TransactionsPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Transactions</h1>
           <p className="text-gray-600">Manage your financial transactions</p>
         </div>
         <button
@@ -585,7 +600,7 @@ export default function TransactionsPage() {
                   <select
                     required
                     value={editingTransaction.type}
-                    onChange={(e) => setEditingTransaction(prev => ({ ...prev, type: e.target.value }))}
+                    onChange={(e) => setEditingTransaction(prev => prev ? { ...prev, type: e.target.value } : null)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="CREDIT">Credit</option>
@@ -601,7 +616,7 @@ export default function TransactionsPage() {
                     type="number"
                     required
                     value={editingTransaction.amount}
-                    onChange={(e) => setEditingTransaction(prev => ({ ...prev, amount: e.target.value }))}
+                    onChange={(e) => setEditingTransaction(prev => prev ? { ...prev, amount: e.target.value } : null)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
                 </div>
@@ -614,7 +629,7 @@ export default function TransactionsPage() {
                     type="text"
                     required
                     value={editingTransaction.description}
-                    onChange={(e) => setEditingTransaction(prev => ({ ...prev, description: e.target.value }))}
+                    onChange={(e) => setEditingTransaction(prev => prev ? { ...prev, description: e.target.value } : null)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
                 </div>

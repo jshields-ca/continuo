@@ -880,7 +880,7 @@ export default function LeadsPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Leads</h1>
             <p className="mt-1 text-sm text-gray-600">Track leads and sales opportunities</p>
           </div>
           <div className="flex items-center space-x-4">

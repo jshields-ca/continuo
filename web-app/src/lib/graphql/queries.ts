@@ -133,3 +133,256 @@ export const GET_COMPANY = gql`
     }
   }
 `;
+
+// Invoice Queries
+export const GET_INVOICES = gql`
+  query GetInvoices($filter: InvoiceFilterInput, $orderBy: InvoiceOrderByInput, $limit: Int, $offset: Int) {
+    invoices(filter: $filter, orderBy: $orderBy, limit: $limit, offset: $offset) {
+      id
+      companyId
+      customerId
+      number
+      status
+      issueDate
+      dueDate
+      currency
+      subtotal
+      taxAmount
+      vatAmount
+      total
+      notes
+      pdfUrl
+      customFields
+      customerName
+      customerAddress
+      customerTaxId
+      companyName
+      companyAddress
+      companyTaxId
+      customer {
+        id
+        name
+        email
+        phone
+      }
+      items {
+        id
+        description
+        quantity
+        unitPrice
+        taxRate
+        vatRate
+        amount
+        customFields
+      }
+      payments {
+        id
+        amount
+        currency
+        paymentDate
+        paymentMethod
+        reference
+        notes
+        status
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const GET_INVOICE = gql`
+  query GetInvoice($id: ID!) {
+    invoice(id: $id) {
+      id
+      companyId
+      customerId
+      number
+      status
+      issueDate
+      dueDate
+      currency
+      subtotal
+      taxAmount
+      vatAmount
+      total
+      notes
+      pdfUrl
+      customFields
+      customerName
+      customerAddress
+      customerTaxId
+      companyName
+      companyAddress
+      companyTaxId
+      customer {
+        id
+        name
+        email
+        phone
+        address
+      }
+      items {
+        id
+        description
+        quantity
+        unitPrice
+        taxRate
+        vatRate
+        amount
+        customFields
+      }
+      payments {
+        id
+        amount
+        currency
+        paymentDate
+        paymentMethod
+        reference
+        notes
+        status
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const GET_INVOICE_BY_NUMBER = gql`
+  query GetInvoiceByNumber($number: String!) {
+    invoiceByNumber(number: $number) {
+      id
+      companyId
+      customerId
+      number
+      status
+      issueDate
+      dueDate
+      currency
+      subtotal
+      taxAmount
+      vatAmount
+      total
+      notes
+      pdfUrl
+      customFields
+      customerName
+      customerAddress
+      customerTaxId
+      companyName
+      companyAddress
+      companyTaxId
+      customer {
+        id
+        name
+        email
+        phone
+        address
+      }
+      items {
+        id
+        description
+        quantity
+        unitPrice
+        taxRate
+        vatRate
+        amount
+        customFields
+      }
+      payments {
+        id
+        amount
+        currency
+        paymentDate
+        paymentMethod
+        reference
+        notes
+        status
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const GET_INVOICE_STATS = gql`
+  query GetInvoiceStats($filter: InvoiceFilterInput) {
+    invoiceStats(filter: $filter) {
+      totalInvoices
+      totalAmount
+      paidAmount
+      overdueAmount
+      draftAmount
+      averageInvoiceAmount
+      currencyBreakdown {
+        currency
+        count
+        totalAmount
+      }
+      statusBreakdown {
+        status
+        count
+        totalAmount
+      }
+    }
+  }
+`;
+
+export const GET_INVOICE_HISTORY = gql`
+  query GetInvoiceHistory($invoiceId: ID!, $limit: Int, $offset: Int) {
+    invoiceHistory(invoiceId: $invoiceId, limit: $limit, offset: $offset) {
+      id
+      invoiceId
+      userId
+      action
+      field
+      itemId
+      oldValue
+      newValue
+      createdAt
+      user {
+        id
+        firstName
+        lastName
+        email
+      }
+    }
+  }
+`;
+
+export const GET_NEXT_INVOICE_NUMBER = gql`
+  query GetNextInvoiceNumber {
+    nextInvoiceNumber
+  }
+`;
+
+export const GET_CUSTOMERS = gql`
+  query GetCustomers($filter: CustomerFilterInput, $first: Int, $after: String) {
+    customers(filter: $filter, first: $first, after: $after) {
+      edges {
+        node {
+          id
+          name
+          email
+          phone
+          type
+          status
+          address
+          industry
+          annualRevenue
+          notes
+          tags
+          createdAt
+        }
+        cursor
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      totalCount
+    }
+  }
+`;
