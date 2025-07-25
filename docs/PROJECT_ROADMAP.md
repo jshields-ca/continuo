@@ -25,6 +25,9 @@ This project leverages the power of human-AI collaboration to achieve rapid, hig
 **For detailed current status, sprint progress, and development metrics, see:**
 **[Project Status Summary](./PROJECT_STATUS_SUMMARY.md)**
 
+**For a comprehensive third-party review of the project architecture and recommendations, see:**
+**[Project Review - July 24, 2025](./PROJECT_REVIEW.md)**
+
 ### Quick Overview
 - **Current Version**: 0.2.5
 - **Current Sprint**: 2 In Progress (75% Complete)

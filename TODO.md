@@ -96,6 +96,8 @@
 
 ## 📊 **PROJECT STATUS OVERVIEW**
 
+> **📋 Note**: For a comprehensive third-party review of the project architecture, codebase quality, and recommendations, see [Project Review - July 24, 2025](./docs/PROJECT_REVIEW.md)
+
 ### ✅ **Completed Modules**
 - **Transactions**: Full CRUD with history tracking
 - **Accounts**: Full CRUD with chart of accounts

@@ -13,6 +13,9 @@ Welcome to the Continuo documentation hub. This page serves as the entry point a
 - [Release Workflow](./RELEASE_WORKFLOW.md)
 - [Changelog](../CHANGELOG.md)
 
+## 📊 Reviews & Analysis
+- [Project Review - July 24, 2025](./PROJECT_REVIEW.md)
+
 ## 🛠️ Technical & Environment Docs
 - [Localhost Testing Fixes](./LOCALHOST_TESTING_FIXES.md)
 - [Production Hosting Requirements](./PRODUCTION_HOSTING_REQUIREMENTS.md)
