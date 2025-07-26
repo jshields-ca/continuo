@@ -62,6 +62,8 @@ const accountTypeDefs = gql`
     # Balance information
     balance: Float!
     openingBalance: Float!
+    calculatedBalance: Float
+    storedBalance: Float
     
     # Hierarchy
     parentId: ID

@@ -219,6 +219,44 @@ export default function CustomersPage() {
 
   const handleCreateCustomer = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Client-side validation
+    if (!newCustomer.name.trim()) {
+      alert('Please enter a company name.');
+      return;
+    }
+    
+    if (!newCustomer.email.trim()) {
+      alert('Please enter an email address.');
+      return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newCustomer.email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    
+    // Phone validation (if provided)
+    if (newCustomer.phone && newCustomer.phone.trim()) {
+      const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+      const cleanPhone = newCustomer.phone.replace(/[\s\-\(\)]/g, '');
+      if (!phoneRegex.test(cleanPhone)) {
+        alert('Please enter a valid phone number.');
+        return;
+      }
+    }
+    
+    // Check for duplicate email
+    const existingCustomer = customers.find((customer: any) => 
+      customer.email.toLowerCase() === newCustomer.email.toLowerCase()
+    );
+    if (existingCustomer) {
+      alert('A customer with this email address already exists.');
+      return;
+    }
+    
     try {
       await createCustomer({
         variables: {
@@ -228,8 +266,21 @@ export default function CustomersPage() {
           },
         },
       });
+      
+      // Reset form
+      setNewCustomer({
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        industry: '',
+        website: '',
+        notes: '',
+      });
+      setShowCreateForm(false);
     } catch (error) {
       console.error('Error creating customer:', error);
+      alert('Error creating customer. Please try again.');
     }
   };
 
@@ -532,28 +583,28 @@ export default function CustomersPage() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Company Name
+                      Company Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       required
                       value={newCustomer.name}
                       onChange={(e) => setNewCustomer({...newCustomer, name: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500"
                       placeholder="Company name"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
+                      Email <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
                       required
                       value={newCustomer.email}
                       onChange={(e) => setNewCustomer({...newCustomer, email: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500"
                       placeholder="contact@company.com"
                     />
                   </div>
@@ -922,7 +973,12 @@ export default function CustomersPage() {
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
                         <p className="text-sm text-gray-900 bg-white px-3 py-2 rounded border">
-                          {viewingCustomer.address}
+                          {typeof viewingCustomer.address === 'string' 
+                            ? viewingCustomer.address 
+                            : viewingCustomer.address && typeof viewingCustomer.address === 'object'
+                            ? `${viewingCustomer.address.street || ''} ${viewingCustomer.address.city || ''} ${viewingCustomer.address.state || ''} ${viewingCustomer.address.zipCode || ''} ${viewingCustomer.address.country || ''}`.trim()
+                            : 'N/A'
+                          }
                         </p>
                       </div>
                     )}

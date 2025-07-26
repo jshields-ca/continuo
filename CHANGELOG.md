@@ -5,6 +5,80 @@ All notable changes to the Continuo Platform will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Major Changes
+- **BUS-34 Comprehensive Sprint 2 Testing - IN PROGRESS**: Currently conducting comprehensive testing of all Sprint 2 features with critical bug fixes identified and resolved. Testing continues to ensure production readiness and quality standards.
+- **Critical Bug Resolution**: Fixed 8 high-priority critical bugs identified during testing, including customer modal crashes, tax calculation errors, transaction balance issues, and form validation problems.
+- **Testing Progress**: Sprint 2 features are being validated through systematic testing with remaining test scenarios to be completed.
+- **Complete Invoice Management System**: Implemented comprehensive invoice item CRUD operations with real-time editing, automatic calculations, and complete audit trail tracking. Invoice system now supports full lifecycle management from creation to payment tracking.
+- **Advanced Audit Trail System**: Added `InvoiceHistory` model and comprehensive tracking for all invoice changes including field updates, item additions/modifications/deletions, with user attribution and detailed change logging.
+- **Professional Invoice UI/UX**: Enhanced invoice pages with consistent styling, improved accessibility, better contrast ratios, and professional user experience across all invoice-related interfaces.
+- **Robust Backend Architecture**: Implemented robust GraphQL resolvers for invoice item management with proper error handling, validation, and database transaction safety.
+
+### Added
+- **Comprehensive Testing Documentation**: Test notes and results documented in `docs/SPRINT_2_TEST_NOTES.md` with testing continuing
+- **Critical Bug Fixes**: Resolved 8 high-priority issues:
+  - **BUS-39**: Customer Details Modal Crash - Fixed React rendering error for address object
+  - **BUS-40**: Tax/VAT Calculation Bugs - Fixed percentage calculation in backend and frontend display
+  - **BUS-41**: Transaction Balance Update Bug - Fixed account balance calculation from transactions
+  - **BUS-42**: Lead Source Validation Error - Added frontend validation for required source field
+  - **BUS-43**: Form Validation Missing - Added visual indicators and client-side validation for all forms
+  - **BUS-44**: PDF Generation Not Working - Implemented actual PDF generation using jsPDF and html2canvas
+  - **BUS-45**: Real-time Updates Missing - Implemented Apollo cache updates and real-time data synchronization
+  - **BUS-46**: Search Functionality Missing - Added comprehensive search and filtering for transaction page
+- **Testing Progress**: Systematic testing of all Sprint 2 features with remaining scenarios to be completed
+- **[BUS-33](https://linear.app/scootr-ca/issue/BUS-33/bus-7-complete-invoice-detail-and-edit-pages-implementation) Invoice Detail & Edit Pages**: Complete implementation of invoice detail and edit pages with professional UI, comprehensive item management, and real-time calculations.
+- **Invoice Item CRUD Operations**: Full create, read, update, and delete functionality for invoice line items with real-time amount calculations and validation.
+- **Invoice History Tracking**: Comprehensive audit trail system tracking all invoice changes including creation, field updates, item additions, modifications, and deletions with user attribution.
+- **Enhanced Invoice UI Components**: Professional styling improvements including better contrast ratios, consistent button designs, improved form layouts, and accessibility enhancements.
+- **Real-time Invoice Calculations**: Automatic tax, VAT, and total calculations that update in real-time as items are modified.
+- **Database Schema Enhancements**: Added `InvoiceHistory` model with proper relationships to track all invoice changes with detailed metadata.
+- **[BUS-32](https://linear.app/scootr-ca/issue/BUS-32/ux-fix-header-duplication-and-improve-navigation-hierarchy) Navigation Hierarchy & UX/UI Improvements**: Completed comprehensive navigation improvements including header duplication fix, WCAG AA compliance implementation, breadcrumb navigation system, and accessibility enhancements across all dashboard pages. Status marked as Complete in Linear.
+- **[BUS-38](https://linear.app/scootr-ca/issue/BUS-38/payment-management-complete-payment-management-ui-system) Payment Management UI System**: Created comprehensive Linear issue for complete payment management system implementation, including payment creation, workflow management, tracking, analytics, and notifications. Assigned to Sprint 3 with high priority.
+- **Comprehensive Linear Label Structure**: Introduced a new, unique, and granular label system for Linear issues, including Feature, Type, Component, Environment, Sprint, Complexity, and Impact categories. Added `complexity/moderate` to avoid naming conflicts.
+- **Linear Labels Reference Guide**: Created `docs/LINEAR_LABELS_REFERENCE.md` as a quick reference for all available Linear labels, usage guidelines, and best practices.
+
+### Changed
+- **Linear Issue Status**: Updated BUS-34 sub-issues to reflect completion status for resolved bugs
+- **Testing Status**: Critical bugs resolved, systematic testing continuing for production readiness
+- **Documentation**: Updated project documentation to reflect current testing progress
+- **Invoice Edit Experience**: Transformed invoice editing from basic field updates to comprehensive item management with real-time calculations and professional UI.
+- **GraphQL Schema**: Enhanced invoice-related types and resolvers to support item CRUD operations and history tracking.
+- **Frontend State Management**: Moved from local state management to server-state management via GraphQL for better data consistency and real-time updates.
+- **UI/UX Standards**: Applied consistent design patterns across all invoice pages with improved accessibility and professional styling.
+- **Documentation Navigation**: Updated both `README.md` and `docs/README.md` to include the new Linear Labels Reference and ensure all navigation follows the single source of truth approach.
+- **Best Practices Update**: Expanded `docs/LINEAR_BEST_PRACTICES.md` to include the new label structure, usage guidelines, and example combinations. Updated all references from `complexity/medium` to `complexity/moderate`.
+- **Label Consistency**: Ensured all documentation and examples use unique label names and reference the new structure.
+
+### Fixed
+- **Customer Modal Crashes**: Resolved React rendering errors for address objects
+- **Tax Calculation Errors**: Fixed percentage calculation logic in both backend and frontend
+- **Transaction Balance Issues**: Corrected account balance calculation from transactions
+- **Form Validation**: Added comprehensive validation and visual indicators
+- **PDF Generation**: Implemented actual PDF generation instead of web preview
+- **Real-time Updates**: Fixed cache management and data synchronization
+- **Search Functionality**: Added missing search and filtering capabilities
+- **Invoice Item Editing**: Resolved issues with item editing not updating the invoice page with new line items by implementing proper backend support.
+- **GraphQL Query Errors**: Fixed Prisma query syntax issues in invoice item resolvers and removed unsupported field errors.
+- **UI Contrast Issues**: Resolved light grey text on light backgrounds across invoice pages for better accessibility.
+- **Rate Limiting**: Addressed 429 errors during development testing with proper API service management.
+- **Data Type Handling**: Fixed `amount.toFixed is not a function` errors by properly handling string/number conversions in currency formatting.
+- **Label Naming Conflict**: Resolved duplicate 'medium' label issue by renaming complexity label to `complexity/moderate`.
+- **Documentation Consistency**: Audited and updated all documentation to reference the new label structure and navigation, ensuring no outdated references remain.
+
+### Technical Improvements
+- **Testing Coverage**: Systematic testing of all Sprint 2 features in progress
+- **Bug Resolution**: Critical bugs identified and resolved, testing continues
+- **Production Readiness**: System validation in progress with testing completion pending
+- **Documentation**: Test notes and results documented with testing continuing
+- **Backend Robustness**: Enhanced invoice resolvers with proper error handling, validation, and database transaction safety.
+- **Frontend Performance**: Optimized invoice editing with efficient GraphQL mutations and real-time updates.
+- **Data Integrity**: Implemented comprehensive audit trail ensuring all invoice changes are tracked and attributable.
+- **User Experience**: Enhanced invoice management with professional UI, better accessibility, and intuitive workflows.
+
+---
+
 ## [0.2.5] - 2025-07-22
 
 ### Major Changes
@@ -41,56 +115,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Production Stability**: Application is now stable and ready for production deployment
 
 ---
-
-## [Unreleased]
-
-### Major Changes
-- **Complete Invoice Management System**: Implemented comprehensive invoice item CRUD operations with real-time editing, automatic calculations, and complete audit trail tracking. Invoice system now supports full lifecycle management from creation to payment tracking.
-- **Advanced Audit Trail System**: Added `InvoiceHistory` model and comprehensive tracking for all invoice changes including field updates, item additions/modifications/deletions, with user attribution and detailed change logging.
-- **Professional Invoice UI/UX**: Enhanced invoice pages with consistent styling, improved accessibility, better contrast ratios, and professional user experience across all invoice-related interfaces.
-- **Robust Backend Architecture**: Implemented robust GraphQL resolvers for invoice item management with proper error handling, validation, and database transaction safety.
-
-### Added
-- **[BUS-33](https://linear.app/scootr-ca/issue/BUS-33/bus-7-complete-invoice-detail-and-edit-pages-implementation) Invoice Detail & Edit Pages**: Complete implementation of invoice detail and edit pages with professional UI, comprehensive item management, and real-time calculations.
-- **Invoice Item CRUD Operations**: Full create, read, update, and delete functionality for invoice line items with real-time amount calculations and validation.
-- **Invoice History Tracking**: Comprehensive audit trail system tracking all invoice changes including creation, field updates, item additions, modifications, and deletions with user attribution.
-- **Enhanced Invoice UI Components**: Professional styling improvements including better contrast ratios, consistent button designs, improved form layouts, and accessibility enhancements.
-- **Real-time Invoice Calculations**: Automatic tax, VAT, and total calculations that update in real-time as items are modified.
-- **Database Schema Enhancements**: Added `InvoiceHistory` model with proper relationships to track all invoice changes with detailed metadata.
-
-### Changed
-- **Invoice Edit Experience**: Transformed invoice editing from basic field updates to comprehensive item management with real-time calculations and professional UI.
-- **GraphQL Schema**: Enhanced invoice-related types and resolvers to support item CRUD operations and history tracking.
-- **Frontend State Management**: Moved from local state management to server-state management via GraphQL for better data consistency and real-time updates.
-- **UI/UX Standards**: Applied consistent design patterns across all invoice pages with improved accessibility and professional styling.
-
-### Fixed
-- **Invoice Item Editing**: Resolved issues with item editing not updating the invoice page with new line items by implementing proper backend support.
-- **GraphQL Query Errors**: Fixed Prisma query syntax issues in invoice item resolvers and removed unsupported field errors.
-- **UI Contrast Issues**: Resolved light grey text on light backgrounds across invoice pages for better accessibility.
-- **Rate Limiting**: Addressed 429 errors during development testing with proper API service management.
-- **Data Type Handling**: Fixed `amount.toFixed is not a function` errors by properly handling string/number conversions in currency formatting.
-
-### Technical Improvements
-- **Backend Robustness**: Enhanced invoice resolvers with proper error handling, validation, and database transaction safety.
-- **Frontend Performance**: Optimized invoice editing with efficient GraphQL mutations and real-time updates.
-- **Data Integrity**: Implemented comprehensive audit trail ensuring all invoice changes are tracked and attributable.
-- **User Experience**: Enhanced invoice management with professional UI, better accessibility, and intuitive workflows.
-
-### Added (Previous)
-- **[BUS-32](https://linear.app/scootr-ca/issue/BUS-32/ux-fix-header-duplication-and-improve-navigation-hierarchy) Navigation Hierarchy & UX/UI Improvements**: Completed comprehensive navigation improvements including header duplication fix, WCAG AA compliance implementation, breadcrumb navigation system, and accessibility enhancements across all dashboard pages. Status marked as Complete in Linear.
-- **[BUS-38](https://linear.app/scootr-ca/issue/BUS-38/payment-management-complete-payment-management-ui-system) Payment Management UI System**: Created comprehensive Linear issue for complete payment management system implementation, including payment creation, workflow management, tracking, analytics, and notifications. Assigned to Sprint 3 with high priority.
-- **Comprehensive Linear Label Structure**: Introduced a new, unique, and granular label system for Linear issues, including Feature, Type, Component, Environment, Sprint, Complexity, and Impact categories. Added `complexity/moderate` to avoid naming conflicts.
-- **Linear Labels Reference Guide**: Created `docs/LINEAR_LABELS_REFERENCE.md` as a quick reference for all available Linear labels, usage guidelines, and best practices.
-
-### Changed (Previous)
-- **Documentation Navigation**: Updated both `README.md` and `docs/README.md` to include the new Linear Labels Reference and ensure all navigation follows the single source of truth approach.
-- **Best Practices Update**: Expanded `docs/LINEAR_BEST_PRACTICES.md` to include the new label structure, usage guidelines, and example combinations. Updated all references from `complexity/medium` to `complexity/moderate`.
-- **Label Consistency**: Ensured all documentation and examples use unique label names and reference the new structure.
-
-### Fixed (Previous)
-- **Label Naming Conflict**: Resolved duplicate 'medium' label issue by renaming complexity label to `complexity/moderate`.
-- **Documentation Consistency**: Audited and updated all documentation to reference the new label structure and navigation, ensuring no outdated references remain.
 
 ## [0.2.4] - 2025-07-21
 

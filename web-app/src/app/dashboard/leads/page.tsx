@@ -430,18 +430,85 @@ export default function LeadsPage() {
 
   const handleCreateLead = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Client-side validation
+    if (!newLead.name.trim()) {
+      alert('Please enter a lead name.');
+      return;
+    }
+    
+    if (!newLead.email.trim()) {
+      alert('Please enter an email address.');
+      return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newLead.email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    
+    if (!newLead.source) {
+      alert('Please select a source for the lead.');
+      return;
+    }
+    
+    // Phone validation (if provided)
+    if (newLead.phone && newLead.phone.trim()) {
+      const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+      const cleanPhone = newLead.phone.replace(/[\s\-\(\)]/g, '');
+      if (!phoneRegex.test(cleanPhone)) {
+        alert('Please enter a valid phone number.');
+        return;
+      }
+    }
+    
+    // Check for duplicate email
+    const existingLead = leads.find((lead: any) => 
+      lead.email.toLowerCase() === newLead.email.toLowerCase()
+    );
+    if (existingLead) {
+      alert('A lead with this email address already exists.');
+      return;
+    }
+    
     try {
+      // Filter out empty values to prevent GraphQL validation errors
+      const leadInput = {
+        name: newLead.name,
+        email: newLead.email,
+        phone: newLead.phone || undefined,
+        company: newLead.company || undefined,
+        source: newLead.source,
+        assignedTo: newLead.assignedTo || undefined,
+        notes: newLead.notes || undefined,
+        status: 'NEW',
+        score: 0,
+      };
+
       await createLead({
         variables: {
-          input: {
-            ...newLead,
-            status: 'NEW',
-            score: 0,
-          },
+          input: leadInput,
         },
       });
+      
+      // Reset form
+      setNewLead({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        source: '',
+        status: '',
+        score: 0,
+        assignedTo: '',
+        notes: '',
+      });
+      setShowCreateForm(false);
     } catch (error) {
       console.error('Error creating lead:', error);
+      alert('Error creating lead. Please try again.');
     }
   };
 
@@ -481,21 +548,30 @@ export default function LeadsPage() {
   const handleUpdateLead = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate required fields
+    if (!editingLead.source) {
+      alert('Please select a source for the lead.');
+      return;
+    }
+    
     try {
+      // Filter out empty values to prevent GraphQL validation errors
+      const updateInput = {
+        name: editingLead.name,
+        email: editingLead.email,
+        phone: editingLead.phone || undefined,
+        company: editingLead.company || undefined,
+        source: editingLead.source, // No longer defaulting - validation ensures it's selected
+        status: editingLead.status,
+        score: editingLead.score,
+        notes: editingLead.notes || undefined,
+        assignedTo: editingLead.assignedTo || null,
+      };
+
       await updateLead({
         variables: {
           id: editingLead.id,
-          input: {
-            name: editingLead.name,
-            email: editingLead.email,
-            phone: editingLead.phone,
-            company: editingLead.company,
-            source: editingLead.source,
-            status: editingLead.status,
-            score: editingLead.score,
-            notes: editingLead.notes,
-            assignedTo: editingLead.assignedTo || null,
-          },
+          input: updateInput,
         },
       });
       
@@ -1130,7 +1206,7 @@ export default function LeadsPage() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Name
+                      Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -1144,7 +1220,7 @@ export default function LeadsPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
+                      Email <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -1171,12 +1247,13 @@ export default function LeadsPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Source
+                      Source <span className="text-red-500">*</span>
                     </label>
                     <select
                       value={newLead.source}
                       onChange={(e) => setNewLead({...newLead, source: e.target.value})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
+                      required
                     >
                       <option value="">Select Source</option>
                       <option value="WEBSITE">Website</option>
@@ -2247,11 +2324,12 @@ export default function LeadsPage() {
                     <input type="text" value={editingLead.company || ''} onChange={e => setEditingLead({...editingLead, company: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500" placeholder="Company name" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Source</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Source <span className="text-red-500">*</span></label>
                     <select
                       value={editingLead.source || ''}
                       onChange={e => setEditingLead({...editingLead, source: e.target.value})}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
+                      required
                     >
                       <option value="">Select Source</option>
                       <option value="WEBSITE">Website</option>

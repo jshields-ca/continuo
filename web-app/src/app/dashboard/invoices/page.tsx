@@ -117,6 +117,8 @@ export default function InvoicesPage() {
       orderBy: { field: 'CREATED_AT', direction: 'DESC' },
       limit: 50,
     },
+    fetchPolicy: 'cache-and-network', // Always fetch fresh data
+    notifyOnNetworkStatusChange: true, // Notify on refetch
   });
 
   const { data: statsData, loading: statsLoading } = useQuery(GET_INVOICE_STATS, {
@@ -135,14 +137,113 @@ export default function InvoicesPage() {
   });
 
   // Mutations
-  const [deleteInvoice] = useMutation(DELETE_INVOICE_MUTATION);
-  const [sendInvoice] = useMutation(SEND_INVOICE_MUTATION);
-  const [voidInvoice] = useMutation(VOID_INVOICE_MUTATION);
-  const [duplicateInvoice] = useMutation(DUPLICATE_INVOICE_MUTATION);
+  const [deleteInvoice] = useMutation(DELETE_INVOICE_MUTATION, {
+    update: (cache, { data }) => {
+      if (data?.deleteInvoice) {
+        // Remove from cache
+        cache.modify({
+          fields: {
+            invoices(existingInvoices = [], { readField }) {
+              return existingInvoices.filter((invoiceRef: any) => 
+                readField('id', invoiceRef) !== data.deleteInvoice
+              );
+            },
+          },
+        });
+      }
+    },
+  });
+  
+  const [sendInvoice] = useMutation(SEND_INVOICE_MUTATION, {
+    update: (cache, { data }) => {
+      if (data?.sendInvoice) {
+        // Update invoice status in cache
+        cache.modify({
+          id: cache.identify({ __typename: 'Invoice', id: data.sendInvoice.id }),
+          fields: {
+            status() {
+              return 'SENT';
+            },
+          },
+        });
+      }
+    },
+  });
+  
+  const [voidInvoice] = useMutation(VOID_INVOICE_MUTATION, {
+    update: (cache, { data }) => {
+      if (data?.voidInvoice) {
+        // Update invoice status in cache
+        cache.modify({
+          id: cache.identify({ __typename: 'Invoice', id: data.voidInvoice.id }),
+          fields: {
+            status() {
+              return 'VOID';
+            },
+          },
+        });
+      }
+    },
+  });
+  
+  const [duplicateInvoice] = useMutation(DUPLICATE_INVOICE_MUTATION, {
+    update: (cache, { data }) => {
+      if (data?.duplicateInvoice) {
+        // Add new invoice to cache
+        try {
+          const existingInvoices = cache.readQuery({
+            query: GET_INVOICES,
+            variables: {
+              filter: {},
+              orderBy: { field: 'CREATED_AT', direction: 'DESC' },
+              limit: 50,
+            },
+          });
+
+          if (existingInvoices && (existingInvoices as any).invoices) {
+            cache.writeQuery({
+              query: GET_INVOICES,
+              variables: {
+                filter: {},
+                orderBy: { field: 'CREATED_AT', direction: 'DESC' },
+                limit: 50,
+              },
+              data: {
+                invoices: [data.duplicateInvoice, ...(existingInvoices as any).invoices],
+              },
+            });
+          }
+        } catch (error) {
+          console.log('Cache update failed for duplicate:', error);
+        }
+      }
+    },
+  });
 
   const invoices = invoicesData?.invoices || [];
   const stats = statsData?.invoiceStats;
   const customers = customersData?.customers?.edges?.map((edge: any) => edge.node) || [];
+
+  // Refetch data when page becomes visible
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        refetchInvoices();
+      }
+    };
+
+    const handleFocus = () => {
+      refetchInvoices();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [refetchInvoices]);
 
   const handleDeleteInvoice = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this invoice?')) {

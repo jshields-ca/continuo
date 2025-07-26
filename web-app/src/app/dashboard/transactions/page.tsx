@@ -143,6 +143,12 @@ const GET_TRANSACTION_HISTORY = gql`
 
 export default function TransactionsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
+  const [accountFilter, setAccountFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
   interface EditingTransaction {
   id: string;
   type: string;
@@ -188,28 +194,67 @@ const [editingTransaction, setEditingTransaction] = useState<EditingTransaction 
   const transactions = transactionsData?.transactions || [];
   const accounts = accountsData?.accounts || [];
 
-  // Sort transactions
-  const sortedTransactions = [...transactions].sort((a, b) => {
-    let aValue = a[sortBy];
-    let bValue = b[sortBy];
+  // Filter and sort transactions
+  const filteredAndSortedTransactions = [...transactions]
+    .filter(transaction => {
+      // Search term filter
+      if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        const matchesSearch = 
+          transaction.description?.toLowerCase().includes(searchLower) ||
+          transaction.reference?.toLowerCase().includes(searchLower) ||
+          transaction.category?.toLowerCase().includes(searchLower) ||
+          transaction.account?.name?.toLowerCase().includes(searchLower) ||
+          transaction.account?.code?.toLowerCase().includes(searchLower) ||
+          transaction.tags?.some((tag: string) => tag.toLowerCase().includes(searchLower));
+        
+        if (!matchesSearch) return false;
+      }
 
-    if (sortBy === 'date') {
-      aValue = new Date(aValue).getTime();
-      bValue = new Date(bValue).getTime();
-    } else if (sortBy === 'amount') {
-      aValue = parseFloat(aValue);
-      bValue = parseFloat(bValue);
-    } else {
-      aValue = String(aValue || '').toLowerCase();
-      bValue = String(bValue || '').toLowerCase();
-    }
+      // Date filter
+      if (dateFilter) {
+        const transactionDate = new Date(transaction.date).toISOString().split('T')[0];
+        if (transactionDate !== dateFilter) return false;
+      }
 
-    if (sortOrder === 'asc') {
-      return aValue > bValue ? 1 : -1;
-    } else {
-      return aValue < bValue ? 1 : -1;
-    }
-  });
+      // Account filter
+      if (accountFilter && transaction.account?.id !== accountFilter) {
+        return false;
+      }
+
+      // Type filter
+      if (typeFilter && transaction.type !== typeFilter) {
+        return false;
+      }
+
+      // Category filter
+      if (categoryFilter && transaction.category !== categoryFilter) {
+        return false;
+      }
+
+      return true;
+    })
+    .sort((a, b) => {
+      let aValue = a[sortBy];
+      let bValue = b[sortBy];
+
+      if (sortBy === 'date') {
+        aValue = new Date(aValue).getTime();
+        bValue = new Date(bValue).getTime();
+      } else if (sortBy === 'amount') {
+        aValue = parseFloat(aValue);
+        bValue = parseFloat(bValue);
+      } else {
+        aValue = String(aValue || '').toLowerCase();
+        bValue = String(bValue || '').toLowerCase();
+      }
+
+      if (sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
 
   const handleCreateTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -967,13 +1012,123 @@ const [editingTransaction, setEditingTransaction] = useState<EditingTransaction 
         </div>
       )}
 
+      {/* Search and Filters */}
+      <div className="bg-white shadow rounded-lg mb-6">
+        <div className="px-4 py-5 sm:p-6">
+          <div className="flex flex-col space-y-4">
+            {/* Search Bar */}
+            <div className="flex items-center space-x-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search transactions by description, reference, category, account, or tags..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-500"
+                  />
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 flex items-center"
+              >
+                <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                Filters
+              </button>
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setDateFilter('');
+                  setAccountFilter('');
+                  setTypeFilter('');
+                  setCategoryFilter('');
+                }}
+                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800"
+              >
+                Clear All
+              </button>
+            </div>
+
+            {/* Advanced Filters */}
+            {showFilters && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                  <input
+                    type="date"
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Account</label>
+                  <select
+                    value={accountFilter}
+                    onChange={(e) => setAccountFilter(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  >
+                    <option value="">All Accounts</option>
+                    {accounts.map((account: any) => (
+                      <option key={account.id} value={account.id}>
+                        {account.code} - {account.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                  <select
+                    value={typeFilter}
+                    onChange={(e) => setTypeFilter(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  >
+                    <option value="">All Types</option>
+                    <option value="CREDIT">Credit</option>
+                    <option value="DEBIT">Debit</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                  <select
+                    value={categoryFilter}
+                    onChange={(e) => setCategoryFilter(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  >
+                    <option value="">All Categories</option>
+                    {Array.from(new Set(transactions.map((t: any) => t.category).filter(Boolean))).map((category: string) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Transactions Table */}
       <div className="bg-white shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Recent Transactions
-            </h3>
+            <div>
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                Transactions
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                Showing {filteredAndSortedTransactions.length} of {transactions.length} transactions
+              </p>
+            </div>
             <button
               onClick={() => refetchTransactions()}
               disabled={transactionsLoading}
@@ -988,7 +1143,7 @@ const [editingTransaction, setEditingTransaction] = useState<EditingTransaction 
             <div className="flex justify-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
-          ) : transactions.length === 0 ? (
+          ) : filteredAndSortedTransactions.length === 0 ? (
             <div className="text-center py-8">
               <Receipt className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900">No transactions found</h3>
@@ -1083,7 +1238,7 @@ const [editingTransaction, setEditingTransaction] = useState<EditingTransaction 
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {sortedTransactions.map((transaction: any) => (
+                  {filteredAndSortedTransactions.map((transaction: any) => (
                     <tr key={transaction.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {formatDate(transaction.date)}

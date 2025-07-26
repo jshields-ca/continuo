@@ -29,8 +29,9 @@ const calculateInvoiceTotals = (items) => {
   items.forEach(item => {
     const itemTotal = item.quantity * item.unitPrice;
     subtotal += itemTotal;
-    taxAmount += itemTotal * (item.taxRate || 0);
-    vatAmount += itemTotal * (item.vatRate || 0);
+    // Convert percentage to decimal (e.g., 11% = 0.11)
+    taxAmount += itemTotal * ((item.taxRate || 0) / 100);
+    vatAmount += itemTotal * ((item.vatRate || 0) / 100);
   });
 
   const total = subtotal + taxAmount + vatAmount;
@@ -146,7 +147,25 @@ const invoiceResolvers = {
           }
         });
 
-        return invoices;
+        // Recalculate totals for each invoice to ensure accuracy
+        const invoicesWithRecalculatedTotals = invoices.map(invoice => {
+          const recalculatedTotals = calculateInvoiceTotals(invoice.items);
+          
+          return {
+            ...invoice,
+            subtotal: recalculatedTotals.subtotal,
+            taxAmount: recalculatedTotals.taxAmount,
+            vatAmount: recalculatedTotals.vatAmount,
+            total: recalculatedTotals.total,
+            // Keep original values for comparison
+            storedSubtotal: invoice.subtotal,
+            storedTaxAmount: invoice.taxAmount,
+            storedVatAmount: invoice.vatAmount,
+            storedTotal: invoice.total
+          };
+        });
+
+        return invoicesWithRecalculatedTotals;
       } catch (error) {
         logger.error('Error fetching invoices:', error);
         throw error;
@@ -181,7 +200,21 @@ const invoiceResolvers = {
           });
         }
 
-        return invoice;
+        // Recalculate totals to ensure accuracy
+        const recalculatedTotals = calculateInvoiceTotals(invoice.items);
+        
+        return {
+          ...invoice,
+          subtotal: recalculatedTotals.subtotal,
+          taxAmount: recalculatedTotals.taxAmount,
+          vatAmount: recalculatedTotals.vatAmount,
+          total: recalculatedTotals.total,
+          // Keep original values for comparison
+          storedSubtotal: invoice.subtotal,
+          storedTaxAmount: invoice.taxAmount,
+          storedVatAmount: invoice.vatAmount,
+          storedTotal: invoice.total
+        };
       } catch (error) {
         logger.error('Error fetching invoice:', error);
         throw error;
@@ -216,7 +249,21 @@ const invoiceResolvers = {
           });
         }
 
-        return invoice;
+        // Recalculate totals to ensure accuracy
+        const recalculatedTotals = calculateInvoiceTotals(invoice.items);
+        
+        return {
+          ...invoice,
+          subtotal: recalculatedTotals.subtotal,
+          taxAmount: recalculatedTotals.taxAmount,
+          vatAmount: recalculatedTotals.vatAmount,
+          total: recalculatedTotals.total,
+          // Keep original values for comparison
+          storedSubtotal: invoice.subtotal,
+          storedTaxAmount: invoice.taxAmount,
+          storedVatAmount: invoice.vatAmount,
+          storedTotal: invoice.total
+        };
       } catch (error) {
         logger.error('Error fetching invoice by number:', error);
         throw error;
@@ -427,22 +474,36 @@ const invoiceResolvers = {
           if (filter.currency) where.currency = filter.currency;
         }
 
-        const invoices = await prisma.invoice.findMany({ where });
+        const invoices = await prisma.invoice.findMany({ 
+          where,
+          include: {
+            items: true
+          }
+        });
+
+        // Recalculate totals for each invoice to ensure accurate statistics
+        const invoicesWithRecalculatedTotals = invoices.map(invoice => {
+          const recalculatedTotals = calculateInvoiceTotals(invoice.items);
+          return {
+            ...invoice,
+            total: recalculatedTotals.total
+          };
+        });
 
         const stats = {
-          totalInvoices: invoices.length,
-          totalAmount: invoices.reduce((sum, inv) => sum + parseFloat(inv.total), 0),
-          paidAmount: invoices
+          totalInvoices: invoicesWithRecalculatedTotals.length,
+          totalAmount: invoicesWithRecalculatedTotals.reduce((sum, inv) => sum + parseFloat(inv.total), 0),
+          paidAmount: invoicesWithRecalculatedTotals
             .filter(inv => inv.status === 'PAID')
             .reduce((sum, inv) => sum + parseFloat(inv.total), 0),
-          overdueAmount: invoices
+          overdueAmount: invoicesWithRecalculatedTotals
             .filter(inv => inv.status === 'OVERDUE')
             .reduce((sum, inv) => sum + parseFloat(inv.total), 0),
-          draftAmount: invoices
+          draftAmount: invoicesWithRecalculatedTotals
             .filter(inv => inv.status === 'DRAFT')
             .reduce((sum, inv) => sum + parseFloat(inv.total), 0),
-          averageInvoiceAmount: invoices.length > 0 
-            ? invoices.reduce((sum, inv) => sum + parseFloat(inv.total), 0) / invoices.length 
+          averageInvoiceAmount: invoicesWithRecalculatedTotals.length > 0 
+            ? invoicesWithRecalculatedTotals.reduce((sum, inv) => sum + parseFloat(inv.total), 0) / invoicesWithRecalculatedTotals.length 
             : 0,
           currencyBreakdown: [],
           statusBreakdown: []
@@ -450,7 +511,7 @@ const invoiceResolvers = {
 
         // Calculate currency breakdown
         const currencyMap = {};
-        invoices.forEach(inv => {
+        invoicesWithRecalculatedTotals.forEach(inv => {
           const currency = inv.currency;
           if (!currencyMap[currency]) {
             currencyMap[currency] = { count: 0, totalAmount: 0 };
@@ -467,7 +528,7 @@ const invoiceResolvers = {
 
         // Calculate status breakdown
         const statusMap = {};
-        invoices.forEach(inv => {
+        invoicesWithRecalculatedTotals.forEach(inv => {
           const status = inv.status;
           if (!statusMap[status]) {
             statusMap[status] = { count: 0, totalAmount: 0 };

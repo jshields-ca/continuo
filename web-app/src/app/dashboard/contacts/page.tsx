@@ -183,6 +183,55 @@ export default function ContactsPage() {
 
   const handleCreateContact = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Client-side validation
+    if (!newContact.customerId) {
+      alert('Please select a customer.');
+      return;
+    }
+    
+    if (!newContact.firstName.trim()) {
+      alert('Please enter a first name.');
+      return;
+    }
+    
+    if (!newContact.lastName.trim()) {
+      alert('Please enter a last name.');
+      return;
+    }
+    
+    if (!newContact.email.trim()) {
+      alert('Please enter an email address.');
+      return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newContact.email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    
+    // Phone validation (if provided)
+    if (newContact.phone && newContact.phone.trim()) {
+      const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+      const cleanPhone = newContact.phone.replace(/[\s\-\(\)]/g, '');
+      if (!phoneRegex.test(cleanPhone)) {
+        alert('Please enter a valid phone number.');
+        return;
+      }
+    }
+    
+    // Check for duplicate email within the same customer
+    const existingContact = contacts.find((contact: any) => 
+      contact.email.toLowerCase() === newContact.email.toLowerCase() &&
+      contact.customer?.id === newContact.customerId
+    );
+    if (existingContact) {
+      alert('A contact with this email address already exists for this customer.');
+      return;
+    }
+    
     try {
       await createContact({
         variables: {
@@ -192,8 +241,21 @@ export default function ContactsPage() {
           },
         },
       });
+      
+      // Reset form
+      setNewContact({
+        customerId: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        role: '',
+        isPrimary: false,
+      });
+      setShowCreateForm(false);
     } catch (error) {
       console.error('Error creating contact:', error);
+      alert('Error creating contact. Please try again.');
     }
   };
 
@@ -471,13 +533,13 @@ export default function ContactsPage() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Customer
+                      Customer <span className="text-red-500">*</span>
                     </label>
                     <select
                       required
                       value={newContact.customerId}
                       onChange={(e) => setNewContact({...newContact, customerId: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
                     >
                       <option value="">Select Customer</option>
                       {customers.map((customer: any) => (
@@ -490,42 +552,42 @@ export default function ContactsPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      First Name
+                      First Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       required
                       value={newContact.firstName}
                       onChange={(e) => setNewContact({...newContact, firstName: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500"
                       placeholder="First name"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Last Name
+                      Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       required
                       value={newContact.lastName}
                       onChange={(e) => setNewContact({...newContact, lastName: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500"
                       placeholder="Last name"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
+                      Email <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
                       required
                       value={newContact.email}
                       onChange={(e) => setNewContact({...newContact, email: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white text-gray-900 bg-white placeholder-gray-500 text-gray-900 bg-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-500"
                       placeholder="contact@email.com"
                     />
                   </div>

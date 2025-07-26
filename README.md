@@ -4,7 +4,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com/)
 ![Version](https://img.shields.io/badge/Version-0.2.5-orange.svg)
-[![Sprint](https://img.shields.io/badge/Sprint-2%2085%25%20In%20Progress-yellow.svg)](https://linear.app/scootr-ca/team/Business%20Dev/active)
+[![Sprint](https://img.shields.io/badge/Sprint-2%2085%25%20Testing%20In%20Progress-yellow.svg)](https://linear.app/scootr-ca/team/Business%20Dev/active)
 [![Production](https://img.shields.io/badge/Production-continuo.pro-brightgreen.svg)](https://continuo.pro)
 
 **AI-powered business management platform for small businesses**
@@ -123,6 +123,8 @@ Continuo/
 │   ├── DEVELOPMENT_PLAN.md
 │   ├── PROJECT_ROADMAP.md
 │   ├── PROJECT_STATUS_SUMMARY.md
+│   ├── SPRINT_2_TESTING_PLAN.md
+│   ├── SPRINT_2_TEST_NOTES.md
 │   ├── ...
 ├── scripts/               # Build and deployment scripts
 ├── docker-compose.yml     # Docker services configuration
@@ -137,5 +139,22 @@ Continuo/
 
 - **Internal Planning & Status:** Use [Linear](https://linear.app/scootr-ca/team/Business%20Dev/active) for all sprint, epic, and planning issues. All internal docs link to Linear issues/epics.
 - **Public Bug Reports & Feature Requests:** Use [GitHub Issues](https://github.com/jshields-ca/Continuo/issues) for open source contributions and public tracking. Public docs link to GitHub issues.
+
+---
+
+## 🎯 Current Status
+
+### 🔄 **Sprint 2 - Testing In Progress (85% Complete)**
+- **BUS-34 Comprehensive Testing**: Critical bugs fixed, systematic testing continuing
+- **8 Critical Bug Fixes**: Customer modals, tax calculations, transaction balances, form validation, PDF generation, real-time updates, search functionality
+- **Testing Progress**: Systematic testing of all Sprint 2 features with remaining scenarios to be completed
+- **Production Readiness**: Testing completion pending before production deployment
+
+### 🔄 **Next Focus: Complete Testing & BUS-22 Production Environment**
+- Complete remaining Sprint 2 testing scenarios
+- Production database setup
+- Cache configuration
+- Environment variables
+- Deployment preparation
 
 ---

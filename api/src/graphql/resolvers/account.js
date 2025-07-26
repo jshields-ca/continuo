@@ -339,7 +339,7 @@ const accountResolvers = {
     chartOfAccounts: async (parent, args, { user, prisma, requireAuth }) => {
       requireAuth();
       
-      return await prisma.account.findMany({
+      const accounts = await prisma.account.findMany({
         where: {
           companyId: user.companyId,
           status: 'ACTIVE',
@@ -347,9 +347,27 @@ const accountResolvers = {
         include: {
           parent: true,
           children: true,
+          transactions: true, // Include transactions for balance calculation
         },
         orderBy: [{ type: 'asc' }, { code: 'asc' }],
       });
+
+      // Calculate actual balance from transactions for each account
+      const accountsWithCalculatedBalance = accounts.map(account => {
+        const calculatedBalance = account.transactions.reduce((sum, transaction) => {
+          const amount = parseFloat(transaction.amount);
+          return transaction.type === 'CREDIT' ? sum + amount : sum - amount;
+        }, parseFloat(account.openingBalance));
+
+        return {
+          ...account,
+          calculatedBalance: parseFloat(calculatedBalance.toFixed(2)),
+          // Keep the stored balance for comparison
+          storedBalance: parseFloat(account.balance),
+        };
+      });
+
+      return accountsWithCalculatedBalance;
     },
 
     accountBalances: async (parent, args, { user, prisma, requireAuth }) => {

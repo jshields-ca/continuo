@@ -1,5 +1,8 @@
 
 
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 export interface InvoiceData {
   id: string;
   number: string;
@@ -31,214 +34,218 @@ export interface InvoiceData {
 
 export class PDFService {
   /**
-   * Generate and download a PDF invoice using browser print functionality
+   * Generate and download a PDF invoice using jsPDF
    */
   static async generateInvoicePDF(invoice: InvoiceData): Promise<void> {
     try {
       // Create HTML template
       const htmlContent = this.createInvoiceHTML(invoice);
       
-      // Create a new window with the invoice
-      const printWindow = window.open('', '_blank');
-      if (!printWindow) {
-        throw new Error('Popup blocked. Please allow popups for this site.');
+      // Create a temporary container
+      const container = document.createElement('div');
+      container.innerHTML = htmlContent;
+      container.style.position = 'absolute';
+      container.style.left = '-9999px';
+      container.style.top = '0';
+      container.style.width = '800px';
+      container.style.backgroundColor = 'white';
+      container.style.padding = '40px';
+      container.style.fontFamily = 'Arial, sans-serif';
+      container.style.fontSize = '12px';
+      container.style.lineHeight = '1.4';
+      container.style.color = '#1f2937';
+      
+      // Add styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 40px;
+          border-bottom: 1px solid #e5e7eb;
+          padding-bottom: 20px;
+        }
+        .company-info h1 {
+          font-size: 24px;
+          font-weight: bold;
+          color: #1f2937;
+          margin: 0 0 8px 0;
+        }
+        .company-info p {
+          font-size: 12px;
+          color: #6b7280;
+          margin: 0;
+          line-height: 1.4;
+        }
+        .invoice-info {
+          text-align: right;
+        }
+        .invoice-info h1 {
+          font-size: 32px;
+          font-weight: bold;
+          color: #3b82f6;
+          margin: 0 0 8px 0;
+        }
+        .invoice-info p {
+          font-size: 14px;
+          color: #6b7280;
+          margin: 0 0 4px 0;
+        }
+        .customer-section {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 30px;
+        }
+        .customer-info h3 {
+          font-size: 12px;
+          font-weight: bold;
+          color: #374151;
+          margin: 0 0 8px 0;
+        }
+        .customer-info p {
+          font-size: 14px;
+          font-weight: bold;
+          color: #1f2937;
+          margin: 0 0 4px 0;
+        }
+        .customer-info .details {
+          font-size: 10px;
+          color: #6b7280;
+          margin: 0 0 4px 0;
+        }
+        .invoice-details {
+          flex: 1;
+          text-align: right;
+        }
+        .detail-row {
+          margin-bottom: 4px;
+        }
+        .detail-label {
+          font-size: 10px;
+          color: #6b7280;
+          margin-right: 20px;
+        }
+        .detail-value {
+          font-size: 10px;
+          color: #1f2937;
+          font-weight: bold;
+        }
+        .items-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 30px;
+        }
+        .items-table th {
+          background-color: #f9fafb;
+          padding: 12px 16px;
+          text-align: left;
+          font-size: 10px;
+          font-weight: bold;
+          color: #374151;
+          border-bottom: 1px solid #e5e7eb;
+        }
+        .items-table td {
+          padding: 12px 16px;
+          font-size: 10px;
+          color: #1f2937;
+          border-bottom: 1px solid #f3f4f6;
+        }
+        .items-table .text-center { text-align: center; }
+        .items-table .text-right { text-align: right; }
+        .items-table .font-bold { font-weight: bold; }
+        .totals-section {
+          text-align: right;
+          margin-bottom: 30px;
+        }
+        .total-row {
+          margin-bottom: 4px;
+        }
+        .total-label {
+          font-size: 12px;
+          color: #6b7280;
+          margin-right: 20px;
+        }
+        .total-value {
+          font-size: 12px;
+          color: #1f2937;
+          font-weight: bold;
+        }
+        .grand-total {
+          font-size: 16px;
+          color: #1f2937;
+          font-weight: bold;
+          border-top: 2px solid #e5e7eb;
+          padding-top: 8px;
+          margin-top: 8px;
+        }
+        .notes-section {
+          margin-bottom: 30px;
+        }
+        .notes-section h3 {
+          font-size: 12px;
+          font-weight: bold;
+          color: #374151;
+          margin: 0 0 8px 0;
+        }
+        .notes-section p {
+          font-size: 10px;
+          color: #6b7280;
+          margin: 0;
+          line-height: 1.4;
+        }
+        .footer {
+          margin-top: 40px;
+          padding-top: 20px;
+          border-top: 1px solid #e5e7eb;
+          text-align: center;
+        }
+        .footer p {
+          font-size: 8px;
+          color: #9ca3af;
+          margin: 0 0 4px 0;
+        }
+      `;
+      
+      container.appendChild(style);
+      document.body.appendChild(container);
+      
+      // Convert HTML to canvas
+      const canvas = await html2canvas(container, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: 800,
+        height: container.scrollHeight,
+      });
+      
+      // Remove temporary container
+      document.body.removeChild(container);
+      
+      // Create PDF
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 295; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      
+      // Add first page
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+      // Add additional pages if needed
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
       }
-
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>Invoice ${invoice.number}</title>
-            <style>
-              @media print {
-                body { margin: 0; }
-                .no-print { display: none; }
-              }
-              body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-                background: white;
-              }
-              .invoice-container {
-                max-width: 800px;
-                margin: 0 auto;
-                background: white;
-                padding: 40px;
-              }
-              .header {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                margin-bottom: 40px;
-                border-bottom: 1px solid #e5e7eb;
-                padding-bottom: 20px;
-              }
-              .company-info h1 {
-                font-size: 24px;
-                font-weight: bold;
-                color: #1f2937;
-                margin: 0 0 8px 0;
-              }
-              .company-info p {
-                font-size: 12px;
-                color: #6b7280;
-                margin: 0;
-                line-height: 1.4;
-              }
-              .invoice-info {
-                text-align: right;
-              }
-              .invoice-info h1 {
-                font-size: 32px;
-                font-weight: bold;
-                color: #3b82f6;
-                margin: 0 0 8px 0;
-              }
-              .invoice-info p {
-                font-size: 14px;
-                color: #6b7280;
-                margin: 0 0 4px 0;
-              }
-              .customer-section {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 30px;
-              }
-              .customer-info h3 {
-                font-size: 12px;
-                font-weight: bold;
-                color: #374151;
-                margin: 0 0 8px 0;
-              }
-              .customer-info p {
-                font-size: 14px;
-                font-weight: bold;
-                color: #1f2937;
-                margin: 0 0 4px 0;
-              }
-              .customer-info .details {
-                font-size: 10px;
-                color: #6b7280;
-                margin: 0 0 4px 0;
-              }
-              .invoice-details {
-                flex: 1;
-                text-align: right;
-              }
-              .detail-row {
-                margin-bottom: 4px;
-              }
-              .detail-label {
-                font-size: 10px;
-                color: #6b7280;
-                margin-right: 20px;
-              }
-              .detail-value {
-                font-size: 10px;
-                color: #1f2937;
-                font-weight: bold;
-              }
-              .items-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 30px;
-              }
-              .items-table th {
-                background-color: #f9fafb;
-                padding: 12px 16px;
-                text-align: left;
-                font-size: 10px;
-                font-weight: bold;
-                color: #374151;
-                border-bottom: 1px solid #e5e7eb;
-              }
-              .items-table td {
-                padding: 12px 16px;
-                font-size: 10px;
-                color: #1f2937;
-                border-bottom: 1px solid #f3f4f6;
-              }
-              .items-table .text-center { text-align: center; }
-              .items-table .text-right { text-align: right; }
-              .items-table .font-bold { font-weight: bold; }
-              .totals-section {
-                text-align: right;
-                margin-bottom: 30px;
-              }
-              .total-row {
-                margin-bottom: 4px;
-              }
-              .total-label {
-                font-size: 12px;
-                color: #6b7280;
-                margin-right: 20px;
-              }
-              .total-value {
-                font-size: 12px;
-                color: #1f2937;
-                font-weight: bold;
-              }
-              .grand-total {
-                font-size: 16px;
-                color: #1f2937;
-                font-weight: bold;
-                border-top: 2px solid #e5e7eb;
-                padding-top: 8px;
-                margin-top: 8px;
-              }
-              .notes-section {
-                margin-bottom: 30px;
-              }
-              .notes-section h3 {
-                font-size: 12px;
-                font-weight: bold;
-                color: #374151;
-                margin: 0 0 8px 0;
-              }
-              .notes-section p {
-                font-size: 10px;
-                color: #6b7280;
-                margin: 0;
-                line-height: 1.4;
-              }
-              .footer {
-                margin-top: 40px;
-                padding-top: 20px;
-                border-top: 1px solid #e5e7eb;
-                text-align: center;
-              }
-              .footer p {
-                font-size: 8px;
-                color: #9ca3af;
-                margin: 0 0 4px 0;
-              }
-              .print-button {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 10px 20px;
-                background: #3b82f6;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 14px;
-              }
-              .print-button:hover {
-                background: #2563eb;
-              }
-            </style>
-          </head>
-          <body>
-            <button class="print-button no-print" onclick="window.print()">Print / Save as PDF</button>
-            <div class="invoice-container">
-              ${htmlContent}
-            </div>
-          </body>
-        </html>
-      `);
-
-      printWindow.document.close();
+      
+      // Download PDF
+      pdf.save(`Invoice-${invoice.number}.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
       throw new Error('Failed to generate PDF invoice');
@@ -246,230 +253,230 @@ export class PDFService {
   }
 
   /**
-   * Open PDF in new tab for preview
+   * Generate PDF and open in new tab for preview
    */
   static async previewInvoicePDF(invoice: InvoiceData): Promise<void> {
     try {
       // Create HTML template
       const htmlContent = this.createInvoiceHTML(invoice);
       
-      // Create a new window with the invoice
-      const previewWindow = window.open('', '_blank');
+      // Create a temporary container
+      const container = document.createElement('div');
+      container.innerHTML = htmlContent;
+      container.style.position = 'absolute';
+      container.style.left = '-9999px';
+      container.style.top = '0';
+      container.style.width = '800px';
+      container.style.backgroundColor = 'white';
+      container.style.padding = '40px';
+      container.style.fontFamily = 'Arial, sans-serif';
+      container.style.fontSize = '12px';
+      container.style.lineHeight = '1.4';
+      container.style.color = '#1f2937';
+      
+      // Add styles
+      const style = document.createElement('style');
+      style.textContent = `
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 40px;
+          border-bottom: 1px solid #e5e7eb;
+          padding-bottom: 20px;
+        }
+        .company-info h1 {
+          font-size: 24px;
+          font-weight: bold;
+          color: #1f2937;
+          margin: 0 0 8px 0;
+        }
+        .company-info p {
+          font-size: 12px;
+          color: #6b7280;
+          margin: 0;
+          line-height: 1.4;
+        }
+        .invoice-info {
+          text-align: right;
+        }
+        .invoice-info h1 {
+          font-size: 32px;
+          font-weight: bold;
+          color: #3b82f6;
+          margin: 0 0 8px 0;
+        }
+        .invoice-info p {
+          font-size: 14px;
+          color: #6b7280;
+          margin: 0 0 4px 0;
+        }
+        .customer-section {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 30px;
+        }
+        .customer-info h3 {
+          font-size: 12px;
+          font-weight: bold;
+          color: #374151;
+          margin: 0 0 8px 0;
+        }
+        .customer-info p {
+          font-size: 14px;
+          font-weight: bold;
+          color: #1f2937;
+          margin: 0 0 4px 0;
+        }
+        .customer-info .details {
+          font-size: 10px;
+          color: #6b7280;
+          margin: 0 0 4px 0;
+        }
+        .invoice-details {
+          flex: 1;
+          text-align: right;
+        }
+        .detail-row {
+          margin-bottom: 4px;
+        }
+        .detail-label {
+          font-size: 10px;
+          color: #6b7280;
+          margin-right: 20px;
+        }
+        .detail-value {
+          font-size: 10px;
+          color: #1f2937;
+          font-weight: bold;
+        }
+        .items-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 30px;
+        }
+        .items-table th {
+          background-color: #f9fafb;
+          padding: 12px 16px;
+          text-align: left;
+          font-size: 10px;
+          font-weight: bold;
+          color: #374151;
+          border-bottom: 1px solid #e5e7eb;
+        }
+        .items-table td {
+          padding: 12px 16px;
+          font-size: 10px;
+          color: #1f2937;
+          border-bottom: 1px solid #f3f4f6;
+        }
+        .items-table .text-center { text-align: center; }
+        .items-table .text-right { text-align: right; }
+        .items-table .font-bold { font-weight: bold; }
+        .totals-section {
+          text-align: right;
+          margin-bottom: 30px;
+        }
+        .total-row {
+          margin-bottom: 4px;
+        }
+        .total-label {
+          font-size: 12px;
+          color: #6b7280;
+          margin-right: 20px;
+        }
+        .total-value {
+          font-size: 12px;
+          color: #1f2937;
+          font-weight: bold;
+        }
+        .grand-total {
+          font-size: 16px;
+          color: #1f2937;
+          font-weight: bold;
+          border-top: 2px solid #e5e7eb;
+          padding-top: 8px;
+          margin-top: 8px;
+        }
+        .notes-section {
+          margin-bottom: 30px;
+        }
+        .notes-section h3 {
+          font-size: 12px;
+          font-weight: bold;
+          color: #374151;
+          margin: 0 0 8px 0;
+        }
+        .notes-section p {
+          font-size: 10px;
+          color: #6b7280;
+          margin: 0;
+          line-height: 1.4;
+        }
+        .footer {
+          margin-top: 40px;
+          padding-top: 20px;
+          border-top: 1px solid #e5e7eb;
+          text-align: center;
+        }
+        .footer p {
+          font-size: 8px;
+          color: #9ca3af;
+          margin: 0 0 4px 0;
+        }
+      `;
+      
+      container.appendChild(style);
+      document.body.appendChild(container);
+      
+      // Convert HTML to canvas
+      const canvas = await html2canvas(container, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: 800,
+        height: container.scrollHeight,
+      });
+      
+      // Remove temporary container
+      document.body.removeChild(container);
+      
+      // Create PDF
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 295; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      
+      // Add first page
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+      // Add additional pages if needed
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      // Convert PDF to blob and open in new tab
+      const pdfBlob = pdf.output('blob');
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      
+      // Open PDF in new tab
+      const previewWindow = window.open(pdfUrl, '_blank');
       if (!previewWindow) {
         throw new Error('Popup blocked. Please allow popups for this site.');
       }
-
-      previewWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>Invoice ${invoice.number} - Preview</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-                background: #f5f5f5;
-              }
-              .invoice-container {
-                max-width: 800px;
-                margin: 0 auto;
-                background: white;
-                padding: 40px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-              }
-              .header {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                margin-bottom: 40px;
-                border-bottom: 1px solid #e5e7eb;
-                padding-bottom: 20px;
-              }
-              .company-info h1 {
-                font-size: 24px;
-                font-weight: bold;
-                color: #1f2937;
-                margin: 0 0 8px 0;
-              }
-              .company-info p {
-                font-size: 12px;
-                color: #6b7280;
-                margin: 0;
-                line-height: 1.4;
-              }
-              .invoice-info {
-                text-align: right;
-              }
-              .invoice-info h1 {
-                font-size: 32px;
-                font-weight: bold;
-                color: #3b82f6;
-                margin: 0 0 8px 0;
-              }
-              .invoice-info p {
-                font-size: 14px;
-                color: #6b7280;
-                margin: 0 0 4px 0;
-              }
-              .customer-section {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 30px;
-              }
-              .customer-info h3 {
-                font-size: 12px;
-                font-weight: bold;
-                color: #374151;
-                margin: 0 0 8px 0;
-              }
-              .customer-info p {
-                font-size: 14px;
-                font-weight: bold;
-                color: #1f2937;
-                margin: 0 0 4px 0;
-              }
-              .customer-info .details {
-                font-size: 10px;
-                color: #6b7280;
-                margin: 0 0 4px 0;
-              }
-              .invoice-details {
-                flex: 1;
-                text-align: right;
-              }
-              .detail-row {
-                margin-bottom: 4px;
-              }
-              .detail-label {
-                font-size: 10px;
-                color: #6b7280;
-                margin-right: 20px;
-              }
-              .detail-value {
-                font-size: 10px;
-                color: #1f2937;
-                font-weight: bold;
-              }
-              .items-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 30px;
-              }
-              .items-table th {
-                background-color: #f9fafb;
-                padding: 12px 16px;
-                text-align: left;
-                font-size: 10px;
-                font-weight: bold;
-                color: #374151;
-                border-bottom: 1px solid #e5e7eb;
-              }
-              .items-table td {
-                padding: 12px 16px;
-                font-size: 10px;
-                color: #1f2937;
-                border-bottom: 1px solid #f3f4f6;
-              }
-              .items-table .text-center { text-align: center; }
-              .items-table .text-right { text-align: right; }
-              .items-table .font-bold { font-weight: bold; }
-              .totals-section {
-                text-align: right;
-                margin-bottom: 30px;
-              }
-              .total-row {
-                margin-bottom: 4px;
-              }
-              .total-label {
-                font-size: 12px;
-                color: #6b7280;
-                margin-right: 20px;
-              }
-              .total-value {
-                font-size: 12px;
-                color: #1f2937;
-                font-weight: bold;
-              }
-              .grand-total {
-                font-size: 16px;
-                color: #1f2937;
-                font-weight: bold;
-                border-top: 2px solid #e5e7eb;
-                padding-top: 8px;
-                margin-top: 8px;
-              }
-              .notes-section {
-                margin-bottom: 30px;
-              }
-              .notes-section h3 {
-                font-size: 12px;
-                font-weight: bold;
-                color: #374151;
-                margin: 0 0 8px 0;
-              }
-              .notes-section p {
-                font-size: 10px;
-                color: #6b7280;
-                margin: 0;
-                line-height: 1.4;
-              }
-              .footer {
-                margin-top: 40px;
-                padding-top: 20px;
-                border-top: 1px solid #e5e7eb;
-                text-align: center;
-              }
-              .footer p {
-                font-size: 8px;
-                color: #9ca3af;
-                margin: 0 0 4px 0;
-              }
-              .action-buttons {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                display: flex;
-                gap: 10px;
-              }
-              .action-button {
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 14px;
-                text-decoration: none;
-                display: inline-block;
-              }
-              .print-button {
-                background: #3b82f6;
-                color: white;
-              }
-              .print-button:hover {
-                background: #2563eb;
-              }
-              .download-button {
-                background: #10b981;
-                color: white;
-              }
-              .download-button:hover {
-                background: #059669;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="action-buttons">
-              <button class="action-button print-button" onclick="window.print()">Print / Save as PDF</button>
-              <button class="action-button download-button" onclick="window.print()">Download PDF</button>
-            </div>
-            <div class="invoice-container">
-              ${htmlContent}
-            </div>
-          </body>
-        </html>
-      `);
-
-      previewWindow.document.close();
+      
+      // Clean up URL object after a delay
+      setTimeout(() => {
+        URL.revokeObjectURL(pdfUrl);
+      }, 1000);
     } catch (error) {
       console.error('Error previewing PDF:', error);
       throw new Error('Failed to preview PDF invoice');

@@ -35,6 +35,8 @@ const GET_ACCOUNTS = gql`
       status
       balance
       openingBalance
+      calculatedBalance
+      storedBalance
       description
       isSystem
       isReconcilable
@@ -105,6 +107,8 @@ const GET_ACCOUNT_DETAILS = gql`
       status
       balance
       openingBalance
+      calculatedBalance
+      storedBalance
       description
       isSystem
       isReconcilable
@@ -688,9 +692,9 @@ export default function AccountsPage() {
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`text-sm font-medium ${getBalanceColor(account.balance)}`}>
-                          {formatCurrency(account.balance)}
-                        </span>
+                                            <span className={`text-sm font-medium ${getBalanceColor(account.calculatedBalance || account.balance)}`}>
+                      {formatCurrency(account.calculatedBalance || account.balance)}
+                    </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -810,9 +814,9 @@ export default function AccountsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Current Balance</label>
-                        <p className={`text-lg font-semibold ${getBalanceColor(accountDetailsData.account.balance)} bg-white px-3 py-2 rounded border`}>
-                          {formatCurrency(accountDetailsData.account.balance)}
-                        </p>
+                                            <p className={`text-lg font-semibold ${getBalanceColor(accountDetailsData.account.calculatedBalance || accountDetailsData.account.balance)} bg-white px-3 py-2 rounded border`}>
+                      {formatCurrency(accountDetailsData.account.calculatedBalance || accountDetailsData.account.balance)}
+                    </p>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Opening Balance</label>

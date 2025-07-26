@@ -6,7 +6,9 @@ import { useRouter } from 'next/navigation';
 import { CREATE_INVOICE_MUTATION } from '@/lib/graphql/mutations';
 import { 
   GET_NEXT_INVOICE_NUMBER,
-  GET_CUSTOMERS
+  GET_CUSTOMERS,
+  GET_INVOICES,
+  GET_INVOICE_STATS
 } from '@/lib/graphql/queries';
 import { 
   ArrowLeftIcon,
@@ -72,7 +74,68 @@ export default function NewInvoicePage() {
   });
 
   // Mutations
-  const [createInvoice, { loading: creating }] = useMutation(CREATE_INVOICE_MUTATION);
+  const [createInvoice, { loading: creating }] = useMutation(CREATE_INVOICE_MUTATION, {
+    update: (cache, { data }) => {
+      if (data?.createInvoice) {
+        // Update the invoices list cache
+        try {
+          const existingInvoices = cache.readQuery({
+            query: GET_INVOICES,
+            variables: {
+              filter: {},
+              orderBy: { field: 'CREATED_AT', direction: 'DESC' },
+              limit: 50,
+            },
+          });
+
+          if (existingInvoices && (existingInvoices as any).invoices) {
+            cache.writeQuery({
+              query: GET_INVOICES,
+              variables: {
+                filter: {},
+                orderBy: { field: 'CREATED_AT', direction: 'DESC' },
+                limit: 50,
+              },
+              data: {
+                invoices: [data.createInvoice, ...(existingInvoices as any).invoices],
+              },
+            });
+          }
+        } catch (error) {
+          console.log('Cache update failed, will refetch:', error);
+        }
+
+        // Update invoice stats cache
+        try {
+          const existingStats = cache.readQuery({
+            query: GET_INVOICE_STATS,
+            variables: { filter: {} },
+          });
+
+          if (existingStats && (existingStats as any).invoiceStats) {
+            const newStats = {
+              ...(existingStats as any).invoiceStats,
+              totalInvoices: (existingStats as any).invoiceStats.totalInvoices + 1,
+              totalAmount: (existingStats as any).invoiceStats.totalAmount + parseFloat(data.createInvoice.total),
+              draftAmount: data.createInvoice.status === 'DRAFT' 
+                ? (existingStats as any).invoiceStats.draftAmount + parseFloat(data.createInvoice.total)
+                : (existingStats as any).invoiceStats.draftAmount,
+            };
+
+            cache.writeQuery({
+              query: GET_INVOICE_STATS,
+              variables: { filter: {} },
+              data: {
+                invoiceStats: newStats,
+              },
+            });
+          }
+        } catch (error) {
+          console.log('Stats cache update failed:', error);
+        }
+      }
+    },
+  });
 
   const customers = customersData?.customers?.edges?.map((edge: any) => edge.node) || [];
   const nextInvoiceNumber = nextNumberData?.nextInvoiceNumber;

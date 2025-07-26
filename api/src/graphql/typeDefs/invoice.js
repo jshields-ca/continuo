@@ -50,6 +50,11 @@ const invoiceTypeDefs = gql`
     taxAmount: Float!
     vatAmount: Float!
     total: Float!
+    # Stored values for comparison (original database values)
+    storedSubtotal: Float
+    storedTaxAmount: Float
+    storedVatAmount: Float
+    storedTotal: Float
     notes: String
     pdfUrl: String
     customFields: JSON
